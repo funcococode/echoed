@@ -95,6 +95,7 @@ model Authenticator {
 model Post{
   id String @id @default(uuid())
   title String
+  main_text String? @db.LongText 
   description String @db.Text
   userId String
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)

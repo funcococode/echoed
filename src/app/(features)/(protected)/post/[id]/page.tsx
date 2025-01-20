@@ -1,13 +1,14 @@
 import { db } from "@/server/db"
 import moment from "moment"
+import Link from "next/link"
 import { TbArrowDown, TbArrowUp, TbBookmark, TbEye, TbHash } from "react-icons/tb"
 
-export default async function Post({params} : {params: Promise<{id: string}>}) {
+export default async function Post({ params }: { params: Promise<{ id: string }> }) {
   const id = (await params)?.id
 
   const updateViewCount = async () => {
     await db.post.update({
-      where: {id},
+      where: { id },
       data: {
         views: {
           increment: 1
@@ -30,7 +31,7 @@ export default async function Post({params} : {params: Promise<{id: string}>}) {
         comments: true
       },
     })
-    if(response?.id){
+    if (response?.id) {
       return response;
     }
   }
@@ -42,7 +43,7 @@ export default async function Post({params} : {params: Promise<{id: string}>}) {
     <div className="space-y-10">
       <div className="space-y-5">
         <div className="space-y-2 flex justify-between items-center text-sm">
-          <h1 className="text-indigo-600 capitalize">{data?.user.firstname} {data?.user.lastname}</h1>
+          <Link href={`/user/${data?.userId}`} className="text-indigo-600 capitalize">{data?.user.firstname} {data?.user.lastname}</Link>
           <div className="flex items-center gap-2">
             <div className="list-none flex text-xs font-medium rounded border items-center text-indigo-700 bg-indigo-500/10 border-indigo-200">
               <span className="p-1 border-r border-indigo-200"><TbArrowUp /></span>
@@ -58,12 +59,12 @@ export default async function Post({params} : {params: Promise<{id: string}>}) {
             </div>
           </div>
           <div className="flex items-center gap-5 font-light text-xs">
-              <p>
-                Posted on <span className="font-medium">{moment(data?.createdAt).format('MMM DD, YYYY')}</span>
-              </p>
-              <button className="rounded-full p-2 border text-gray-400 text-base hover:bg-gray-500/10 hover:text-gray-700">
-                <TbBookmark />
-              </button>
+            <p>
+              Posted on <span className="font-medium">{moment(data?.createdAt).format('MMM DD, YYYY')}</span>
+            </p>
+            <button className="rounded-full p-2 border text-gray-400 text-base hover:bg-gray-500/10 hover:text-gray-700">
+              <TbBookmark />
+            </button>
           </div>
         </div>
         <div className="flex gap-2">
