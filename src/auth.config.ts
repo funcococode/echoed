@@ -1,14 +1,16 @@
-import {  CredentialsSignin, type NextAuthConfig } from "next-auth"
-import Credentials from "next-auth/providers/credentials"
-import { comparePassword} from "./utils/password";
+import { CredentialsSignin, type NextAuthConfig } from "next-auth";
+import Credentials from "next-auth/providers/credentials";
+import { comparePassword } from "./utils/password";
 import { db } from "./server/db";
- 
+import { AdapterSession, AdapterUser } from "next-auth/adapters";
+import { JWT } from "next-auth/jwt";
+
 export default {
   providers: [
     Credentials({
       credentials: {
         username: {},
-        password: {}
+        password: {},
       },
       authorize: async (credentials) => {
         let user = null;
@@ -16,42 +18,38 @@ export default {
           where: {
             username: credentials.username as string,
           },
-        })
+        });
 
-        if(!user){
+        if (!user) {
           throw new CredentialsSignin();
         }
 
-        const passwordMatch = comparePassword(credentials.password as string, user?.password)
+        const passwordMatch = comparePassword(
+          credentials.password as string,
+          user?.password,
+        );
 
-        if(passwordMatch){
+        if (passwordMatch) {
           return user;
-        }else{
+        } else {
           throw new CredentialsSignin();
         }
-      }
-    })
+      },
+    }),
   ],
   callbacks: {
-    jwt: async ({ token, user }) =>{
+    jwt: async ({ token, user }) => {
       if (user) {
         token.uid = user;
       }
 
-      return token
+      return token;
     },
     session: async ({ session, token }) => {
-        if(token.uid){
-          session.user = {
-            id: token.uid.id,
-            image:token.uid.image,
-            firstname: token.uid.firstname,
-            lastname: token.uid.lastname,
-            email: token.uid.email,
-            username: token.uid.username
-          }
-        }
+      if (token.uid) {
+        session.user = token.uid;
+      }
       return session;
     },
-  }
-} satisfies NextAuthConfig
+  },
+} satisfies NextAuthConfig;

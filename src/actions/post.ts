@@ -2,6 +2,8 @@
 
 import { auth } from "@/auth";
 import { db } from "@/server/db";
+import { remark } from "remark";
+import strip from "strip-markdown";
 
 export type PostType =
   ReturnType<typeof getPost> extends Promise<infer T> ? T : never;
@@ -114,7 +116,12 @@ export async function getAllPosts({
     votePositive: post.votes.some(
       (vote) => vote.userId === session?.user?.id && vote.positive,
     ),
-    readTime: Math.round(post.description.split(" ")?.length / 200),
+    readTime: post?.main_text?.length
+      ? Math.round(
+          String(remark().use(strip).process(post.main_text))?.length ??
+            0 / 200,
+        )
+      : 0,
   }));
 
   const total_count = await db.post.count();
@@ -129,3 +136,40 @@ export async function getAllPosts({
     },
   };
 }
+
+export type PostDetailType =
+  ReturnType<typeof getPostDetails> extends Promise<infer T> ? T : never;
+export async function getPostDetails(postId: string) {
+  const response = await db.post.findFirst({
+    where: {
+      id: postId,
+    },
+    include: {
+      user: true,
+      votes: true,
+      _count: true,
+      tag: true,
+      comments: {
+        include: {
+          user: true,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      },
+    },
+  });
+
+  return response;
+}
+
+export const updateViewCount = async (id: string) => {
+  await db.post.update({
+    where: { id },
+    data: {
+      views: {
+        increment: 1,
+      },
+    },
+  });
+};

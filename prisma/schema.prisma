@@ -119,13 +119,16 @@ model Vote{
   updatedAt DateTime @updatedAt
 }
 
-model Comment{
+model Comment {
   id String @id @default(uuid())
   postId String
   post Post @relation(fields: [postId], references: [id])
   userId String
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   description String
+  parentCommentId String? 
+  depth Int @default(0)
+  path String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

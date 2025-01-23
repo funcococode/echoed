@@ -7,7 +7,7 @@ import Pagination from "@/components/ui/pagination";
 
 export default function Feed() {
   const [data, setData] = useState<PostType[]>([]);
-  const [pageInfo,setPageInfo] = useState<{
+  const [pageInfo, setPageInfo] = useState<{
     total_count: number;
     total_pages: number;
     page: number;
@@ -17,7 +17,7 @@ export default function Feed() {
   const [currentPage, setCurrentPage] = useState(0)
   const [limit, setLimit] = useState(5)
 
-  const fetchData = useCallback(async ()=> {
+  const fetchData = useCallback(async () => {
     const payload = {
       page: currentPage,
       limit
@@ -25,8 +25,8 @@ export default function Feed() {
 
     const response = await getAllPosts(payload)
 
-    setData(response.data) 
-    setPageInfo(response.pageInfo) 
+    setData(response.data)
+    setPageInfo(response.pageInfo)
   }, [currentPage, limit])
 
   useEffect(() => {
@@ -35,10 +35,10 @@ export default function Feed() {
 
   return (
     <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <Pagination setCurrentPage={setCurrentPage} currentPage={currentPage} totalRecords={(pageInfo?.total_count ?? 0)} totalPages={pageInfo?.total_pages ?? 0} />
-        </div>
-        {data?.map((item) => <PostCard post={item} key={item.id}/>)}
+      <div className="flex items-center justify-between">
+        <Pagination setCurrentPage={setCurrentPage} currentPage={currentPage} totalRecords={(pageInfo?.total_count ?? 0)} totalPages={pageInfo?.total_pages ?? 0} />
+      </div>
+      {data?.map((item) => <PostCard post={item} key={item.id} />)}
     </div>
   )
 }
