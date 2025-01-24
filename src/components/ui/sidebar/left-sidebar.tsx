@@ -25,11 +25,11 @@ export default function LeftSidebar() {
         },
     ]
     return (
-        <div className="space-y-2">
-            {data?.map(item => <Link 
-                key={item.link} 
-                href={item.link} 
-                className={`flex items-center gap-2 px-4 py-2 rounded border-l-4  ${item.current ? "text-indigo-700 border-indigo-700" : "border-transparent"}`}
+        <div className="md:space-y-2 flex items-center justify-between md:block rounded md:rounded-none">
+            {data?.map(item => <Link
+                key={item.link}
+                href={item.link}
+                className={`flex items-center gap-2 px-4 py-2 md:rounded border-b md:border-b-0 md:border-l-4  ${item.current ? "text-indigo-700 border-indigo-700" : "border-transparent"}`}
             >
                 {item.icon}
                 <h1 className="text-sm font-medium">{item.title}</h1>

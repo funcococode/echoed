@@ -35,7 +35,7 @@ export default function Comment({
         className={`list-none space-y-2 w-full`}
         key={comment.id}
       >
-        <div className="flex gap-2 text-gray-500 text-[11px]">
+        <div className="flex gap-2 text-gray-500 text-sm md:text-[11px]">
           <Link href={`/user/${comment.userId}`} className="text-gray-500">
             {comment.user.username}
           </Link> /
@@ -77,7 +77,7 @@ export default function Comment({
 
         {!showReply && <button
           onClick={() => setShowReply((prev) => !prev)}
-          className={"text-xs text-gray-400 hover:text-indigo-700 flex items-center gap-2 "}
+          className={"text-sm md:text-xs text-gray-400 hover:text-indigo-700 flex items-center gap-2 "}
         >
           Reply<TbArrowBackUp />
         </button>}

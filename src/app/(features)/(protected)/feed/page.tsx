@@ -34,7 +34,7 @@ export default function Feed() {
   }, [refetch, currentPage, limit, fetchData])
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-10 md:space-y-4">
       <div className="flex items-center justify-between">
         <Pagination setCurrentPage={setCurrentPage} currentPage={currentPage} totalRecords={(pageInfo?.total_count ?? 0)} totalPages={pageInfo?.total_pages ?? 0} />
       </div>

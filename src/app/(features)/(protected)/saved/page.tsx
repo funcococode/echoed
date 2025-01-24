@@ -1,13 +1,14 @@
 import { auth } from "@/auth";
 import { db } from "@/server/db";
 import moment from "moment";
+import Link from "next/link";
 import { TbArrowUp, TbBookmark, TbEye, TbMessage } from "react-icons/tb";
 
 export default async function MyTopics() {
   const session = await auth();
   const fetchData = async () => {
     const response = await db.savedPost.findMany({
-      where:{
+      where: {
         userId: session?.user?.id
       },
       select: {
@@ -15,7 +16,7 @@ export default async function MyTopics() {
           include: {
             user: true,
             _count: {
-              select:{
+              select: {
                 votes: true,
                 comments: true,
                 saves: true,
@@ -40,7 +41,7 @@ export default async function MyTopics() {
           {data?.length}
         </span>
       </h1>
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid md:grid-cols-2 gap-4">
         {data?.map(item => <li className='space-y-4 list-none p-5 rounded shadow shadow-gray-400/10 border flex flex-col justify-between' key={item.post.id}>
           <div className="space-y-4">
             <div className="font-light text-xs text-gray-400 flex justify-between">
@@ -49,7 +50,7 @@ export default async function MyTopics() {
               </p>
               <p>{moment(item.post.createdAt).format('MMM DD, YYYY')}</p>
             </div>
-            <h1 className="font-medium">{item.post.title}</h1>
+            <Link href={`/post/${item.post.id}`} className="font-medium block hover:text-indigo-700">{item.post.title}</Link>
           </div>
           <div className="flex items-center gap-2">
             <div className="flex items-center text-xs gap-2 text-gray-400 border rounded px-2 w-fit">

@@ -136,7 +136,7 @@ model Comment {
 model Tag{
   id String @id @default(uuid())
   name String
-  description String
+  description String?
   postId String
   post Post[]
   userId String

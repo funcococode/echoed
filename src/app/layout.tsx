@@ -16,7 +16,7 @@ export default function RootLayout({
       <head>
         <title>Echoed</title>
       </head>
-      <body className="max-w-[70%] mx-auto min-h-screen overflow-y-scroll">
+      <body className="max-w-[90%] md:max-w-[70%] mx-auto min-h-screen overflow-y-scroll">
         <Toaster />
         {children}
       </body>

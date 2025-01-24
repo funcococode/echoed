@@ -1,23 +1,27 @@
 'use client';
 import React from "react";
-import { TbUser } from "react-icons/tb";
+import { TbSearch, TbUser } from "react-icons/tb";
 import Button from "../form/button";
 import { signOut, useSession } from "next-auth/react";
 import Logo from "./logo";
+import Link from "next/link";
+import Input from "../form/input";
+import { useForm } from "react-hook-form";
 
 export default function Header() {
   const { data: session } = useSession();
+  const { control } = useForm({
+    defaultValues: {
+      search: ''
+    }
+  });
   return (
     <header className="sticky top-0 z-10 flex items-center justify-between rounded-b border border-gray-100 bg-white p-5">
-      <div className="flex items-center gap-2">
+      <Link href={'/'} className="flex items-center gap-2">
         <Logo />
         <h1 className="text-sm font-bold">Echoed</h1>
-      </div>
-      <input
-        className="w-96 rounded border bg-gray-100 p-2 text-sm outline-none"
-        type="text"
-        placeholder="Search for topics"
-      />
+      </Link>
+      <Input withIcon icon={<TbSearch />} control={control} name="search" showLabel={false} placeholder="Search for topics" />
       <div className="flex items-center gap-4 text-sm font-medium text-gray-500">
         <button className="flex items-center gap-2">
           <TbUser /> {session?.user?.firstname}
