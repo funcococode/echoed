@@ -24,6 +24,7 @@ export default function UserProfile() {
     fetchData().catch(err => console.log(err));
   }, [])
 
+  console.log(data)
   return (
     <section className="space-y-10">
       <div className="space-y-5 p-5 border border-gray-100 shadow shadow-gray-400/10 rounded-md">
@@ -53,7 +54,7 @@ export default function UserProfile() {
               Tags Followed
             </span>
             <span className="text-sm font-bold">
-              {data?._count?.tag}
+              {data?._count?.TagsFollowed}
             </span>
           </p>
         </div>

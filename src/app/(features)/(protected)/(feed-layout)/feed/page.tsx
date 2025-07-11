@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import PostCard from "@/components/ui/post/post-card";
 import { getAllPosts, type PostType } from "@/actions/post";
 import Pagination from "@/components/ui/pagination";
+import { Modal } from "../../../../../components/ui/modal";
 
 export default function Feed() {
   const [data, setData] = useState<PostType[]>([]);
@@ -34,10 +35,11 @@ export default function Feed() {
   }, [refetch, currentPage, limit, fetchData])
 
   return (
-    <div className="space-y-10 md:space-y-4">
-      <div className="flex items-center justify-between">
+    <div className="space-y-10 md:space-y-4 relative ">
+      <div className="flex items-center justify-between ">
         <Pagination setCurrentPage={setCurrentPage} currentPage={currentPage} totalRecords={(pageInfo?.total_count ?? 0)} totalPages={pageInfo?.total_pages ?? 0} />
       </div>
+
       {data?.map((item) => <PostCard post={item} key={item.id} />)}
     </div>
   )

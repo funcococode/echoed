@@ -1,7 +1,6 @@
 'use client'
 import { addTagToPost } from "@/actions/tag";
 import Input from "@/components/form/input";
-import useTags from "@/hooks/use-tag";
 import { useForm } from "react-hook-form";
 import { TbTag } from "react-icons/tb";
 

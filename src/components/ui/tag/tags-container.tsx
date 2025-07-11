@@ -1,8 +1,7 @@
 'use client'
 import { TbHash, TbTagPlus } from "react-icons/tb";
 import SectionHeading from "../section-heading";
-import { useCallback, useEffect, useState } from "react";
-import { getPostTags, type TagType } from "@/actions/tag";
+import { useState } from "react";
 import TagInput from "./tag-input";
 import useTags from "@/hooks/use-tag";
 

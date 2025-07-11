@@ -33,7 +33,7 @@ export default function CommentsContainer({ postId }: { postId: string, depth?: 
     return (
         <div className="md:text-sm rounded-md border-gray-100  py-4 md:py-0 space-y-10">
             <div className="space-y-5">
-                <SectionHeading text={`All comments (${data?.length})`} />
+                <SectionHeading text={`All comments (${data?.[0]?.post?._count?.comments ?? 0})`} />
                 <div className="space-y-4">
                     <form action={handlePostComment} className="space-y-2">
                         <textarea name="comment" id="comment" className="w-full resize-none bg-gray-50 border rounded min-h-32 outline-none p-2 text-gray-600 text-sm" placeholder="Contribute your thoughts here"></textarea>

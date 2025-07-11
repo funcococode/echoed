@@ -13,9 +13,11 @@ export async function getUser({ id }: { id: string }) {
       _count: {
         select: {
           Posts: true,
-          tag: true,
+          TagsFollowed: true
+          // tag: true,
         },
       },
+      TagsFollowed: true,
     },
   });
 

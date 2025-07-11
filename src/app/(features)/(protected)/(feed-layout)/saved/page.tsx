@@ -1,8 +1,9 @@
 import { auth } from "@/auth";
+import PageHeading from "@/components/ui/page-heading";
 import { db } from "@/server/db";
 import moment from "moment";
 import Link from "next/link";
-import { TbArrowUp, TbBookmark, TbEye, TbMessage } from "react-icons/tb";
+import { TbArrowUp, TbBook, TbBookmark, TbEye, TbMessage } from "react-icons/tb";
 
 export default async function MyTopics() {
   const session = await auth();
@@ -32,15 +33,7 @@ export default async function MyTopics() {
   const data = await fetchData();
   return (
     <div className="space-y-4">
-      <h1 className="text-3xl font-semibold h-44 flex items-center justify-between px-4 bg-orange-400/10 rounded-md text-orange-300">
-        <span className="flex items-center gap-2">
-          <TbBookmark />
-          Saved Posts
-        </span>
-        <span className="">
-          {data?.length}
-        </span>
-      </h1>
+      <PageHeading text='Saved Posts' count={data?.length} icon={<TbBookmark />} />
       <div className="grid md:grid-cols-2 gap-4">
         {data?.map(item => <li className='space-y-4 list-none p-5 rounded shadow shadow-gray-400/10 border flex flex-col justify-between' key={item.post.id}>
           <div className="space-y-4">

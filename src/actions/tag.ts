@@ -16,34 +16,80 @@ export async function addTagToPost({
 }) {
   const session = await auth();
   if (session?.user?.id) {
-    const response = await db.tag.create({
-      data: {
+    const foundTag = await db.tag.findFirst({
+      where: {
         name: tag,
-        postId,
-        userId: session?.user?.id,
       },
       select: {
         id: true,
       },
     });
+    let tagId;
+    if (foundTag?.id) {
+      tagId = foundTag.id;
+    } else {
+      const newTag = await db.tag.create({
+        data: {
+          name: tag,
+        },
+        select: {
+          id: true,
+        },
+      });
+      tagId = newTag.id;
+    }
+    const response = await db.tagsOnPost.create({
+      data: {
+        tagId: tagId,
+        postId,
+      },
+      select: {
+        tag: {
+          select: {
+            id: true,
+          },
+        },
+      },
+    });
 
-    return response;
+    return { id: response.tag.id };
   }
 }
 
-export async function getPostTags({ postId }: { postId: string }) {
+export async function getPostTags({
+  postId,
+  // tagId,
+}: {
+  postId: string;
+  // tagId: string;
+}) {
   const session = await auth();
-  if (session?.user?.id) {
-    const response = await db.tag.findMany({
+  if (!session?.user?.id) {
+    throw new Error("User is not authenticated.");
+  }
+
+  try {
+    const response = (await db.tagsOnPost.findMany({
       where: {
         postId,
+        // tagId,
       },
       select: {
-        id: true,
-        name: true,
+        tag: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
       },
-    });
+    })) as { tag: { id: string; name: string } }[];
 
-    return response;
+    return response.map((item) => ({ id: item.tag.id, name: item.tag.name }));
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error("Error fetching tags:", error.message);
+      throw new Error("Unable to fetch tags.");
+    }
+    throw new Error("An unknown error occurred.");
   }
 }

@@ -23,6 +23,11 @@ export type CommentType = {
   createdAt: Date;
   updatedAt: Date;
   replies: CommentType[];
+  post: {
+    _count: {
+      comments: number;
+    };
+  };
 };
 
 function nestComments(comments: CommentType[]) {
@@ -57,6 +62,15 @@ export async function getComments(postId: string) {
           lastname: true,
           id: true,
           username: true,
+        },
+      },
+      post: {
+        select: {
+          _count: {
+            select: {
+              comments: true,
+            },
+          },
         },
       },
     },

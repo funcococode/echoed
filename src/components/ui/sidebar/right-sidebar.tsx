@@ -8,7 +8,7 @@ export default function RightSidebar() {
         <div className="space-y-5">
             {pathname !== '/post/new' && <Link href='/post/new' className="bg-indigo-700 text-white text-sm font-medium flex items-center justify-center gap-2 w-full rounded py-3">
                 <TbPlus className="text-base" />
-                Start a new topic
+                Create a new Echo
             </Link>}
 
             <div className="shadow-lg shadow-gray-500/10 rounded-md p-3 border space-y-4 hidden md:block">

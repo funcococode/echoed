@@ -20,7 +20,7 @@ export async function getPost(postId: string) {
           comments: true,
           votes: true,
           saves: true,
-          tag: true,
+          tags: true,
         },
       },
       votes: true,
@@ -29,12 +29,16 @@ export async function getPost(postId: string) {
           userId: true,
         },
       },
-      tag: {
-        select: {
-          id: true,
-          name: true,
-        },
-      },
+      // tags: {
+      //   select: {
+      //     tag: {
+      //       select: {
+      //         id: true,
+      //         name: true,
+      //       },
+      //     },
+      //   },
+      // },
       user: {
         select: {
           id: true,
@@ -74,6 +78,11 @@ export async function getAllPosts({
     take: limit,
     where: {
       ...(userId && { userId }),
+      is_hidden: false,
+      is_archived: false,
+      NOT: {
+        userId: session?.user?.id,
+      },
     },
     include: {
       _count: {
@@ -81,7 +90,7 @@ export async function getAllPosts({
           comments: true,
           votes: true,
           saves: true,
-          tag: true,
+          tags: true,
         },
       },
       saves: {
@@ -90,12 +99,16 @@ export async function getAllPosts({
         },
       },
       votes: true,
-      tag: {
-        select: {
-          id: true,
-          name: true,
-        },
-      },
+      // tags: {
+      //   select: {
+      //     tag: {
+      //       select: {
+      //         id: true,
+      //         name: true,
+      //       },
+      //     },
+      //   },
+      // },
       user: {
         select: {
           id: true,
@@ -124,7 +137,17 @@ export async function getAllPosts({
       : 0,
   }));
 
-  const total_count = await db.post.count();
+  const total_count = await db.post.count({
+    where: {
+      NOT: { userId: session?.user?.id },
+      AND: {
+        is_hidden: false,
+        is_archived: false,
+      },
+    },
+  });
+  console.log(total_count);
+  console.log(Math.ceil(total_count / limit));
 
   return {
     data,
@@ -132,7 +155,7 @@ export async function getAllPosts({
       total_count,
       page,
       limit,
-      total_pages: Math.floor(total_count / limit) + 1,
+      total_pages: Math.ceil(total_count / limit),
     },
   };
 }
@@ -148,7 +171,7 @@ export async function getPostDetails(postId: string) {
       user: true,
       votes: true,
       _count: true,
-      tag: true,
+      tags: true,
       comments: {
         include: {
           user: true,
@@ -172,4 +195,35 @@ export const updateViewCount = async (id: string) => {
       },
     },
   });
+};
+
+export const updatePost = async (
+  id: string,
+  payload: { title?: string; description?: string },
+) => {
+  const response = await db.post.update({
+    where: { id },
+    data: {
+      ...payload,
+    },
+    select: {
+      id: true,
+    },
+  });
+
+  return response.id;
+};
+
+export const togglePostVisibilty = async (id: string, hidden: boolean) => {
+  const response = await db.post.update({
+    where: { id },
+    data: {
+      is_hidden: hidden,
+    },
+    select: {
+      id: true,
+    },
+  });
+
+  return response.id;
 };

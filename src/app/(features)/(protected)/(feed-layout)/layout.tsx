@@ -6,7 +6,11 @@ import RightSidebar from '@/components/ui/sidebar/right-sidebar'
 import { SessionProvider } from 'next-auth/react'
 import React, { type ReactElement } from 'react'
 
-export default function FeedLayout({ children }: { children: ReactElement }) {
+interface Props {
+    children: ReactElement
+}
+
+export default function FeedLayout({ children }: Props) {
     return (
         <SessionProvider>
             <div className='space-y-4 flex flex-col h-screen'>
