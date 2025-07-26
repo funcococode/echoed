@@ -27,9 +27,11 @@ model User {
   comments      Comment[]
   savedPosts    SavedPost[]
 
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
-  TagsFollowed TagsFollowed[]
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  TagsFollowed   TagsFollowed[]
+  Chamber        Chamber[]
+  chamberMembers ChamberMember[]
 }
 
 model Account {
@@ -93,21 +95,37 @@ model Authenticator {
 }
 
 model Post {
-  id          String       @id @default(uuid())
+  id          String            @id @default(uuid())
   title       String
-  main_text   String?      @db.LongText
-  description String       @db.Text
+  main_text   String?           @db.LongText
+  description String            @db.Text
   userId      String
-  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user        User              @relation(fields: [userId], references: [id], onDelete: Cascade)
   votes       Vote[]
   comments    Comment[]
   saves       SavedPost[]
   tags        TagsOnPost[]
-  is_hidden   Boolean      @default(false)
-  is_archived Boolean      @default(false)
-  views       Int          @default(0)
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
+  attachments PostAttachments[]
+  is_hidden   Boolean           @default(false)
+  is_archived Boolean           @default(false)
+  views       Int               @default(0)
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  Chamber     Chamber?          @relation(fields: [chamberId], references: [id])
+  chamberId   String?
+}
+
+model PostAttachments {
+  id        String   @id @default(uuid())
+  postId    String
+  post      Post     @relation(fields: [postId], references: [id])
+  cid       String
+  fileId    String
+  type      String // e.g., 'image', 'video', 'document'
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([postId, cid])
 }
 
 model Vote {
@@ -178,4 +196,34 @@ model SavedPost {
   updatedAt DateTime @default(now()) @updatedAt
 
   @@unique([userId, postId])
+}
+
+model Chamber {
+  id            String          @id @default(uuid())
+  frequency     String?         @unique
+  name          String          @unique
+  description   String?         @db.Text
+  userId        String
+  user          User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  posts         Post[]
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  ChamberMember ChamberMember[]
+
+  @@index([userId])
+}
+
+model ChamberMember {
+  id        String   @id @default(uuid())
+  chamberId String
+  chamber   Chamber  @relation(fields: [chamberId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role      String // e.g., 'admin', 'member'
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([chamberId, userId])
+  @@index([chamberId])
+  @@index([userId])
 }

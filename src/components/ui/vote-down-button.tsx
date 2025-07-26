@@ -1,5 +1,6 @@
 'use client'
 import { TbArrowDown } from "react-icons/tb";
+import Icon from "./icon";
 
 export interface VoteDownButtonProps {
     isVoted?: boolean;
@@ -14,7 +15,7 @@ export default function VoteDownButton({ handlerFn, isVoted = false }: VoteDownB
                 onClick={() => handlerFn?.(false)}
                 className={`text-lg md:text-sm ${isVoted ? 'text-red-600' : 'text-gray-400'}`}
             >
-                <TbArrowDown />
+                <Icon icon={<TbArrowDown />} size="small" color={isVoted ? 'danger-light-bg' : 'default'} />
             </button>
         </div>
     )

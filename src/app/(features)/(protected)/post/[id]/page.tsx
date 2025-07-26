@@ -1,22 +1,32 @@
 'use client'
-import { getPostDetails, type PostDetailType, togglePostVisibilty, updateViewCount } from "@/actions/post"
+import { deleteEcho, getPostDetails, type PostDetailType, toggleEchoArchive, togglePostVisibilty, updateViewCount } from "@/actions/post"
+import Input from "@/components/form/input"
+import BookmarkButton from "@/components/ui/bookmark-button"
 import CommentsContainer from "@/components/ui/comment/comments-container"
 import Dropdown, { type DropdownOption } from "@/components/ui/dropdown/dropdown"
+import Icon from "@/components/ui/icon"
+import ImageContainer from "@/components/ui/image-container"
+import { Modal } from "@/components/ui/modal"
 import TagContainer from "@/components/ui/tag/tags-container"
 import moment from "moment"
 import { useSession } from "next-auth/react"
 import Link from "next/link"
 import { useParams } from "next/navigation"
 import { useCallback, useEffect, useState } from "react"
-import { TbArchive, TbArrowDown, TbArrowUp, TbBookmark, TbEye, TbEyeClosed, TbEyeDown, TbEyeglass, TbEyeglass2, TbEyeglassOff, TbLoader2, TbPencil, TbTrash } from "react-icons/tb"
+import { useForm } from "react-hook-form"
+import { HiOutlineCollection } from "react-icons/hi"
+import { TbArchive, TbArchiveOff, TbArrowDown, TbArrowUp, TbEye, TbEyeClosed, TbEyeglass, TbEyeglassOff, TbLoader2, TbPencil, TbTrash } from "react-icons/tb"
 import Markdown from "react-markdown"
 import remarkGfm from "remark-gfm"
+import { toast } from "sonner"
 
 export default function Post() {
   const { id } = useParams<{ id: string }>();
   const [data, setData] = useState<PostDetailType>()
   const [isLoading, setIsLoading] = useState(true);
+  const [showChamberModal, setShowChamberModal] = useState(false);
   const { data: sessionData } = useSession();
+  const { control } = useForm();
 
   const fetchData = useCallback(async () => {
     if (id) {
@@ -38,9 +48,35 @@ export default function Post() {
   const handleVisibility = () => {
     togglePostVisibilty(id, !data?.is_hidden).then(response => {
       if (response) {
-        alert(`Post visibility updated`)
+        toast.success(`Post visibility updated`, {
+          richColors: true
+        })
       }
     }).catch(err => console.log(err))
+  }
+
+  const handleArchive = () => {
+    toggleEchoArchive(id, !data?.is_archived).then(response => {
+      if (response) {
+        toast.success(!data?.is_archived ? "Post Archived" : 'Post Unarchived', {
+          richColors: true
+        })
+      }
+    }).catch(err => console.log(err))
+  }
+
+  const handleDelete = () => {
+    deleteEcho(id).then(response => {
+      if (response) {
+        toast.success(`Echo Removed`, {
+          richColors: true
+        })
+      }
+    }).catch(err => console.log(err))
+  }
+
+  const handleAddToChamber = () => {
+    setShowChamberModal(true)
   }
 
   if (isLoading) return <div className="w-full grid place-content-center">
@@ -52,38 +88,49 @@ export default function Post() {
   const menuOptions: DropdownOption<undefined>[] = [
     {
       label: 'Edit',
-      icon: <TbPencil />,
+      icon: <Icon icon={<TbPencil />} size='small' />,
       link: `./edit/${id}`
     },
     {
       label: 'Delete',
-      icon: <TbTrash />,
+      icon: <Icon icon={<TbTrash />} size='small' />,
+      action: handleDelete
     },
 
     {
-      label: 'Archive',
-      icon: <TbArchive />,
+      label: data?.is_archived ? 'Unarchive' : 'Archive',
+      icon: data?.is_archived ? <Icon icon={<TbArchiveOff />} size="small" /> : <Icon icon={<TbArchive />} size='small' />,
+      action: handleArchive
     },
 
     {
       label: data?.is_hidden ? 'Unhide' : 'Hide',
-      icon: data?.is_hidden ? <TbEyeglass /> : <TbEyeglassOff />,
+      icon: data?.is_hidden ? <Icon icon={<TbEyeglass />} size='small' /> : <Icon icon={<TbEyeglassOff />} size='small' />,
       action: handleVisibility
+    },
+    {
+      label: 'Add to Chamber',
+      icon: <Icon icon={<HiOutlineCollection />} size='small' />,
+      action: handleAddToChamber
     }
   ]
 
   return (
     <div className="flex gap-5 divide-y md:divide-y-0 md:divide-x flex-wrap">
-      <div className="space-y-10 md:px-5 flex-[2]">
+      <div className="space-y-10 flex-[2]">
         <div className="space-y-5">
           <div className="flex flex-wrap justify-between md:items-center md:text-sm">
-            <Link href={`/user/${data?.userId}`} className="text-indigo-600 capitalize">{data?.user.firstname} {data?.user.lastname}</Link>
+            <Link href={`/user/${data?.userId}`} className="text-primary capitalize">{data?.user?.firstname} {data?.user?.lastname}</Link>
             <div className="flex items-center gap-2">
               {data?.is_hidden && <div className="list-none flex text-xs font-medium rounded border items-center text-gray-400 bg-gray-500/10 border-gray-200">
                 <span className="p-1 border-r border-gray-200"><TbEyeClosed /></span>
                 <span className="px-1.5">Hidden</span>
               </div>}
-              <div className="list-none flex text-xs font-medium rounded border items-center text-indigo-700 bg-indigo-500/10 border-indigo-200">
+              {data?.is_archived && <div className="list-none flex text-xs font-medium rounded border items-center text-orange-400 bg-orange-500/10 border-orange-200">
+                <span className="p-1 border-r border-orange-200"><TbArchive /></span>
+                <span className="px-1.5">Archived</span>
+              </div>}
+              <div className="list-none flex text-xs font-medium rounded border items-center text-primary bg-indigo-500/10 border-indigo-200">
                 <span className="p-1 border-r border-indigo-200"><TbArrowUp /></span>
                 <span className="px-1.5">{data?.votes?.filter(item => item.positive)?.length}</span>
               </div>
@@ -100,10 +147,8 @@ export default function Post() {
               <p>
                 Posted on <span className="font-medium">{moment(data?.createdAt).format('MMM DD, YYYY')}</span>
               </p>
-              {sessionData?.user?.id !== data?.userId && <button className="rounded-full p-2 border text-gray-400 text-base hover:bg-gray-500/10 hover:text-gray-700">
-                <TbBookmark />
-              </button>}
-              {sessionData?.user?.id === data?.userId && <Dropdown options={menuOptions || []} title="Edit Post" />}
+              {sessionData?.user?.id !== data?.userId && <BookmarkButton bookmarked={!!data?.bookmarked} postId={data?.id ?? ''} />}
+              {sessionData?.user?.id === data?.userId && <Dropdown options={menuOptions || []} title="Post Actions" />}
             </div>
           </div>
         </div>
@@ -111,14 +156,28 @@ export default function Post() {
           {data?.title}
         </h1>
         <div className="space-y-10">
-          <p className="text-base font-light text-gray-600 border-l-4 border-indigo-700 pl-5">{data?.description}</p>
+          <p className="text-base font-light text-gray-600 border-l-4 border-primary pl-5">{data?.description}</p>
           <Markdown className={'prose'} remarkPlugins={[remarkGfm]}>{data?.main_text}</Markdown>
+
         </div>
+        <footer>
+          <div className="p-8 rounded-md bg-gray-50 space-y-8 border">
+            <h1 className="font-semibold text-sm text-gray-500">Attachments</h1>
+            {!!data?.cids?.length && <div className="grid grid-cols-3 gap-4">
+              {data?.cids?.map(item => <ImageContainer key={item} src={item} />)}
+            </div>}
+          </div>
+        </footer>
       </div>
       <div className="flex-1 md:pl-4 space-y-10">
-        <TagContainer postId={id} />
+        <TagContainer postId={id} userId={data?.userId} showHeading />
         <CommentsContainer postId={id} />
       </div>
+      {showChamberModal && <Modal title="Search for a chamber">
+        <div>
+          <Input name="Chamber Name" control={control} />
+        </div>
+      </Modal>}
     </div>
   )
 }

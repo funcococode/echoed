@@ -12,12 +12,11 @@ interface Props {
   children: ReactNode,
   modal: ReactNode,
   loader: ReactNode
+  search: ReactNode
 }
 
 export default function RootLayout({
   children,
-  modal,
-  loader
 }: Readonly<Props>) {
   return (
     <html lang="en" className={`${inter.className}`}>
@@ -27,10 +26,6 @@ export default function RootLayout({
       <body className="max-w-[90%] md:max-w-[70%] mx-auto min-h-screen overflow-y-scroll">
         <Toaster />
         {children}
-        <div className="z-20 relative">
-          {modal}
-          {loader}
-        </div>
         <div id="overlays"></div>
       </body>
     </html>

@@ -77,7 +77,7 @@ export default function Comment({
 
         {!showReply && <button
           onClick={() => setShowReply((prev) => !prev)}
-          className={"text-sm md:text-xs text-gray-400 hover:text-indigo-700 flex items-center gap-2 "}
+          className={"text-sm md:text-xs text-gray-400 hover:text-primary flex items-center gap-2 "}
         >
           Reply<TbArrowBackUp />
         </button>}

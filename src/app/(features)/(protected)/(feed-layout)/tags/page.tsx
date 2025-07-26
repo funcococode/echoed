@@ -2,7 +2,7 @@ import PageHeading from "@/components/ui/page-heading";
 import { db } from "@/server/db"
 import { TbTag } from "react-icons/tb";
 
-export default async function MyTopics() {
+export default async function Tags() {
   const fetchData = async () => {
     const response = await db.tag.findMany({
       include: {

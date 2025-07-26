@@ -61,7 +61,7 @@ export default function UserProfile() {
       </div>
 
       <div className="space-y-10 ">
-        <h1 className="text-sm text-indigo-700 border-l-4 border-indigo-700 pl-5">Posts</h1>
+        <h1 className="text-sm text-primary border-l-4 border-primary pl-5">Posts</h1>
         {posts?.map(item => <PostCard key={item.id} post={item} />)}
       </div>
 

@@ -8,7 +8,7 @@ import React, { type ReactNode, type ReactElement } from 'react'
 export default function FeedLayout({ children, modal }: { children: ReactElement, modal: ReactNode }) {
     return (
         <SessionProvider>
-            <div className='space-y-4 flex flex-col h-screen'>
+            <div className='space-y-4 flex flex-col'>
                 <Header />
                 <section className='py-5 md:flex relative flex-grow gap-4'>
                     <LeftSidebar slim />

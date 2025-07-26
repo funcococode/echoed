@@ -22,7 +22,7 @@ export default function PostVotes({ post }: PostVotesProps) {
     return (
         currentPost ? <div className={`flex flex-row md:flex-col items-center gap-2 `}>
             <VoteUpButton handlerFn={handleClick} isVoted={currentPost?.votePositive && currentPost?.votedByMe} />
-            <p className={`text-lg md:text-xs ${currentPost.votedByMe && (currentPost.votePositive ? 'text-indigo-600' : 'text-red-500')}`}>
+            <p className={`text-lg md:text-xs ${currentPost.votedByMe && (currentPost.votePositive ? 'text-primary' : 'text-red-500')}`}>
                 {currentPost._count?.votes}
             </p>
             <VoteDownButton handlerFn={handleClick} isVoted={currentPost.votePositive === false && currentPost.votedByMe} />

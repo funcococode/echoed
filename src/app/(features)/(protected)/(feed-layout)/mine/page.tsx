@@ -1,71 +1,39 @@
-import { auth } from "@/auth";
+'use client'
+import { type EchoesByType_TypeDef, getEchoesByType } from "@/actions/post";
 import PageHeading from "@/components/ui/page-heading";
-import { db } from "@/server/db";
-import moment from "moment";
-import Link from "next/link";
-import { TbArrowUp, TbBookmark, TbEye, TbEyeClosed, TbMessage, TbRobotFace } from "react-icons/tb";
+import useNavigationStore from "@/stores/navigation-store";
+import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
+import SmallPostCard from "../_components/post-card-small";
 
-export default async function Mine() {
-    const session = await auth();
+export default function Mine() {
+    const session = useSession();
+    const { currentPath } = useNavigationStore();
+    const [data, setData] = useState<EchoesByType_TypeDef>([]);
+
     const fetchData = async () => {
-        const response = await db.post.findMany({
-            where: {
-                userId: session?.user?.id,
-            },
-            include: {
-                user: true,
-                _count: {
-                    select: {
-                        votes: true,
-                        comments: true,
-                        saves: true,
-                    }
-                }
-            }
-        })
-        return response;
+        const response = await getEchoesByType('mine')
+        setData(response);
     }
 
-    const data = await fetchData();
+    useEffect(() => {
+        if (session.status === 'authenticated') {
+            fetchData().catch(err => console.log(err));
+        }
+    }, [])
+
     return (
         <div className="space-y-4">
-            <PageHeading text='My Posts' count={data?.length} icon={<TbRobotFace />} />
-            <div className="grid md:grid-cols-2 gap-4">
-                {data?.map(item => <li className='space-y-4 list-none p-5 rounded shadow shadow-gray-400/10 border flex flex-col justify-between' key={item.id}>
-                    <div className="space-y-4">
-                        <div className="font-light text-xs text-gray-400 flex justify-between">
-                            <p className="">
-                                Posted by <span className="capitalize text-indigo-700 font-medium">{item.user?.firstname} {item.user?.lastname}</span>
-                            </p>
-                            <p>{moment(item.createdAt).format('MMM DD, YYYY')}</p>
-                        </div>
-                        <Link href={`/post/${item.id}`} className="font-medium block hover:text-indigo-700">{item.title}</Link>
+            <PageHeading>
+                <section className='h-32 flex items-center justify-between px-4 gap-1 '>
+                    <div className='w-1/4 text-5xl flex justify-start gap-4 items-center text-secondary'>
+                        {currentPath.icon}
+                        <span className="font-extralight">{data.length || ''}</span>
                     </div>
-                    <div className="flex items-center gap-2">
-                        <div className="flex items-center text-xs gap-2 text-gray-400 border rounded px-2 w-fit">
-                            <h2><TbEye /></h2>
-                            <p>{item.views}</p>
-                        </div>
-                        <div className="flex items-center text-xs gap-2 text-gray-400 border rounded px-2 w-fit">
-                            <h2><TbArrowUp /></h2>
-                            <p>{item._count?.votes}</p>
-                        </div>
-                        <div className="flex items-center text-xs gap-2 text-gray-400 border rounded px-2 w-fit">
-                            <h2><TbMessage /></h2>
-                            <p>{item._count?.comments}</p>
-                        </div>
-                        <div className="flex items-center text-xs gap-2 text-gray-400 border rounded px-2 w-fit">
-                            <h2><TbBookmark /></h2>
-                            <p>{item._count?.saves}</p>
-                        </div>
-
-                        {item?.is_hidden && <div className="list-none flex text-xs font-medium rounded border items-center text-gray-400 bg-gray-500/10 border-gray-200">
-                            <span className="p-1 border-r border-gray-200"><TbEyeClosed /></span>
-                            <span className="px-1.5">Hidden</span>
-                        </div>}
-
-                    </div>
-                </li>)}
+                </section>
+            </PageHeading>
+            <div className="grid md:grid-cols-2 gap-4 ">
+                {data?.map(item => <SmallPostCard key={item.id} item={item} />)}
             </div>
         </div>
     )

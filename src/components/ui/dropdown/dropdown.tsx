@@ -26,28 +26,34 @@ export default function Dropdown<T>({ options, open = false, title }: Props<T>) 
         setMenuOpen(prev => !prev)
     }
 
-    const handleLink = (link: string) => {
-        router.push(link)
+    const handleClick = (param: string | (() => void) | null) => {
+        if (typeof param === 'string') {
+            router.push(param)
+        }
+        if (typeof param === 'function') {
+            param()
+        }
+
+        setMenuOpen(false)
     }
 
     return (
         <div className="relative">
-            <button onClick={toggleMenu} className="relative z-10 rounded p-1.5 border text-gray-400 text-sm hover:bg-gray-500/10 hover:text-gray-700">
+            <button onClick={toggleMenu} className={`relative rounded p-0.5 border text-gray-600 text-xs hover:bg-gray-500/10 z-20 hover:text-gray-700`}>
                 {!menuOpen && <TbMenu2 />}
                 {menuOpen && <TbX />}
             </button>
-            {menuOpen && <div className="bg-white absolute -top-2 -right-2 space-y-4 min-w-36 max-w-max border rounded shadow">
-                {title && <h1 className='font-semibold px-4 pt-4'>{title}</h1>}
+            {menuOpen && <div className="bg-white absolute -top-2 -right-2 min-w-44 max-w-max border rounded shadow z-10">
+                {title && <h1 className='font-semibold px-2.5 py-4'>{title}</h1>}
                 {!options?.length && <p className="text-gray-400">No menu items available</p>}
-                <div className="space-y-1 ">
+                <div className="space-y-1 pb-2">
                     {options?.map(item => {
-
-                        return <button onClick={item.action ? item.action : item.link ? () => handleLink(item.link ?? '') : () => { }}
+                        return <button onClick={() => handleClick(item.action ?? item.link ?? null)}
                             key={item.label}
-                            className="w-full flex items-center gap-2 py-1 text-sm hover:bg-gray-100 px-4 cursor-pointer"
+                            className="w-full flex items-center hover:bg-gray-100 px-2.5 gap-x-4 cursor-pointer justify-between"
                         >
+                            <p className="font-medium text-xs">{item.label}</p>
                             {!!item.icon && item.icon}
-                            <p className="">{item.label}</p>
                         </button>
                     })}
                 </div>

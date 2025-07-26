@@ -6,7 +6,22 @@ import "./src/env.js";
 
 /** @type {import("next").NextConfig} */
 const config = {
-    
+    images: {
+        remotePatterns: [
+            {
+                protocol: "https",
+                hostname: "olive-secure-gayal-534.mypinata.cloud",
+                port: "",
+                pathname: "/**"
+            },
+            {
+                protocol: "https",
+                hostname: "images.unsplash.com",
+                port: "",
+                pathname: "/**"
+            },
+        ]
+    }
 };
 
 export default config;

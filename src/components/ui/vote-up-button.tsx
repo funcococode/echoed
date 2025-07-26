@@ -1,5 +1,6 @@
 'use client'
 import { TbArrowUp } from "react-icons/tb";
+import Icon from "./icon";
 
 export interface VoteUpButtonProps {
     isVoted?: boolean;
@@ -11,9 +12,9 @@ export default function VoteUpButton({ isVoted = false, handlerFn }: VoteUpButto
         <div>
             <button
                 onClick={() => handlerFn?.(true)}
-                className={`text-lg md:text-sm ${isVoted ? 'text-indigo-600' : 'text-gray-400'}`}
+                className={`text-lg md:text-sm `}
             >
-                <TbArrowUp />
+                <Icon icon={<TbArrowUp />} size="small" color={isVoted ? 'success-light-bg' : 'default'} />
             </button>
         </div>
     )
