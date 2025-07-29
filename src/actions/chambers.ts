@@ -4,14 +4,25 @@ import { auth } from '@/auth'
 import { db } from '@/server/db'
 
 export type ChamberType = ReturnType<typeof listChambers> extends Promise<infer T> ? T : never
-export const listChambers = async () => {
+export const listChambers = async (query?: string) => {
 	const response = await db.chamber.findMany({
+		where: {
+			...(query
+				? {
+						OR: [
+							{ name: { contains: query } },
+							{ description: { contains: query } },
+						],
+					}
+				: {}),
+		},
 		select: {
 			id: true,
 			name: true,
 			description: true,
 			frequency: true,
 		},
+		...(query?.length ? { take: 5 } : {}),
 	})
 
 	return response

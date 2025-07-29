@@ -195,7 +195,7 @@ export async function getPostDetails(postId: string) {
 	const urls: string[] = []
 	cids?.forEach(id => {
 		getEchoAttachments(id)
-			.then(obj => urls.push(obj?.data?.url!))
+			.then(obj => urls.push(obj?.data?.url ?? ''))
 			.catch(err => console.log(err))
 	})
 

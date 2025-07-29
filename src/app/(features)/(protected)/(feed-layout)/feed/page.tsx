@@ -5,6 +5,7 @@ import PostCard from "@/components/ui/post/post-card";
 import { getAllPosts, type PostType } from "@/actions/post";
 import Pagination from "@/components/ui/pagination";
 import { usePathname } from "next/navigation";
+import PageHeading from "@/components/ui/page-heading";
 
 export default function Feed() {
   const pathname = usePathname();
@@ -38,9 +39,11 @@ export default function Feed() {
   return (
     <section className="flex gap-4">
       <div className="space-y-10 md:space-y-4 relative flex-1">
-        <div className="flex items-center justify-between ">
-          <Pagination setCurrentPage={setCurrentPage} currentPage={currentPage} totalRecords={(pageInfo?.total_count ?? 0)} totalPages={pageInfo?.total_pages ?? 0} />
-        </div>
+        <PageHeading>
+          <div className="h-32 px-10 flex items-center">
+            <Pagination setCurrentPage={setCurrentPage} currentPage={currentPage} totalRecords={(pageInfo?.total_count ?? 0)} totalPages={pageInfo?.total_pages ?? 0} />
+          </div>
+        </PageHeading>
 
         {data?.map((item) => <PostCard post={item} key={item.id} />)}
 

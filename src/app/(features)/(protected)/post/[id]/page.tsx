@@ -1,12 +1,10 @@
 'use client'
 import { deleteEcho, getPostDetails, type PostDetailType, toggleEchoArchive, togglePostVisibilty, updateViewCount } from "@/actions/post"
-import Input from "@/components/form/input"
 import BookmarkButton from "@/components/ui/bookmark-button"
 import CommentsContainer from "@/components/ui/comment/comments-container"
 import Dropdown, { type DropdownOption } from "@/components/ui/dropdown/dropdown"
 import Icon from "@/components/ui/icon"
 import ImageContainer from "@/components/ui/image-container"
-import { Modal } from "@/components/ui/modal"
 import TagContainer from "@/components/ui/tag/tags-container"
 import moment from "moment"
 import { useSession } from "next-auth/react"
@@ -19,6 +17,7 @@ import { TbArchive, TbArchiveOff, TbArrowDown, TbArrowUp, TbEye, TbEyeClosed, Tb
 import Markdown from "react-markdown"
 import remarkGfm from "remark-gfm"
 import { toast } from "sonner"
+import SearchChamber from "../../(feed-layout)/chambers/_components/search-chamber"
 
 export default function Post() {
   const { id } = useParams<{ id: string }>();
@@ -173,11 +172,7 @@ export default function Post() {
         <TagContainer postId={id} userId={data?.userId} showHeading />
         <CommentsContainer postId={id} />
       </div>
-      {showChamberModal && <Modal title="Search for a chamber">
-        <div>
-          <Input name="Chamber Name" control={control} />
-        </div>
-      </Modal>}
+      {showChamberModal && <SearchChamber onClose={() => setShowChamberModal(false)} onSelect={() => { }} />}
     </div>
   )
 }
