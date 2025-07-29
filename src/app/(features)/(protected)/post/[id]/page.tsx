@@ -33,15 +33,11 @@ import {
 	TbPencil,
 	TbTrash,
 } from 'react-icons/tb'
-import Markdown from 'react-markdown'
-import remarkGfm from 'remark-gfm'
 import { toast } from 'sonner'
 import SearchChamber from '../../(feed-layout)/chambers/_components/search-chamber'
+import Markdown from 'react-markdown'
 import rehypeRaw from 'rehype-raw'
-import { EditorContent, useEditor } from '@tiptap/react'
-import StarterKit from '@tiptap/starter-kit'
-import Heading from '@tiptap/extension-heading'
-
+import remarkGfm from 'remark-gfm'
 export default function Post() {
 	const { id } = useParams<{ id: string }>()
 	const [data, setData] = useState<PostDetailType>()
@@ -147,28 +143,6 @@ export default function Post() {
 		},
 	]
 
-	const editor = useEditor(
-		{
-			immediatelyRender: false,
-			editable: false,
-			extensions: [
-				StarterKit,
-				Heading.configure({
-					HTMLAttributes: {
-						class: 'text-2xl font-bold capitalize',
-						levels: [1, 2, 3, 4],
-					},
-				}),
-			],
-			content: data?.main_text,
-			editorProps: {
-				attributes: {
-					class: 'appearance-none min-h-96 border rounded w-full py-2 px-3 bg-gray-100 text-black text-sm leading-tight focus:outline-none',
-				},
-			},
-		},
-		[data],
-	)
 
 	if (isLoading)
 		return (
@@ -179,8 +153,8 @@ export default function Post() {
 			</div>
 		)
 	return (
-		<div className="flex flex-wrap gap-5 divide-y md:divide-x md:divide-y-0">
-			<div className="flex-[2] space-y-10">
+		<div className="flex flex-wrap gap-5 divide-secondary divide-y md:divide-x md:divide-y-0">
+			<div className="flex-[2] space-y-10 pr-10">
 				<div className="space-y-5">
 					<div className="flex flex-wrap justify-between md:items-center md:text-sm">
 						<Link
@@ -265,34 +239,36 @@ export default function Post() {
 					<p className="border-l-4 border-primary pl-5 text-base font-light text-gray-600">
 						{data?.description}
 					</p>
-					{/* <Markdown
-						rehypePlugins={[rehypeRaw]}
-						// className={'prose'}
-						remarkPlugins={[remarkGfm]}>
-						{data?.main_text}
-					</Markdown> */}
-					<EditorContent editor={editor} allowTransparency />
-				</div>
-				<footer>
-					<div className="space-y-8 rounded-md border bg-gray-50 p-8">
-						<h1 className="text-sm font-semibold text-gray-500">Attachments</h1>
-						{!!data?.cids?.length && (
-							<div className="grid grid-cols-3 gap-4">
-								{data?.cids?.map(item => (
-									<ImageContainer key={item} src={item} />
-								))}
-							</div>
-						)}
+					<div className='prose'>
+
+						<Markdown
+							rehypePlugins={[rehypeRaw]}
+							remarkPlugins={[remarkGfm]}
+						>
+							{data?.main_text ?? ''}
+						</Markdown>
 					</div>
-				</footer>
+				</div>
 			</div>
-			<div className="flex-1 space-y-10 md:pl-4">
+			<div className="flex-1 space-y-10 md:pr-5">
 				<TagContainer postId={id} userId={data?.userId} showHeading />
 				<CommentsContainer postId={id} />
 			</div>
 			{showChamberModal && (
-				<SearchChamber onClose={() => setShowChamberModal(false)} onSelect={() => {}} />
+				<SearchChamber onClose={() => setShowChamberModal(false)} onSelect={() => { }} />
 			)}
+			<footer>
+				<div className="space-y-8 rounded-md border border-secondary bg-gray-50 p-8">
+					<h1 className="text-sm font-semibold text-gray-500">Attachments</h1>
+					{!!data?.cids?.length && (
+						<div className="flex items-center flex-wrap gap-4">
+							{data?.cids?.map(item => (
+								<ImageContainer key={item} src={item} />
+							))}
+						</div>
+					)}
+				</div>
+			</footer>
 		</div>
 	)
 }

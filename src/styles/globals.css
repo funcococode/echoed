@@ -1,3 +1,22 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+@plugin "@tailwindcss/typography";
+
+@theme {
+	--color-primary: #3730a3;
+	--color-secondary: #e5e7eb;
+	--color-accent: #f59e0b;
+	--color-danger: #ef4444;
+	--color-success: #10b981;
+	--color-warning: #f97316;
+	--color-info: #3b82f6;
+	--color-dark: #111827;
+	--color-light: #f3f4f6;
+
+	--color-primary-light: #ede9fe;
+	--color-secondary-light: #f3f4f6;
+	--color-accent-light: #fef3c7;
+	--color-danger-light: #fee2e2;
+	--color-success-light: #dcfce7;
+	--color-warning-light: #ffedd5;
+	--color-info-light: #dbeafe;
+}

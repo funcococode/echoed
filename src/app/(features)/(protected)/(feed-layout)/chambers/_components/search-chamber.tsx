@@ -23,7 +23,7 @@ export default function SearchChamber({ onSelect, onClose }: Props) {
     return (
         <Modal open title="Search for a chamber" onClose={onClose}>
             <div className="w-96 space-y-5">
-                <div className="border-b pb-5 border-dashed">
+                <div className="border-b pb-5 border-dashed border-secondary">
                     <input className="w-full outline-none border rounded border-gray-200 p-4 text-sm bg-gray-100" type="text" name="Chamber Name" onChange={(e) => search(e.target.value)} placeholder="Search Chambers" />
                 </div>
                 <div className="space-y-5 rounded mt-2 text-xs min-h-44">

@@ -20,7 +20,7 @@ export default function PostCard({ post }: PostCardProps) {
           <PostVotes post={post} />
         </div>
       </div>
-      <div className="flex flex-col divide-y divide-gray-100 gap-5 flex-1">
+      <div className="flex flex-col gap-5 flex-1">
         <div className="space-y-4 flex-grow">
           <div className="flex gap-4 ">
             <div className="space-y-5">
@@ -37,7 +37,7 @@ export default function PostCard({ post }: PostCardProps) {
               )}
             </div>
             {!!post.headerImage && (
-              <div className="min-w-52 flex pl-5 border-dashed border-l ">
+              <div className="min-w-52 flex pl-5 border-dashed border-secondary border-l ">
                 <div className="min-h-44 relative flex-1 ">
                   <Image
                     alt="Header Image"

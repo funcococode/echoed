@@ -39,11 +39,11 @@ export default function Dropdown<T>({ options, open = false, title }: Props<T>) 
 
     return (
         <div className="relative">
-            <button onClick={toggleMenu} className={`relative rounded p-0.5 border text-gray-600 text-xs hover:bg-gray-500/10 z-20 hover:text-gray-700`}>
+            <button onClick={toggleMenu} className={`border-secondary relative rounded p-0.5 border text-gray-600 text-xs hover:bg-gray-500/10 z-20 hover:text-gray-700`}>
                 {!menuOpen && <TbMenu2 />}
                 {menuOpen && <TbX />}
             </button>
-            {menuOpen && <div className="bg-white absolute -top-2 -right-2 min-w-44 max-w-max border rounded shadow z-10">
+            {menuOpen && <div className="bg-white absolute -top-2 -right-2 min-w-44 max-w-max border border-secondary rounded shadow z-10">
                 {title && <h1 className='font-semibold px-2.5 py-4'>{title}</h1>}
                 {!options?.length && <p className="text-gray-400">No menu items available</p>}
                 <div className="space-y-1 pb-2">
