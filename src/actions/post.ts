@@ -53,8 +53,15 @@ export async function getPost(postId: string) {
 }
 
 export type AllEchoesType = ReturnType<typeof getAllPosts> extends Promise<infer T> ? T : never
-export async function getAllPosts({ page = 0, limit = 5, userId = null, chamberId, tagId }: GetAllEchoesProps) {
+export async function getAllPosts({
+	page = 0,
+	limit = 5,
+	userId = null,
+	chamberId = '',
+	tagId = '',
+}: GetAllEchoesProps) {
 	const session = await auth()
+	console.log('CHAMBER ID ', chamberId)
 
 	const skip = page * limit
 	const response = await db.post.findMany({
@@ -71,9 +78,11 @@ export async function getAllPosts({ page = 0, limit = 5, userId = null, chamberI
 			}),
 			is_hidden: false,
 			is_archived: false,
-			NOT: {
-				userId: session?.user?.id,
-			},
+			...(!chamberId && {
+				NOT: {
+					userId: session?.user?.id,
+				},
+			}),
 		},
 		include: {
 			_count: {

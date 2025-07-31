@@ -80,16 +80,6 @@ export default function Chambers() {
         </button>}
         {showModal && <CreateChamberModal onClose={handleOnClose} />}
       </div>
-      {/* {!!data.length && <aside className='flex-1 order-2'>
-        <RightSidebar>
-          <Button
-            text="New chamber"
-            icon={<TbPlus className="text-xl " />}
-            onClick={() => setShowModal(true)}
-            classNames="py-4 font-semibold "
-          />
-        </RightSidebar>
-      </aside>} */}
     </section>
   )
 }

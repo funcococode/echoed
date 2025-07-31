@@ -20,7 +20,7 @@ export default function Mine() {
 		if (session.status === 'authenticated') {
 			fetchData().catch(err => console.log(err))
 		}
-	}, [session])
+	}, [session.status])
 
 	return (
 		<div className="space-y-4">
