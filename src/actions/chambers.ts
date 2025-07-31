@@ -53,3 +53,60 @@ export const getChamberById = async (id: string) => {
 	})
 	return response
 }
+
+export const addEchoToChamber = async (echoId: string, chamberId: string) => {
+	const response = await db.chamber.update({
+		where: {
+			id: chamberId,
+		},
+		data: {
+			posts: {
+				connect: [
+					{
+						id: echoId,
+					},
+				],
+			},
+		},
+
+		select: {
+			id: true,
+		},
+	})
+	return response
+}
+
+export type ChamberDataType = ReturnType<typeof getChamberData> extends Promise<infer T> ? T : never
+export const getChamberData = async (chamberId: string) => {
+	const response = await db.chamber.findUnique({
+		where: {
+			id: chamberId,
+			posts: {
+				every: {
+					AND: [{ is_archived: false }, { is_hidden: false }],
+				},
+			},
+		},
+		select: {
+			name: true,
+			description: true,
+			user: {
+				select: {
+					id: true,
+					username: true,
+					firstname: true,
+					lastname: true,
+					image: true,
+				},
+			},
+			ChamberMember: true,
+			_count: {
+				select: {
+					ChamberMember: true,
+					posts: true,
+				},
+			},
+		},
+	})
+	return response
+}

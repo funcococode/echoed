@@ -3,12 +3,10 @@ import { addNewEcho } from '@/actions/post'
 import MarkdownEditor from '@/components/form/markdown-editor'
 import FileUploadForm from '@/components/ui/file-upload-form'
 import { useState } from 'react'
-import { useForm } from 'react-hook-form'
 import { TbCheck, TbTag } from 'react-icons/tb'
 import { toast } from 'sonner'
 
 export default function NewPost() {
-	const { control } = useForm()
 	const [question, setQuestion] = useState('')
 	const [description, setDescription] = useState('')
 	const [details, setDetails] = useState('')
@@ -43,7 +41,7 @@ export default function NewPost() {
 	}
 
 	return (
-		<div className="space-y-5 rounded-lg border p-5">
+		<div className="border-secondary space-y-5 rounded-lg border p-5">
 			<h1 className="text-lg font-semibold text-gray-700">Create a new Echo</h1>
 			<div className="space-y-2">
 				<label className="text-sm font-medium text-gray-500" htmlFor="question">
@@ -93,7 +91,7 @@ export default function NewPost() {
 				</div>
 				<button
 					onClick={onSubmit}
-					className="flex items-center gap-2 rounded border border-primary px-4 py-2 text-xs font-medium text-primary hover:bg-primary hover:text-white">
+					className="border-primary text-primary hover:bg-primary flex items-center gap-2 rounded border px-4 py-2 text-xs font-medium hover:text-white">
 					<TbCheck />
 					Publish
 				</button>

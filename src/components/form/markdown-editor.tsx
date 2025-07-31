@@ -45,7 +45,7 @@ const MarkdownEditor = ({ editorContent, setEditorContent }: Props) => {
 		immediatelyRender: false,
 		editorProps: {
 			attributes: {
-				class: 'appearance-none min-h-96 border rounded w-full py-2 px-3 bg-gray-100 text-black text-sm leading-tight focus:outline-none',
+				class: 'appearance-none min-h-96 border border-secondary rounded w-full py-2 px-3 bg-gray-100 text-black text-sm leading-tight focus:outline-none',
 			},
 		},
 		content: editorContent,

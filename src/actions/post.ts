@@ -5,6 +5,7 @@ import { db } from '@/server/db'
 import { pinata } from '@/utils/config'
 import { remark } from 'remark'
 import strip from 'strip-markdown'
+import type { GetAllEchoesProps } from './types'
 
 export type PostType = ReturnType<typeof getPost> extends Promise<infer T> ? T : never
 
@@ -51,15 +52,8 @@ export async function getPost(postId: string) {
 	return mappedData
 }
 
-export async function getAllPosts({
-	page = 0,
-	limit = 5,
-	userId = null,
-}: {
-	page?: number
-	limit?: number
-	userId?: string | null
-}) {
+export type AllEchoesType = ReturnType<typeof getAllPosts> extends Promise<infer T> ? T : never
+export async function getAllPosts({ page = 0, limit = 5, userId = null, chamberId, tagId }: GetAllEchoesProps) {
 	const session = await auth()
 
 	const skip = page * limit
@@ -68,6 +62,13 @@ export async function getAllPosts({
 		take: limit,
 		where: {
 			...(userId && { userId }),
+			...(chamberId && {
+				Chamber: {
+					some: {
+						id: chamberId,
+					},
+				},
+			}),
 			is_hidden: false,
 			is_archived: false,
 			NOT: {
