@@ -11,7 +11,6 @@ interface SmallPostCardProps {
 }
 
 export default function SmallPostCard({ item }: SmallPostCardProps) {
-	console.log(item)
 	return (
 		<Card>
 			<div className="space-y-4">

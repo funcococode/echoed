@@ -1,19 +1,23 @@
 'use client'
-import { type EchoesByType_TypeDef, getEchoesByType } from '@/actions/post'
+import { type AllEchoesType, getAllPosts } from '@/actions/post'
 import PageHeading from '@/components/ui/page-heading'
 import useNavigationStore from '@/stores/navigation-store'
 import { useSession } from 'next-auth/react'
 import { useEffect, useState } from 'react'
-import SmallPostCard from '../_components/post-card-small'
+import PostCard from '@/components/ui/post/post-card'
 
 export default function Mine() {
 	const session = useSession()
 	const { currentPath } = useNavigationStore()
-	const [data, setData] = useState<EchoesByType_TypeDef>([])
+	const [data, setData] = useState<AllEchoesType['data']>([])
 
 	const fetchData = async () => {
-		const response = await getEchoesByType('mine')
-		setData(response)
+		const response = await getAllPosts({
+			type: 'mine'
+		})
+		console.log(response)
+		setData(response.data)
+
 	}
 
 	useEffect(() => {
@@ -34,7 +38,7 @@ export default function Mine() {
 			</PageHeading>
 			<div className="grid gap-4 md:grid-cols-2">
 				{data?.map(item => (
-					<SmallPostCard key={item.id} item={item} />
+					<PostCard key={item.id} post={item} />
 				))}
 			</div>
 		</div>

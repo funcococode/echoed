@@ -3,10 +3,10 @@ import { type ChamberDataType, getChamberData } from '@/actions/chambers'
 import PageHeading from '@/components/ui/page-heading'
 import PostCard from '@/components/ui/post/post-card'
 import { useParams } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
 import { type AllEchoesType, getAllPosts } from '@/actions/post'
-import { TbPlus } from 'react-icons/tb'
+import { TbPlus, TbWaveSquare } from 'react-icons/tb'
 import Button from '@/components/form/button'
 import { } from 'react-icons/md'
 
@@ -15,7 +15,7 @@ export default function ChamberPage() {
 	const { id } = useParams<{ id: string }>()
 	const [data, setData] = useState<{ chamber: ChamberDataType; posts: AllEchoesType['data'] }>()
 
-	const fetchData = async () => {
+	const fetchData = useCallback(async () => {
 		if (!id) throw new Error('Invalid chamber id')
 
 		const payload = {
@@ -26,15 +26,14 @@ export default function ChamberPage() {
 			chamber,
 			posts: posts.data,
 		})
-	}
+	}, [id])
 
 	useEffect(() => {
 		if (session.status === 'authenticated') {
 			fetchData().catch(err => console.log(err))
 		}
-	}, [session])
+	}, [session, fetchData])
 
-	console.log(data)
 
 	if (!data) return <></>
 
@@ -47,8 +46,12 @@ export default function ChamberPage() {
 							{data?.chamber?.name?.split(' ')?.map(item => item[0])?.[0]}
 						</div>
 						<div className="space-y-2">
-							<h1 className="text-2xl font-semibold">
+							<h1 className="text-2xl font-semibold flex items-center gap-5">
 								{data?.chamber?.name}
+								<span className="text-xs font-light text-gray-400 bg-secondary px-2 py-0.5 rounded w-fit flex items-center gap-2">
+									<TbWaveSquare className='text-success' />
+									{data?.chamber?.frequency?.split('-')?.[0]}
+								</span>
 							</h1>
 							<p className="text-sm font-light ">
 								{data?.chamber?.description}
@@ -70,8 +73,8 @@ export default function ChamberPage() {
 				</section>
 			</PageHeading>
 
-			<section>
-				{data?.posts?.map(item => <PostCard post={item} />)}
+			<section className=''>
+				{data?.posts?.map(item => <PostCard key={item.id} post={item} />)}
 			</section>
 		</div>
 	)

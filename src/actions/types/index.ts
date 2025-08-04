@@ -5,4 +5,7 @@ export interface GetAllEchoesProps {
 	userId?: string | null
 	chamberId?: string
 	tagId?: string
+	type?: EchoTypes
 }
+
+export type EchoTypes = 'all' | 'hidden' | 'mine' | 'saved' | 'archived'

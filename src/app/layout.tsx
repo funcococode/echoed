@@ -1,6 +1,6 @@
 import '@/styles/globals.css'
 
-import { Inter, Fira_Sans, Reddit_Sans } from 'next/font/google'
+import { Inter, Reddit_Sans } from 'next/font/google'
 import type { ReactNode } from 'react'
 import { Toaster } from 'sonner'
 const inter = Inter({

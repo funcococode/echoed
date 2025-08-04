@@ -16,9 +16,8 @@ import TagContainer from '@/components/ui/tag/tags-container'
 import moment from 'moment'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
-import { useForm } from 'react-hook-form'
 import { HiOutlineCollection } from 'react-icons/hi'
 import {
 	TbArchive,
@@ -45,7 +44,7 @@ export default function Post() {
 	const [isLoading, setIsLoading] = useState(true)
 	const [showChamberModal, setShowChamberModal] = useState(false)
 	const { data: sessionData } = useSession()
-	const { control } = useForm()
+	const router = useRouter();
 
 	const fetchData = useCallback(async () => {
 		if (id) {
@@ -85,6 +84,8 @@ export default function Post() {
 					toast.success(!data?.is_archived ? 'Post Archived' : 'Post Unarchived', {
 						richColors: true,
 					})
+					setShowChamberModal(false)
+					router.refresh();
 				}
 			})
 			.catch(err => console.log(err))

@@ -90,6 +90,7 @@ export const getChamberData = async (chamberId: string) => {
 		select: {
 			name: true,
 			description: true,
+			frequency: true,
 			user: {
 				select: {
 					id: true,

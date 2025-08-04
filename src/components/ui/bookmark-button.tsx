@@ -2,6 +2,7 @@
 import { addBookmark } from "@/actions/bookmark";
 import { useState } from "react";
 import { TbBookmark } from "react-icons/tb";
+import Icon from "./icon";
 
 export interface BookmarkButtonProps {
     postId: string;
@@ -20,9 +21,9 @@ export default function BookmarkButton({ postId, bookmarked }: BookmarkButtonPro
         <div>
             <button
                 onClick={handleClick}
-                className={`rounded-full p-1 border text-sm ${isBookmarked ? 'bg-primary text-white border-transparent' : 'text-gray-400  hover:bg-gray-500/10 hover:text-gray-700'}`}
+                className="cursor-pointer"
             >
-                <TbBookmark />
+                <Icon icon={<TbBookmark className={isBookmarked ? "text-white" : "text-gray-400"} />} size="small" color={`${isBookmarked ? 'primary' : 'secondary'}`} />
             </button>
         </div>
     )

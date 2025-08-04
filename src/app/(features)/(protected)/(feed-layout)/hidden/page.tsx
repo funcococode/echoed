@@ -1,19 +1,19 @@
 'use client'
-import { type EchoesByType_TypeDef, getEchoesByType } from "@/actions/post";
+import { type AllEchoesType, getAllPosts } from "@/actions/post";
 import PageHeading from "@/components/ui/page-heading";
 import useNavigationStore from "@/stores/navigation-store";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import SmallPostCard from "../_components/post-card-small";
+import PostCard from "@/components/ui/post/post-card";
 
 export default function HiddenEchoes() {
     const session = useSession();
     const { currentPath } = useNavigationStore()
-    const [data, setData] = useState<EchoesByType_TypeDef>([]);
+    const [data, setData] = useState<AllEchoesType['data']>([]);
 
     const fetchData = async () => {
-        const response = await getEchoesByType('hidden');
-        setData(response)
+        const response = await getAllPosts({ type: 'hidden' });
+        setData(response.data)
     }
 
     useEffect(() => {
@@ -33,7 +33,7 @@ export default function HiddenEchoes() {
                 </section>
             </PageHeading>
             <div className="grid md:grid-cols-2 gap-4">
-                {data?.map(item => <SmallPostCard key={item.id} item={item} />)}
+                {data?.map(item => <PostCard key={item.id} post={item} />)}
             </div>
         </div>
     )

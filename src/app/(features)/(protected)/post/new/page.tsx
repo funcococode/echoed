@@ -6,25 +6,29 @@ import { useState } from 'react'
 import { TbCheck, TbTag } from 'react-icons/tb'
 import { toast } from 'sonner'
 
-export default function NewPost() {
-	const [question, setQuestion] = useState('')
+interface Props {
+	chamberId?: string
+}
+export default function NewPost({ chamberId }: Props) {
+	const [title, setTitle] = useState('')
 	const [description, setDescription] = useState('')
 	const [details, setDetails] = useState('')
 
 	const onSubmit = async () => {
-		// if (question && description) {
+		// if (title && description) {
 		try {
 			const payload = {
-				title: question,
+				title,
 				description,
 				main_text: details,
+				chamberId
 			}
 			const response = await addNewEcho(payload)
 			if (response.success) {
 				toast.success(response.message, {
 					richColors: true,
 				})
-				setQuestion('')
+				setTitle('')
 				setDescription('')
 				setDetails('')
 			} else {
@@ -44,14 +48,14 @@ export default function NewPost() {
 		<div className="border-secondary space-y-5 rounded-lg border p-5">
 			<h1 className="text-lg font-semibold text-gray-700">Create a new Echo</h1>
 			<div className="space-y-2">
-				<label className="text-sm font-medium text-gray-500" htmlFor="question">
+				<label className="text-sm font-medium text-gray-500" htmlFor="title">
 					Title
 				</label>
 				<input
-					value={question}
-					onChange={e => setQuestion(e.target.value)}
+					value={title}
+					onChange={e => setTitle(e.target.value)}
 					className="w-full rounded bg-gray-100 p-3 text-sm text-gray-600 outline-none"
-					name="question"
+					name="title"
 					placeholder="What's on your mind?"
 				/>
 			</div>
@@ -64,7 +68,7 @@ export default function NewPost() {
 					onChange={e => setDescription(e.target.value)}
 					className="min-h-36 w-full resize-none rounded bg-gray-100 p-3 text-sm text-gray-600 outline-none"
 					name="description"
-					placeholder="Give us a little context about your thought / question, some references? some examples?"
+					placeholder="Give us a little context about your thought / title, some references? some examples?"
 				/>
 			</div>
 			<div className="space-y-2">

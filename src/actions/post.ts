@@ -53,15 +53,16 @@ export async function getPost(postId: string) {
 }
 
 export type AllEchoesType = ReturnType<typeof getAllPosts> extends Promise<infer T> ? T : never
+export type SingleEcho = AllEchoesType['data'][0]
 export async function getAllPosts({
 	page = 0,
 	limit = 5,
 	userId = null,
 	chamberId = '',
 	tagId = '',
+	type = 'all',
 }: GetAllEchoesProps) {
 	const session = await auth()
-	console.log('CHAMBER ID ', chamberId)
 
 	const skip = page * limit
 	const response = await db.post.findMany({
@@ -76,13 +77,17 @@ export async function getAllPosts({
 					},
 				},
 			}),
-			is_hidden: false,
-			is_archived: false,
-			...(!chamberId && {
-				NOT: {
-					userId: session?.user?.id,
-				},
-			}),
+			...(type === 'all'
+				? {
+						NOT: {
+							userId: session?.user?.id,
+						},
+					}
+				: {
+						userId: session?.user?.id,
+					}),
+			...(type === 'hidden' ? { is_hidden: true } : { is_hidden: false }),
+			...(type === 'archived' ? { is_archived: true } : { is_archived: false }),
 		},
 		include: {
 			_count: {
@@ -283,7 +288,12 @@ export const toggleEchoArchive = async (id: string, archived: boolean) => {
 	return response.id
 }
 
-export const addNewEcho = async (data: { title: string; description: string; main_text?: string }) => {
+export const addNewEcho = async (data: {
+	title: string
+	description: string
+	main_text?: string
+	chamberId?: string
+}) => {
 	const session = await auth()
 	try {
 		if (!data.title || !data.description) {
