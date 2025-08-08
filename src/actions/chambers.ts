@@ -2,6 +2,7 @@
 
 import { auth } from '@/auth'
 import { db } from '@/server/db'
+import moment from 'moment'
 
 export type ChamberType = ReturnType<typeof listChambers> extends Promise<infer T> ? T : never
 export const listChambers = async (query?: string) => {
@@ -81,16 +82,12 @@ export const getChamberData = async (chamberId: string) => {
 	const response = await db.chamber.findUnique({
 		where: {
 			id: chamberId,
-			posts: {
-				every: {
-					AND: [{ is_archived: false }, { is_hidden: false }],
-				},
-			},
 		},
 		select: {
 			name: true,
 			description: true,
 			frequency: true,
+			createdAt: true,
 			user: {
 				select: {
 					id: true,
@@ -109,5 +106,58 @@ export const getChamberData = async (chamberId: string) => {
 			},
 		},
 	})
-	return response
+	const mapped = {
+		...response,
+		createdAt: moment(response?.createdAt).format('MMM DD, yyyy'),
+	}
+	return mapped
+}
+
+export const joinChamber = async (chamberId: string) => {
+	const session = await auth()
+	if (!session?.user?.id) {
+		throw new Error('Unauthenticated')
+	}
+
+	try {
+		const response = await db.chamberMember.create({
+			data: {
+				role: 'member',
+				chamberId,
+				userId: session?.user?.id,
+			},
+			select: {
+				id: true,
+			},
+		})
+
+		return response
+	} catch (e) {
+		console.log(e)
+	}
+}
+
+export const leaveChamber = async (chamberId: string) => {
+	const session = await auth()
+	if (!session?.user?.id) {
+		throw new Error('Unauthenticated')
+	}
+
+	try {
+		const response = await db.chamberMember.delete({
+			where: {
+				chamberId_userId: {
+					chamberId: chamberId,
+					userId: session?.user?.id,
+				},
+			},
+			select: {
+				id: true,
+			},
+		})
+
+		return response
+	} catch (e) {
+		console.log(e)
+	}
 }

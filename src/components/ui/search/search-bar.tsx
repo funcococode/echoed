@@ -1,52 +1,73 @@
 'use client'
-import { TbSearch } from "react-icons/tb";
-import Input from "../../form/input";
-import { useForm } from "react-hook-form";
+
 import { useEffect, useState } from "react";
 import { getSearchResults } from "@/actions/search";
-import SearchResults from "./search-results";
+import { FiSearch } from "react-icons/fi";
+import dynamic from "next/dynamic";
+import { type GroupedSearchData } from "@/actions/types/search";
+import SearchResults from "./results";
+const SearchResultsPortal = dynamic(() => import('./search-result-portal'), {
+    ssr: false,
+})
 
 export interface SearchDataResponse {
     id: string;
     name: string;
     desc?: string;
     username?: string;
+    type?: 'user' | 'tag' | 'echo';
+    avatar?: string;
 }
 
 export default function SearchBar() {
-    const [data, setData] = useState<SearchDataResponse[]>([]);
+    const [data, setData] = useState<GroupedSearchData | null>(null);
     const [loading, setLoading] = useState(false);
+    const [searchValue, setSearchValue] = useState('');
 
-    const { control, watch } = useForm({
-        defaultValues: {
-            search: ''
-        }
-    });
-
-    const input = watch('search');
 
     const fetchData = async (query: string) => {
-        if (query) {
-            const payload = {
-                query,
-            }
-            const response = await getSearchResults(payload);
-            if (response.success && response.data) {
-                setData(response?.data);
+        setLoading(true);
+        if (query.trim()) {
+            try {
+                const response = await getSearchResults({ query });
+                if (response.success && response.data) {
+                    setData(response.data);
+                }
+            } catch (err) {
+                console.error(err);
             }
         } else {
-            setData([])
+            setData(null);
         }
-    }
+        setLoading(false);
+    };
 
     useEffect(() => {
-        fetchData(input).catch(err => console.log(err)).finally(() => setLoading(false))
-    }, [input])
+        const delay = setTimeout(() => {
+            fetchData(searchValue).catch(err => console.log(err));
+        }, 300);
+        return () => clearTimeout(delay);
+    }, [searchValue]);
 
     return (
-        <>
-            <Input withIcon icon={<TbSearch />} control={control} name="search" showLabel={false} placeholder="Search for topics" />
-            {data.length > 0 && <SearchResults data={data} setData={setData} />}
-        </>
-    )
+        <div className="relative w-full">
+            <div className="relative mb-4">
+                <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                <input
+                    type="text"
+                    placeholder="Search..."
+                    value={searchValue}
+                    onChange={(e) => setSearchValue(e.target.value)}
+                    className="w-full pl-10 pr-3 py-2 text-sm rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary"
+                />
+            </div>
+            <SearchResultsPortal>
+                <SearchResults
+                    data={data}
+                    query={searchValue}
+                    setData={setData}
+                />
+            </SearchResultsPortal>
+        </div>
+    );
 }

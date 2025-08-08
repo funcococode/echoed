@@ -1,33 +1,93 @@
 'use client'
 import type { Dispatch, SetStateAction } from "react";
 import { TbArrowLeft, TbArrowRight } from "react-icons/tb";
+import { motion, LayoutGroup } from "motion/react";
 import Button from "../form/button";
 
 export interface PaginationProps {
     currentPage: number;
-    setCurrentPage: Dispatch<SetStateAction<number>>
+    setCurrentPage: Dispatch<SetStateAction<number>>;
     totalRecords: number;
     totalPages: number;
 }
 
-export default function Pagination({ currentPage, setCurrentPage, totalRecords, totalPages }: PaginationProps) {
+export default function Pagination({
+    currentPage,
+    setCurrentPage,
+    totalRecords,
+    totalPages,
+}: PaginationProps) {
     return (
-        <div className="flex justify-end w-full">
-            <div className="flex items-center justify-center gap-4 w-fit border p-2 rounded border-secondary/60 bg-gray-50/10 ">
-                <Button text="" className="p-1.5 rounded bg-gray-100 disabled:text-gray-400" onClick={() => setCurrentPage(prev => prev - 1)} disabled={currentPage === 0} icon={<TbArrowLeft />} />
-                <div className="space-x-4">
-                    {Array.from({ length: totalPages }, (_, idx) => (
-                        <Button
-                            key={idx}
-                            // variant="outline-secondary"
-                            className={`text-xs p-1.5 px-3 rounded ${currentPage === idx ? 'bg-primaryLight text-primary' : 'text-gray-400 bg-gray-50 '}`}
-                            onClick={() => setCurrentPage(idx)}
-                            text={String(idx + 1)}
-                        />
-                    ))}
-                </div>
-                <Button text="" className="p-1.5 rounded bg-gray-100 disabled:text-gray-900" onClick={() => setCurrentPage(prev => prev + 1)} disabled={currentPage === 0} icon={<TbArrowRight />} />
-            </div >
+        <div className="flex w-full justify-center">
+            <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+                className="flex items-center gap-3 bg-white/80 backdrop-blur-md p-3 rounded-full shadow-lg border border-gray-100"
+            >
+                {/* Prev Button */}
+                <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+                    <Button
+                        text=""
+                        className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition disabled:opacity-50 disabled:hover:bg-gray-100"
+                        onClick={() => setCurrentPage((prev) => prev - 1)}
+                        disabled={currentPage === 0}
+                        icon={<TbArrowLeft className="text-gray-700" />}
+                    />
+                </motion.div>
+
+                {/* Page Numbers */}
+                <LayoutGroup>
+                    <div className="flex gap-2">
+                        {Array.from({ length: totalPages }, (_, idx) => {
+                            const isActive = currentPage === idx;
+                            return (
+                                <motion.div
+                                    key={idx}
+                                    whileHover={{ scale: 1.08 }}
+                                    whileTap={{ scale: 0.92 }}
+                                    className="relative"
+                                >
+                                    {/* {isActive && (
+                                        <motion.div
+                                            layoutId="activePage"
+                                            className="absolute inset-0 rounded-full bg-primary/10 border border-primary/20"
+                                            transition={{ type: "spring", stiffness: 350, damping: 25 }}
+                                        />
+                                    )} */}
+                                    {isActive && (
+                                        <motion.div
+                                            layoutId="activePage"
+                                            className="absolute inset-0 rounded-lg bg-primary/10"
+                                            transition={{ type: "spring", stiffness: 320, damping: 25 }}
+                                        />
+                                    )}
+
+                                    <Button
+                                        className={`relative text-sm p-2 px-4 rounded-full font-medium transition-colors duration-200 ${isActive
+                                            ? 'text-primary'
+                                            : 'text-gray-500 hover:text-primary'
+                                            }`}
+                                        onClick={() => setCurrentPage(idx)}
+                                        text={String(idx + 1)}
+                                    />
+                                </motion.div>
+                            );
+                        })}
+                    </div>
+                </LayoutGroup>
+
+                {/* Next Button */}
+                <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+                    <Button
+                        text=""
+                        className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition disabled:opacity-50 disabled:hover:bg-gray-100"
+                        onClick={() => setCurrentPage((prev) => prev + 1)}
+                        disabled={currentPage === totalPages - 1}
+                        icon={<TbArrowRight className="text-gray-700" />}
+                    />
+                </motion.div>
+            </motion.div>
         </div>
-    )
+    );
 }

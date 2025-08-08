@@ -1,8 +1,14 @@
+import { type ReactElement } from "react"
+
 export interface SectionHeadingProps {
     text: string
+    icon?: ReactElement
 }
-export default function SectionHeading({ text }: SectionHeadingProps) {
+export default function SectionHeading({ text, icon }: SectionHeadingProps) {
     return (
-        <h2 className="text-sm pl-4 border-l-4 border-primary text-primary">{text}</h2>
+        <div className="text-primary flex items-center gap-2">
+            {!!icon && icon}
+            <h2 className="text-xs font-medium ">{text}</h2>
+        </div>
     )
 }

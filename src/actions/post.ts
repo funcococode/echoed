@@ -60,7 +60,7 @@ export async function getAllPosts({
 	userId = null,
 	chamberId = '',
 	tagId = '',
-	type = 'all',
+	type = 'feed',
 }: GetAllEchoesProps) {
 	const session = await auth()
 
@@ -70,22 +70,21 @@ export async function getAllPosts({
 		take: limit,
 		where: {
 			...(userId && { userId }),
-			...(chamberId && {
+			...(!!chamberId && {
 				Chamber: {
 					some: {
 						id: chamberId,
 					},
 				},
 			}),
-			...(type === 'all'
-				? {
-						NOT: {
-							userId: session?.user?.id,
-						},
-					}
-				: {
-						userId: session?.user?.id,
-					}),
+			...(type === 'feed' && {
+				NOT: {
+					userId: session?.user?.id,
+				},
+			}),
+			...(type === 'mine' && {
+				userId: session?.user?.id,
+			}),
 			...(type === 'hidden' ? { is_hidden: true } : { is_hidden: false }),
 			...(type === 'archived' ? { is_archived: true } : { is_archived: false }),
 		},
@@ -96,6 +95,7 @@ export async function getAllPosts({
 					votes: true,
 					saves: true,
 					tags: true,
+					attachments: true,
 				},
 			},
 			saves: {
@@ -115,6 +115,7 @@ export async function getAllPosts({
 				select: {
 					cid: true,
 				},
+				take: 3,
 			},
 		},
 		orderBy: {
@@ -198,15 +199,16 @@ export async function getPostDetails(postId: string) {
 					createdAt: 'desc',
 				},
 			},
+			Chamber: {
+				select: {
+					id: true,
+					name: true,
+				},
+			},
 		},
 	})
 
 	const cids = response?.attachments?.map(item => item.cid)
-	// const main_text = String(
-	// 	await remark()
-	// 		.use(strip)
-	// 		.process(response?.main_text || ''),
-	// )
 	const urls: string[] = []
 	cids?.forEach(id => {
 		getEchoAttachments(id)
@@ -218,7 +220,6 @@ export async function getPostDetails(postId: string) {
 		...response,
 		cids: urls,
 		bookmarked: response?.saves.some(item => item.userId === session?.user?.id),
-		// main_text,
 	}
 
 	return mapped

@@ -8,4 +8,4 @@ export interface GetAllEchoesProps {
 	type?: EchoTypes
 }
 
-export type EchoTypes = 'all' | 'hidden' | 'mine' | 'saved' | 'archived'
+export type EchoTypes = 'all' | 'hidden' | 'mine' | 'saved' | 'archived' | 'feed'

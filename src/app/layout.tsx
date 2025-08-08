@@ -2,7 +2,6 @@ import '@/styles/globals.css'
 
 import { Inter, Reddit_Sans } from 'next/font/google'
 import type { ReactNode } from 'react'
-import { Toaster } from 'sonner'
 const inter = Inter({
 	subsets: ['latin'],
 	display: 'swap',
@@ -26,9 +25,10 @@ export default function RootLayout({ children }: Readonly<Props>) {
 			<head>
 				<title>Echoed</title>
 			</head>
-			<body className="mx-auto min-h-screen max-w-[90%] overflow-y-scroll md:max-w-[70%]">
-				<Toaster />
-				{children}
+			<body className="relative min-h-screen overflow-y-scroll ">
+				<div className='mx-auto md:max-w-[70%]'>
+					{children}
+				</div>
 				<div id="overlays"></div>
 			</body>
 		</html>

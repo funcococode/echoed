@@ -1,4 +1,5 @@
 'use client'
+import { cn } from '@/lib/utils'
 import useNavigationStore from '@/stores/navigation-store'
 import { type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
@@ -6,9 +7,10 @@ import { TbLoader2 } from 'react-icons/tb'
 
 interface PageHeadingProps {
 	children?: ReactNode
+	className?: string;
 }
 
-export default function PageHeading({ children }: PageHeadingProps) {
+export default function PageHeading({ children, className }: PageHeadingProps) {
 	const { isChangingPath } = useNavigationStore()
 	// Ensure the page heading is rendered in the correct place
 	if (!children) return null
@@ -22,7 +24,7 @@ export default function PageHeading({ children }: PageHeadingProps) {
 
 	return createPortal(
 		isChangingPath ? (
-			<div className="min-h-32 animate-pulse overflow-hidden rounded border border-gray-100">
+			<div className="min-h-32 max-h-max animate-pulse overflow-hidden rounded border border-gray-100">
 				<section className="flex h-32 items-center justify-between gap-1 px-4">
 					<div className="text-secondary flex w-1/4 items-center justify-start gap-4 text-5xl">
 						<TbLoader2 className="animate-spin" />
@@ -31,7 +33,7 @@ export default function PageHeading({ children }: PageHeadingProps) {
 				</section>
 			</div>
 		) : (
-			<div className="flex min-h-32 flex-col overflow-hidden rounded border border-gray-100 *:h-full *:flex-1">
+			<div className={cn("flex min-h-32 h-auto py-5 flex-col overflow-hidden rounded border border-gray-100 *:h-full *:flex-1", className)}>
 				{children}
 			</div>
 		),

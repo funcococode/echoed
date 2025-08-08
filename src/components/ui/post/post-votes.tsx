@@ -2,13 +2,15 @@ import VoteUpButton from '../vote-up-button'
 import VoteDownButton from '../vote-down-button'
 import { useState } from 'react'
 import { addVote } from '@/actions/vote'
-import { AllEchoesType, getPost, type PostType } from '@/actions/post'
+import { type AllEchoesType, getPost } from '@/actions/post'
+import { cn } from '@/utils/cn'
 
 export interface PostVotesProps {
 	post: AllEchoesType['data'][0]
+	display?: 'vertical' | 'horizontal'
 }
 
-export default function PostVotes({ post }: PostVotesProps) {
+export default function PostVotes({ post, display = 'vertical' }: PostVotesProps) {
 	const [currentPost, setCurrentPost] = useState(post)
 
 	const handleClick = async (positive: boolean) => {
@@ -20,7 +22,7 @@ export default function PostVotes({ post }: PostVotesProps) {
 	}
 
 	return currentPost ? (
-		<div className={`flex flex-row items-center gap-2 md:flex-col`}>
+		<div className={cn(`flex flex-col items-center gap-2 `, display === 'horizontal' && 'flex-row')}>
 			<VoteUpButton
 				handlerFn={handleClick}
 				isVoted={currentPost?.votePositive && currentPost?.votedByMe}

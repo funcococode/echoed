@@ -28,6 +28,7 @@ import {
 	TbEyeClosed,
 	TbEyeglass,
 	TbEyeglassOff,
+	TbFile,
 	TbLoader2,
 	TbPencil,
 	TbTrash,
@@ -38,6 +39,9 @@ import Markdown from 'react-markdown'
 import rehypeRaw from 'rehype-raw'
 import remarkGfm from 'remark-gfm'
 import { addEchoToChamber } from '@/actions/chambers'
+import SectionHeading from '@/components/ui/section-heading'
+import Card from '@/components/ui/card/card'
+
 export default function Post() {
 	const { id } = useParams<{ id: string }>()
 	const [data, setData] = useState<PostDetailType>()
@@ -169,7 +173,7 @@ export default function Post() {
 	return (
 		<div className="space-y-5">
 			<div className="divide-secondary flex flex-wrap gap-5 divide-y md:divide-x md:divide-y-0">
-				<div className="flex-[2] space-y-10 pr-10">
+				<div className="flex-[5] space-y-10 pr-10">
 					<div className="space-y-5">
 						<div className="flex flex-wrap justify-between md:items-center md:text-sm">
 							<Link
@@ -265,9 +269,34 @@ export default function Post() {
 						</div>
 					</div>
 				</div>
-				<div className="flex-1 space-y-10 md:pr-5">
+				<div className="flex-[2] space-y-2 md:pr-5">
+					{!!data?.cids.length && (
+						<Card>
+							<SectionHeading icon={<TbFile />} text={`Attachments (${data?._count?.attachments})`} />
+							<div className="flex flex-wrap items-center gap-2">
+								{data?.cids?.map(item => (
+									<ImageContainer key={item} src={item} size='small' />
+								))}
+							</div>
+						</Card>
+					)}
 					<TagContainer postId={id} userId={data?.userId} showHeading />
 					<CommentsContainer postId={id} />
+					<Card className='space-y-4'>
+						<SectionHeading icon={<HiOutlineCollection />} text={`Chambers containing this Echo (${data?._count?.Chamber})`} />
+						<div className='flex items-center gap-2 flex-wrap'>
+							{data?.Chamber?.map(chamber =>
+								<Link
+									className='text-xs text-gray-500 font-medium border border-secondary bg-white rounded px-4 py-1 flex items-center gap-2'
+									href={`/chambers/${chamber.id}`}
+									key={chamber.id}
+								>
+									{chamber.name}
+								</Link>
+							)}
+							{!data?._count?.Chamber && <p className='text-xs font-medium text-gray-400'>No Chambers</p>}
+						</div>
+					</Card>
 				</div>
 				{showChamberModal && (
 					<SearchChamber
@@ -276,20 +305,6 @@ export default function Post() {
 					/>
 				)}
 			</div>
-			{!!data?.cids.length && (
-				<footer>
-					<div className="border-secondary space-y-8 rounded-md border bg-gray-50 p-8">
-						<h1 className="text-sm font-semibold text-gray-500">Attachments</h1>
-						{!!data?.cids?.length && (
-							<div className="flex flex-wrap items-center gap-4">
-								{data?.cids?.map(item => (
-									<ImageContainer key={item} src={item} />
-								))}
-							</div>
-						)}
-					</div>
-				</footer>
-			)}
 		</div>
 	)
 }

@@ -7,12 +7,13 @@ import { useState } from "react";
 interface ImageContainerProps {
     // Define any props you need here
     src: string;
-    size?: 'small' | 'medium' | 'large' | 'thumbnail';
+    size?: 'xsmall' | 'small' | 'medium' | 'large' | 'thumbnail';
     allowFullSizeViewing?: boolean;
 }
 const sizeClasses = {
+    xsmall: 'w-8 ring ring-offset-2 border-none ring-gray-200 shadow-lg overflow-hidden',
     small: 'w-24',
-    medium: 'w-64',
+    medium: 'w-44',
     large: 'w-80',
     thumbnail: 'w-12 ring ring-offset-2 border-none ring-gray-200 shadow-lg overflow-hidden',
 };

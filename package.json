@@ -23,7 +23,9 @@
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.7.4",
+    "@headlessui/react": "^2.2.7",
     "@prisma/client": "^5.22.0",
+    "@radix-ui/react-select": "^2.2.5",
     "@t3-oss/env-nextjs": "^0.10.1",
     "@tailwindcss/postcss": "^4.1.11",
     "@tiptap/core": "^3.0.7",
@@ -34,9 +36,12 @@
     "@types/bcryptjs": "^2.4.6",
     "axios": "^1.7.9",
     "bcryptjs": "^2.4.3",
+    "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "geist": "^1.3.0",
+    "lucide-react": "^0.536.0",
     "moment": "^2.30.1",
+    "motion": "^12.23.12",
     "next": "^15.0.1",
     "next-auth": "^5.0.0-beta.25",
     "pinata": "^2.4.9",
@@ -70,6 +75,7 @@
     "prettier-plugin-tailwindcss": "^0.6.5",
     "prisma": "^6.2.0",
     "tailwindcss": "4.1",
+    "tw-animate-css": "^1.3.6",
     "typescript": "^5.5.3"
   },
   "ct3aMetadata": {
