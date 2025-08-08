@@ -5,16 +5,17 @@ import { ResultRow } from "./ResultRow";
 import type { TabKey } from "./index";
 import type { AnySearchItem, GroupedSearchData } from "@/actions/types/search";
 import { TbMoodSad } from "react-icons/tb";
+import { useSearchStore } from "@/stores/search";
 
 interface Props {
     active: TabKey;
     grouped: Required<GroupedSearchData>;
     items: AnySearchItem[];
-    query?: string;
     onRowClick: () => void;
 }
 
-export function ResultsList({ active, grouped, items, query, onRowClick }: Props) {
+export function ResultsList({ active, grouped, items, onRowClick }: Props) {
+    const { query } = useSearchStore();
     const Header = ({ children }: { children: React.ReactNode }) => (
         <h3 className="sticky top-0 z-10 px-4 py-4 text-xs font-semibold text-gray-500 tracking-wide bg-gray-50/90 backdrop-blur">
             {children}
@@ -54,17 +55,24 @@ export function ResultsList({ active, grouped, items, query, onRowClick }: Props
                             ))}
                         </>
                     )}
+                    {!grouped.echo.length && !grouped.tag.length && !grouped.user.length &&
+                        <div className="h-44 grid place-content-center font-semibold text-sm text-gray-500">
+                            <div className="flex flex-col items-center gap-2">
+                                <TbMoodSad className="text-2xl" />
+                                Nothing found
+                            </div>
+                        </div>
+                    }
                 </>
             ) : (
                 items?.length ? items.map((item) => (
                     <ResultRow key={item.id} item={item} query={query} onClick={onRowClick} />
-                )) : <p className="h-44 grid place-content-center font-semibold text-sm text-gray-500">
+                )) : <div className="h-44 grid place-content-center font-semibold text-sm text-gray-500">
                     <div className="flex flex-col items-center gap-2">
-
                         <TbMoodSad className="text-2xl" />
                         Nothing found
                     </div>
-                </p>
+                </div>
             )}
         </motion.div>
     );

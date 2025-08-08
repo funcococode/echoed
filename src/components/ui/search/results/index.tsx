@@ -6,17 +6,19 @@ import { TbX } from "react-icons/tb";
 import { ResultsList } from "./ResultsList";
 import type { AnySearchItem, GroupedSearchData } from "@/actions/types/search";
 import { SearchTabs } from "./SearchTabs";
+import { FiSearch } from "react-icons/fi";
+import { useSearchStore } from "@/stores/search";
 
 interface Props {
     data: GroupedSearchData | null;
     setData: Dispatch<SetStateAction<GroupedSearchData | null>>;
-    query?: string;
 }
 
 export type TabKey = "all" | "user" | "tag" | "echo";
 
-export default function SearchResults({ data, setData, query }: Props) {
+export default function SearchResults({ data, setData }: Props) {
     const [active, setActive] = useState<TabKey>("all");
+    const { query, setQuery } = useSearchStore();
 
     const grouped = useMemo(() => ({
         user: data?.user ?? [],
@@ -39,7 +41,7 @@ export default function SearchResults({ data, setData, query }: Props) {
         return grouped[active] as AnySearchItem[];
     }, [active, grouped, hasAny]);
 
-    if (!hasAny) return null;
+    if (!hasAny && !query) return null;
 
     return (
         <AnimatePresence>
@@ -51,6 +53,18 @@ export default function SearchResults({ data, setData, query }: Props) {
                 className="absolute inset-0 z-50 flex items-center justify-center bg-transparent backdrop-blur-sm"
             >
                 <div className="w-full max-w-2xl h-[75vh] bg-white border border-gray-200 rounded-2xl shadow-lg flex flex-col overflow-hidden">
+                    <div className="relative p-4">
+                        <FiSearch className="absolute top-1/2 translate-x-full -translate-y-1/2 text-gray-400" />
+                        <input
+                            type="text"
+                            placeholder="Search..."
+                            value={query}
+                            onChange={(e) => setQuery(e.target.value)}
+                            className="w-full pl-10 pr-3 py-2 text-sm rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary"
+                            autoFocus
+                        />
+
+                    </div>
                     <h1 className="text-sm font-semibold px-4 py-4 text-gray-500">Search Results</h1>
                     <div className="flex items-center justify-between px-3 py-2 border-b bg-gray-50/60">
                         <SearchTabs
@@ -59,7 +73,7 @@ export default function SearchResults({ data, setData, query }: Props) {
                             onChange={setActive}
                         />
                         <motion.button
-                            onClick={() => setData(null)}
+                            onClick={() => { setData(null); setQuery('') }}
                             whileTap={{ scale: 0.96 }}
                             className="cursor-pointer inline-flex items-center gap-1.5 text-xs text-gray-500 hover:text-gray-800 px-2 py-1 rounded-md hover:bg-gray-100"
                             title="Clear results"
@@ -73,7 +87,6 @@ export default function SearchResults({ data, setData, query }: Props) {
                         active={active}
                         grouped={grouped}
                         items={itemsForTab}
-                        query={query}
                         onRowClick={() => setData(null)}
                     />
                 </div>

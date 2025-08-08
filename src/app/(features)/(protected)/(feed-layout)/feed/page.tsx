@@ -45,13 +45,7 @@ export default function Feed() {
 		<section className="flex gap-4">
 			<div className="relative flex-1 space-y-10 md:space-y-4">
 				<PageHeading>
-					<div className="flex h-32 items-center justify-between px-10 w-full">
-						<Pagination
-							setCurrentPage={setCurrentPage}
-							currentPage={currentPage}
-							totalRecords={pageInfo?.total_count ?? 0}
-							totalPages={pageInfo?.total_pages ?? 0}
-						/>
+					<div className="flex h-32 items-center justify-end px-10 w-full">
 						<div className="flex items-center gap-4">
 							<SelectEchoesContainerLayout />
 							<SelectEchoLayout />
@@ -65,6 +59,12 @@ export default function Feed() {
 					))}
 				</div>
 			</div>
+			<Pagination
+				setCurrentPage={setCurrentPage}
+				currentPage={currentPage}
+				totalRecords={pageInfo?.total_count ?? 0}
+				totalPages={pageInfo?.total_pages ?? 0}
+			/>
 		</section >
 	)
 }

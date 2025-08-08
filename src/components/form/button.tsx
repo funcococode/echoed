@@ -19,7 +19,7 @@ const VARIANTS = {
 
 export default function Button({ classNames, text, type = 'button', onClick, variant = 'primary', icon, ...rest }: ButtonProps) {
   return (
-    <button onClick={onClick} type={type} className={cn(VARIANTS[variant], 'flex items-center gap-2', classNames)} {...rest}>
+    <button onClick={onClick} type={type} className={cn(VARIANTS[variant], 'cursor-pointer flex items-center gap-2', classNames)} {...rest}>
       {icon && <p className="text-base">
         {icon}
       </p>}

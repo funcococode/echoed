@@ -18,7 +18,7 @@ export default function Pagination({
     totalPages,
 }: PaginationProps) {
     return (
-        <div className="flex w-full justify-center">
+        <div className="fixed bottom-0 -translate-y-full left-1/2 -translate-x-1/2 z-50">
             <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -29,7 +29,7 @@ export default function Pagination({
                 <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
                     <Button
                         text=""
-                        className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition disabled:opacity-50 disabled:hover:bg-gray-100"
+                        className="cursor-pointer p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition disabled:opacity-50 disabled:hover:bg-gray-100"
                         onClick={() => setCurrentPage((prev) => prev - 1)}
                         disabled={currentPage === 0}
                         icon={<TbArrowLeft className="text-gray-700" />}
@@ -64,7 +64,7 @@ export default function Pagination({
                                     )}
 
                                     <Button
-                                        className={`relative text-sm p-2 px-4 rounded-full font-medium transition-colors duration-200 ${isActive
+                                        className={` cursor-pointer relative text-sm p-2 px-4 rounded-full font-medium transition-colors duration-200 ${isActive
                                             ? 'text-primary'
                                             : 'text-gray-500 hover:text-primary'
                                             }`}
@@ -81,7 +81,7 @@ export default function Pagination({
                 <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
                     <Button
                         text=""
-                        className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition disabled:opacity-50 disabled:hover:bg-gray-100"
+                        className=" cursor-pointer p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition disabled:opacity-50 disabled:hover:bg-gray-100"
                         onClick={() => setCurrentPage((prev) => prev + 1)}
                         disabled={currentPage === totalPages - 1}
                         icon={<TbArrowRight className="text-gray-700" />}
