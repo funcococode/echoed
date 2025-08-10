@@ -1,7 +1,6 @@
 "use client";
 
 import NavBar from "./(features)/(marketing)/_components/nav-bar";
-import EchoBackground from "./(features)/(marketing)/_components/echo-background";
 import Hero from "./(features)/(marketing)/_components/hero";
 import LogosRow from "./(features)/(marketing)/_components/logo-row";
 import Features from "./(features)/(marketing)/_components/features";
@@ -9,6 +8,7 @@ import Showcase from "./(features)/(marketing)/_components/showcase";
 import Testimonials from "./(features)/(marketing)/_components/testimonials";
 import CTA from "./(features)/(marketing)/_components/cta";
 import Footer from "./(features)/(marketing)/_components/footer";
+import EchoBackground from "./(features)/(marketing)/_components/echo-background";
 
 export default function LandingPage() {
   return (

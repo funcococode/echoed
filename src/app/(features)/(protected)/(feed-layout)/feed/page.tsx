@@ -40,7 +40,7 @@ export default function Feed() {
 	}, [refetch, currentPage, limit, fetchData])
 
 	return (
-		<section className="flex gap-4">
+		<section className="flex gap-4 relative">
 			<div className="relative flex-1 space-y-10 md:space-y-4">
 				<PageHeading>
 					<div className="flex h-32 items-center justify-end px-10 w-full">

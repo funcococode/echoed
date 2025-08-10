@@ -11,14 +11,23 @@ interface Props {
 
 export default function FeedLayout({ children }: Props) {
     const { isChangingPath } = useNavigationStore()
+
     return (
-        <main className="relative">
+        // Lock the whole layout to the viewport and prevent page scroll
+        <main className="relative mx-auto grid max-w-[80vw] grid-cols-12 gap-2 min-h-dvh h-dvh overflow-hidden items-start">
             {isChangingPath && <EchoLoader overlay />}
-            <aside className=' shadow-md shadow-gray-500/10 h-fit rounded absolute -translate-x-full '>
+
+            {/* Non-scrolling sidebar (it can scroll internally if taller than viewport) */}
+            <aside className="col-span-2 h-full rounded shadow-md shadow-gray-500/10">
                 <LeftSidebar />
             </aside>
-            <div id="search-results" className="flex-1"></div>
-            {children}
+
+            {/* Only this column scrolls */}
+            <div className="relative col-span-10 h-full overflow-y-auto scrollbar-hide">
+                {children}
+            </div>
+
+            <div id="search-results" />
         </main>
     )
 }
