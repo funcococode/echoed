@@ -4,7 +4,6 @@ import { useCallback, useEffect, useState } from 'react'
 import PostCard from '@/components/ui/post/post-card'
 import { type AllEchoesType, getAllPosts } from '@/actions/post'
 import Pagination from '@/components/ui/pagination'
-import { usePathname } from 'next/navigation'
 import PageHeading from '@/components/ui/page-heading'
 import SelectEchoesContainerLayout from '../_components/select-echoes-container-layout'
 import SelectEchoLayout from '../_components/select-echo-layout'
@@ -12,7 +11,6 @@ import useLayoutStore from '@/stores/layout-store'
 import { cn } from '@/utils/cn'
 
 export default function Feed() {
-	const pathname = usePathname()
 	const [data, setData] = useState<AllEchoesType['data']>([])
 	const [pageInfo, setPageInfo] = useState<{
 		total_count: number

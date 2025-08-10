@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { ResultRow } from "./ResultRow";
 import type { TabKey } from "./index";
 import type { AnySearchItem, GroupedSearchData } from "@/actions/types/search";

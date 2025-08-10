@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useState, type Dispatch, type SetStateAction } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "motion/react";
 import { TbX } from "react-icons/tb";
 import { ResultsList } from "./ResultsList";
 import type { AnySearchItem, GroupedSearchData } from "@/actions/types/search";

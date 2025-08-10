@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import Icon from "../icon";
 import useEchoNavigation, { type NavigationLinkProps } from "@/hooks/use-echo-navigation";
 import useNavigationStore from "@/stores/navigation-store";

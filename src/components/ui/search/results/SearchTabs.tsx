@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import type { TabKey } from "./index";
 import { TbUser, TbTag, TbFileText, TbGridDots } from "react-icons/tb";
 

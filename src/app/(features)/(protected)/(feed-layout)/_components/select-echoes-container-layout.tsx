@@ -1,4 +1,5 @@
 
+'use client'
 import { SelectInput } from "@/components/form/select-input";
 import useLayoutStore from "@/stores/layout-store";
 import { TbGridDots, TbLayoutList } from "react-icons/tb";

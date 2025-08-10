@@ -1,17 +1,15 @@
 'use client'
-import Link from 'next/link'
 import React, { type ReactElement } from 'react'
-import { Toaster } from 'sonner'
+import AuthTransition from './auth-transition'
 
-export default function AuthLayout({children} : {children: ReactElement}) {
+export default function AuthLayout({ children }: { children: ReactElement }) {
   return (
     <div className='h-screen flex flex-col'>
-        <header className='p-5 '>
-            <Link href='/' className='text-lg font-bold'>Echoed</Link>
-        </header>
-        <main className='flex-1 grid place-content-center'>
-            {children}
-        </main>
+      <main className='flex-1 grid grid-cols-2 place-content-center'>
+        <AuthTransition>
+          {children}
+        </AuthTransition>
+      </main>
     </div>
   )
 }

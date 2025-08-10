@@ -26,7 +26,7 @@ export default function RootLayout({ children }: Readonly<Props>) {
 				<title>Echoed</title>
 			</head>
 			<body className="relative min-h-screen overflow-y-scroll ">
-				<div className='mx-auto md:max-w-[70%]'>
+				<div className='mx-auto md:max-w-[100%]'>
 					{children}
 				</div>
 				<div id="overlays"></div>

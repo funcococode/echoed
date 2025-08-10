@@ -1,50 +1,72 @@
-'use client'
-import Button from "@/components/form/button";
-import Input from "@/components/form/input"
-import { signIn } from "next-auth/react";
-import Link from "next/link";
+"use client";
+
+import { useForm } from "react-hook-form";
 import { useSearchParams } from "next/navigation";
-import { useForm } from "react-hook-form"
+import Link from "next/link";
+import { signIn } from "next-auth/react";
 
+import Button from "@/components/form/button";
+import Input from "@/components/form/input";
+import EchoCanvas from "@/components/canvas/echo-canvas";
+import Logo from "@/components/ui/logo";
 
-export type LoginFields = Record<string, string>
+export type LoginFields = Record<string, string>;
 
 export default function Login() {
   const { control, handleSubmit } = useForm<LoginFields>({
-    defaultValues: {
-      username: '',
-      password: ''
-    }
+    defaultValues: { username: "", password: "" },
   });
-
   const router = useSearchParams();
-  const error = router.get('error');
-  const errorMessages = {
-    CredentialsSignin: 'Invalid credentials, please try again.',
-    Default: 'An unknown error occurred, please try again later.',
+  const error = router.get("error");
+  const errorMessages: Record<string, string> = {
+    CredentialsSignin: "Invalid credentials, please try again.",
+    Default: "An unknown error occurred, please try again later.",
   };
 
   const onSubmit = async (values: LoginFields) => {
-    await signIn('credentials', {
-      ...values,
-      redirectTo: '/feed'
-    })
-  }
+    await signIn("credentials", { ...values, callbackUrl: "/feed" });
+  };
 
   return (
-    <main className="rounded p-5 space-y-4 border">
-      <h1 className="font-semibold text-lg">Login</h1>
-      {error && (
-        <div className="text-sm font-medium text-red-500">
-          {errorMessages[error] || errorMessages.Default}
+    <main className="min-h-[90vh] grid md:grid-cols-5 rounded-2xl overflow-hidden border shadow-sm bg-white/50 dark:bg-neutral-900/50">
+      {/* Left: form */}
+      <section className="relative flex flex-col justify-center px-6 sm:px-10 py-10 col-span-2">
+        <Link href={'/'} className="absolute top-5 left-6 sm:left-8 flex items-center gap-2">
+          <Logo />
+          <h1 className="font-semibold text">Echoed</h1>
+        </Link>
+
+        <div className="mx-auto w-full max-w-md">
+          <header className="mb-8">
+            <h1 className="text-2xl font-semibold tracking-tight">Welcome back</h1>
+            <p className="text-sm text-neutral-500 mt-1">Log in to continue to your feed.</p>
+          </header>
+
+          {error && (
+            <div className="mb-4 text-sm font-medium text-red-500">
+              {errorMessages[error] || errorMessages.Default}
+            </div>
+          )}
+
+          <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
+            <Input control={control} name="username" placeholder="user.name" label="Username" showCounter />
+            <Input control={control} name="password" placeholder="••••••••" type="password" label="Password" showPasswordVisiblilityToggle />
+            <div className="flex items-center justify-between text-xs text-neutral-500">
+              <Link href="/auth/forgot" className="hover:underline">Forgot password?</Link>
+              <Link href="/auth/register" className="hover:underline">Create an account</Link>
+            </div>
+            <Button text="Login" type="submit" />
+          </form>
+
+          <p className="mt-6 text-[11px] text-neutral-400">
+            By continuing, you agree to our Terms and acknowledge our Privacy Policy.
+          </p>
         </div>
-      )}
-      <div className="space-y-4">
-        <Input control={control} name="username" placeholder="user.name" />
-        <Input control={control} name="password" placeholder="password" type="password" />
-        <Button onClick={handleSubmit(onSubmit)} text="Login" />
-        <Link className='block text-xs text-gray-400' href={'/auth/register'}>Register</Link>
-      </div>
+      </section>
+
+      {/* Right: Echo visuals */}
+      <EchoCanvas />
     </main>
-  )
+  );
 }
+
