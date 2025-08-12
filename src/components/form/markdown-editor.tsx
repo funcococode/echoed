@@ -50,10 +50,7 @@ const IconBtn = ({
 		title={title}
 		onClick={onClick}
 		disabled={disabled}
-		className={`rounded px-2 py-1 text-lg text-white transition
-      ${active ? 'bg-primary' : 'bg-black/90 hover:bg-black'}
-      disabled:opacity-40 disabled:cursor-not-allowed`}
-	>
+		className={`rounded px-2 py-1 text-lg text-white transition ${active ? 'bg-primary' : 'bg-black/90 hover:bg-black'} disabled:cursor-not-allowed disabled:opacity-40`}>
 		{icon}
 	</button>
 )
@@ -82,19 +79,8 @@ const MarkdownEditor = ({ editorContent, setEditorContent }: Props) => {
 		immediatelyRender: false,
 		editorProps: {
 			attributes: {
-				class:
-					'appearance-none min-h-96 border border-secondary rounded w-full py-2 px-3 bg-gray-100 text-black text-sm leading-tight focus:outline-none',
+				class: 'appearance-none min-h-96 border border-secondary rounded w-full py-2 px-3 bg-gray-100 text-black text-sm leading-tight focus:outline-none',
 			},
-		},
-		onCreate: ({ editor }) => {
-			// Treat incoming content as Markdown
-			if (editorContent) {
-				editor.commands.setContent(editorContent, true, {
-					preserveWhitespace: 'full',
-					// @ts-expect-error (supported by tiptap-markdown)
-					contentFormat: 'markdown',
-				})
-			}
 		},
 		onUpdate: ({ editor }) => {
 			const md = renderToMarkdown({
@@ -107,8 +93,7 @@ const MarkdownEditor = ({ editorContent, setEditorContent }: Props) => {
 
 	if (!editor) return null
 
-	const isHeading = (level: 1 | 2 | 3) =>
-		editor.isActive('heading', { level })
+	const isHeading = (level: 1 | 2 | 3) => editor.isActive('heading', { level })
 
 	const toggleLink = () => {
 		const prev = editor.getAttributes('link')?.href as string | undefined
@@ -118,12 +103,7 @@ const MarkdownEditor = ({ editorContent, setEditorContent }: Props) => {
 			editor.chain().focus().unsetLink().run()
 			return
 		}
-		editor
-			.chain()
-			.focus()
-			.extendMarkRange('link')
-			.setLink({ href: url.trim() })
-			.run()
+		editor.chain().focus().extendMarkRange('link').setLink({ href: url.trim() }).run()
 	}
 
 	return (
@@ -132,8 +112,7 @@ const MarkdownEditor = ({ editorContent, setEditorContent }: Props) => {
 			<BubbleMenu
 				editor={editor}
 				className="flex flex-wrap items-center gap-2 rounded border border-gray-200 bg-white p-2 shadow"
-				options={{ placement: 'bottom-start' }}
-			>
+				options={{ placement: 'bottom-start' }}>
 				{/* Inline formatting */}
 				<div className="flex items-center gap-1">
 					<IconBtn
