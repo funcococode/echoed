@@ -20,7 +20,7 @@ export default function Feed() {
 	}>()
 	const [refetch, setRefetch] = useState(false)
 	const [currentPage, setCurrentPage] = useState(0)
-	const [limit, setLimit] = useState(1)
+	const [limit, setLimit] = useState(5)
 	const { layout, echoLayout } = useLayoutStore()
 
 	const fetchData = useCallback(async () => {

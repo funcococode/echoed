@@ -289,26 +289,61 @@ export const toggleEchoArchive = async (id: string, archived: boolean) => {
 	return response.id
 }
 
-export const addNewEcho = async (data: {
+type AddEchoInput = {
 	title: string
 	description: string
 	main_text?: string
 	chamberId?: string
-}) => {
+	tags?: string[] // ← add this
+}
+
+export const addNewEcho = async (data: AddEchoInput) => {
 	const session = await auth()
+
 	try {
-		if (!data.title || !data.description) {
-			throw new Error('Please provide a title and a description for new Echo')
+		if (!session?.user?.id) {
+			throw new Error('You must be signed in to publish an Echo.')
 		}
+		if (!data.title?.trim() || !data.description?.trim()) {
+			throw new Error('Please provide a title and a description for new Echo.')
+		}
+
+		// normalize tags: lowercase + trim + dedupe
+		const normalizedTags = Array.from(
+			new Set((data.tags ?? []).map(t => t?.trim().toLowerCase()).filter(Boolean)),
+		)
+
+		// Build nested create payload for the join table
+		// NOTE: replace `tags` below with your actual relation field name on Post
+		// if it's different (often it's `tags` or `postTags`).
+		const tagsNested =
+			normalizedTags.length > 0
+				? {
+						tags: {
+							create: normalizedTags.map(name => ({
+								tag: {
+									connectOrCreate: {
+										where: { name }, // Tag.name is @unique in your schema
+										create: { name },
+									},
+								},
+							})),
+						},
+					}
+				: undefined
+
 		const response = await db.post.create({
 			data: {
-				userId: session?.user?.id ?? '',
-				...data,
+				title: data.title.trim(),
+				description: data.description.trim(),
+				main_text: data.main_text ?? '',
+				user: { connect: { id: session.user.id } }, // prefer relation connect over raw userId
+				...(data.chamberId ? { chamber: { connect: { id: data.chamberId } } } : {}),
+				...(tagsNested ?? {}),
 			},
-			select: {
-				id: true,
-			},
+			select: { id: true },
 		})
+
 		if (response?.id) {
 			return {
 				message: 'Post created successfully',
@@ -316,16 +351,11 @@ export const addNewEcho = async (data: {
 				data: { id: response.id },
 			}
 		}
-	} catch (e: unknown) {
-		if (e instanceof Error) {
-			return { message: e.message, success: false, data: null }
-		}
-	}
 
-	return {
-		message: 'Error creating account at the moment, please try again later.',
-		success: false,
-		data: null,
+		throw new Error('Failed to create post')
+	} catch (e: unknown) {
+		const message = e instanceof Error ? e.message : 'Unknown error'
+		return { message, success: false, data: null }
 	}
 }
 

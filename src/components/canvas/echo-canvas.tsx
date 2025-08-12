@@ -107,12 +107,13 @@ export default function EchoCanvas() {
                     <>
                         <div className="absolute inset-0 bg-[radial-gradient(90%_90%_at_80%_20%,rgba(34,211,238,0.28),transparent_60%),radial-gradient(75%_80%_at_25%_75%,rgba(168,85,247,0.28),transparent_60%),linear-gradient(180deg,#06070e_10%,#070914_55%,#05060d_100%)]" />
                         <div className="absolute inset-0 bg-[radial-gradient(60%_50%_at_50%_100%,rgba(59,130,246,0.18),transparent_70%)]" />
-                        <div className="absolute inset-0 bg-black/35" />
+                        <div className="absolute inset-0 " />
                     </>
                 ) : (
                     <>
+                        {/* Existing gradient */}
                         <div className="absolute inset-0 bg-[radial-gradient(80%_80%_at_75%_25%,rgba(37,99,235,0.18),transparent_60%),radial-gradient(65%_70%_at_20%_80%,rgba(124,58,237,0.18),transparent_60%),linear-gradient(180deg,#05060a_20%,#04050a_60%,#03040a_100%)]" />
-                        <div className="absolute inset-0 bg-black/45" />
+                        <div className="absolute inset-0 " />
                     </>
                 )}
             </div>
