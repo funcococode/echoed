@@ -5,8 +5,6 @@ import { type ReactElement, useMemo, useState } from 'react'
 import { Controller, type Control, type FieldPath, type FieldValues } from 'react-hook-form'
 import { TbAlertCircle, TbCheck, TbEye, TbEyeOff } from 'react-icons/tb'
 
-// Minimal inline icons to avoid extra deps
-
 export interface InputProps<T extends FieldValues> {
   type?: string
   name: string
@@ -23,16 +21,17 @@ export interface InputProps<T extends FieldValues> {
   allowClear?: boolean
   showCounter?: boolean
   disabled?: boolean
-  /** When set, enables password-specific UI regardless of `type` */
   kind?: 'text' | 'email' | 'password'
-  /** For confirm password, pass the value to compare with */
   matchToValue?: string
   matchToLabel?: string
-  showPasswordStrength?: boolean;
-  showPasswordVisiblilityToggle?: boolean;
+  showPasswordStrength?: boolean
+  showPasswordVisiblilityToggle?: boolean
+  /** Wrap with dashed section like your design */
+  sectioned?: boolean
+  /** Optional custom counter renderer (e.g. your <Counter />) */
+  counterRenderer?: (len: number, max?: number) => React.ReactNode
 }
 
-// Password strength scoring
 function scorePassword(pw: string) {
   let score = 0
   if (!pw) return { score, label: 'Too weak' } as const
@@ -69,22 +68,17 @@ export default function Input<T extends FieldValues>({
   matchToValue,
   matchToLabel = 'Password',
   showPasswordStrength = false,
-  showPasswordVisiblilityToggle = false
+  showPasswordVisiblilityToggle = false,
+  sectioned = true,
+  counterRenderer,
 }: InputProps<T>) {
   const isPasswordKind = (kind ?? type) === 'password'
   const isEmailKind = (kind ?? type) === 'email'
-
   const [showPw, setShowPw] = useState(false)
   const [capsOn, setCapsOn] = useState(false)
 
   return (
-    <div className="space-y-1">
-      {showLabel && (
-        <label className="text-sm font-medium block text-gray-800 capitalize" htmlFor={name}>
-          {label ?? name}
-        </label>
-      )}
-
+    <div className={cn(sectioned && 'border-secondary-light border-b border-dashed pb-5')}>
       <Controller
         name={name as FieldPath<T>}
         control={control}
@@ -94,14 +88,43 @@ export default function Input<T extends FieldValues>({
           const showMatch = isPasswordKind && typeof matchToValue === 'string' && valueStr.length > 0
           const matched = showMatch ? valueStr === matchToValue : undefined
 
+          const counterNode =
+            counterRenderer?.(valueStr.length, maxLength) ??
+            (showCounter && typeof maxLength === 'number' ? (
+              <span className="text-xs tabular-nums text-gray-500">{valueStr.length}/{maxLength}</span>
+            ) : null)
+
           return (
             <>
+              {/* Top row: label + counter (right) */}
+              {(showLabel || counterNode) && (
+                <div className="mb-1 flex items-center justify-between">
+                  {showLabel ? (
+                    <label
+                      htmlFor={name}
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      {label ?? name}
+                    </label>
+                  ) : <span />}
+                  {counterNode}
+                </div>
+              )}
+
+              {/* Field container: rounded, white bg, thin border; turns rose on error */}
               <div
-                className={`flex items-stretch rounded border bg-gray-100 group ${error ? 'border-red-500 divide-red-200' : 'border-secondary divide-secondary'
-                  } ${disabled ? 'opacity-60 pointer-events-none' : ''}`}
+                className={cn(
+                  'relative rounded-md border bg-white',
+                  error ? 'border-rose-300' : 'border-secondary-light',
+                  disabled && 'opacity-60 pointer-events-none'
+                )}
               >
+                {/* Optional left icon */}
                 {withIcon && icon && (
-                  <label htmlFor={name} className="flex items-center px-2 text-gray-400 group-focus-within:text-black">
+                  <label
+                    htmlFor={name}
+                    className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                  >
                     {icon}
                   </label>
                 )}
@@ -122,34 +145,39 @@ export default function Input<T extends FieldValues>({
                   autoComplete={autoComplete}
                   inputMode={inputMode}
                   aria-invalid={!!error}
-                  className={cn("w-full p-2 text-sm outline-none bg-gray-100", isPasswordKind && 'border-r pr-2')}
+                  className={cn(
+                    'w-full rounded-md border-0 bg-transparent p-3.5 text-sm text-gray-800 placeholder:text-gray-400 focus:outline-none',
+                    withIcon && icon ? 'pl-10' : ''
+                  )}
                 />
 
-
-                {/* Right side adornments */}
-                <div className="flex items-center gap-1 px-2 text-gray-500">
-                  {/* Clear button */}
+                {/* Right-side adornments (password toggle / clear) */}
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center gap-1 pr-3">
                   {allowClear && !isPasswordKind && valueStr && (
-                    <button type="button" aria-label="Clear" onClick={() => onChange('')} className="hover:text-gray-800">×</button>
+                    <button
+                      type="button"
+                      aria-label="Clear"
+                      onClick={() => onChange('')}
+                      className="pointer-events-auto rounded px-1 text-gray-400 hover:text-gray-700"
+                    >
+                      ×
+                    </button>
                   )}
-
-                  {/* Password show/hide toggle */}
                   {isPasswordKind && showPasswordVisiblilityToggle && (
                     <button
                       type="button"
                       aria-label={showPw ? 'Hide password' : 'Show password'}
                       onClick={() => setShowPw((s) => !s)}
-                      className="grid place-items-center w-6 h-6 hover:text-gray-800"
+                      className="pointer-events-auto grid h-6 w-6 place-items-center text-gray-400 hover:text-gray-700"
                     >
                       {showPw ? <TbEye /> : <TbEyeOff />}
                     </button>
                   )}
-
                 </div>
               </div>
 
-              {/* Subtext row: error / helper / counters */}
-              <div className="flex items-start justify-between text-[11px] leading-4 mt-1">
+              {/* Helper / error line (kept minimal like your sample) */}
+              <div className="mt-1 flex items-start justify-between text-[11px] leading-4">
                 <div className="text-neutral-500">
                   {error?.message ? (
                     <span className="text-red-600">{error.message}</span>
@@ -159,43 +187,41 @@ export default function Input<T extends FieldValues>({
                     <span>We’ll never share your email.</span>
                   ) : null}
                 </div>
-                {showCounter && typeof maxLength === 'number' && (
-                  <div className={`tabular-nums ${valueStr.length > maxLength * 0.9 ? 'text-gray-700' : 'text-neutral-400'}`}>
-                    {valueStr.length}/{maxLength}
-                  </div>
-                )}
               </div>
 
-              {/* Password helpers: caps lock + strength + match */}
+              {/* Password helpers: caps lock + strength bar + match state (fits under your section) */}
               {isPasswordKind && showPasswordStrength && (
-                <div className="space-y-1 mt-1">
+                <div className="mt-2 space-y-1">
                   {capsOn && (
                     <p className="text-[11px] text-amber-600">Caps Lock is on</p>
                   )}
 
-                  {/* Strength meter */}
-                  <div className="h-1.5 w-full rounded-full bg-neutral-200 overflow-hidden">
+                  <div className="h-1.5 w-full overflow-hidden rounded-full bg-neutral-200">
                     <div
-                      className={`h-full transition-all duration-300 ${pwScore.score === 0
-                        ? 'w-1/12 bg-red-500'
-                        : pwScore.score === 1
-                          ? 'w-1/4 bg-orange-500'
-                          : pwScore.score === 2
-                            ? 'w-1/2 bg-yellow-500'
-                            : pwScore.score === 3
-                              ? 'w-3/4 bg-lime-500'
-                              : 'w-full bg-green-600'
-                        }`}
+                      className={cn(
+                        'h-full transition-all duration-300',
+                        pwScore.score === 0 && 'w-1/12 bg-red-500',
+                        pwScore.score === 1 && 'w-1/4 bg-orange-500',
+                        pwScore.score === 2 && 'w-1/2 bg-yellow-500',
+                        pwScore.score === 3 && 'w-3/4 bg-lime-500',
+                        pwScore.score === 4 && 'w-full bg-green-600'
+                      )}
                     />
                   </div>
-                  <div className="flex items-center justify-between text-[11px] text-neutral-500">
+
+                  <div className="flex items-center justify-between text-[11px] text-neutral-600">
                     <span>
                       Strength: <span className="font-medium">{pwScore.label}</span>
                       {valueStr.length < 12 && <> · Use 12+ chars for better security</>}
                     </span>
+
                     {showMatch && (
                       <span className={matched ? 'text-green-600' : 'text-red-600'}>
-                        {matched ? <p className='flex items-center gap-1'><TbCheck /> Matches </p> : <p className='flex items-center gap-1 '><TbAlertCircle /> Invalid match </p>}`
+                        {matched ? (
+                          <span className="inline-flex items-center gap-1"><TbCheck /> Matches</span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1"><TbAlertCircle /> Invalid match</span>
+                        )}
                       </span>
                     )}
                   </div>

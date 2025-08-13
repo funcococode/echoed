@@ -289,7 +289,7 @@ export const toggleEchoArchive = async (id: string, archived: boolean) => {
 	return response.id
 }
 
-type AddEchoInput = {
+export type AddEchoInput = {
 	title: string
 	description: string
 	main_text?: string

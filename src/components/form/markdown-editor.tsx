@@ -7,7 +7,7 @@ import { BubbleMenu } from '@tiptap/react/menus'
 import StarterKit from '@tiptap/starter-kit'
 import { renderToMarkdown } from '@tiptap/static-renderer/pm/markdown'
 
-import { type ReactNode, type Dispatch, type SetStateAction } from 'react'
+import { type ReactNode } from 'react'
 import {
 	TbBold,
 	TbH1,
@@ -27,9 +27,8 @@ import {
 } from 'react-icons/tb'
 
 interface Props {
-	/** Pass/receive MARKDOWN here */
 	editorContent: string
-	setEditorContent: Dispatch<SetStateAction<string>>
+	setEditorContent: (value: string) => void
 }
 
 const IconBtn = ({
@@ -58,8 +57,6 @@ const IconBtn = ({
 const MarkdownEditor = ({ editorContent, setEditorContent }: Props) => {
 	const editor = useEditor({
 		extensions: [
-			// StarterKit gives: Paragraph, Text, Document, Bold, Italic, Strike,
-			// Blockquote, BulletList, OrderedList, Code, CodeBlock, HorizontalRule, History, etc.
 			StarterKit,
 			Underline,
 			Link.configure({
@@ -75,11 +72,10 @@ const MarkdownEditor = ({ editorContent, setEditorContent }: Props) => {
 				},
 			}),
 		],
-		// You can pass initial markdown directly too (see setContent below)
 		immediatelyRender: false,
 		editorProps: {
 			attributes: {
-				class: 'appearance-none min-h-96 border border-secondary rounded w-full py-2 px-3 bg-gray-100 text-black text-sm leading-tight focus:outline-none',
+				class: 'appearance-none min-h-96 text-black text-sm leading-tight focus:outline-none',
 			},
 		},
 		onUpdate: ({ editor }) => {
@@ -87,7 +83,7 @@ const MarkdownEditor = ({ editorContent, setEditorContent }: Props) => {
 				extensions: editor.extensionManager.extensions,
 				content: editor.getJSON(),
 			})
-			setEditorContent(md) // now you're storing Markdown
+			setEditorContent(md)
 		},
 	})
 
@@ -108,12 +104,11 @@ const MarkdownEditor = ({ editorContent, setEditorContent }: Props) => {
 
 	return (
 		<div>
-			<EditorContent editor={editor} className="rounded" />
+			<EditorContent editor={editor} className="w-full resize-y rounded-md border-0 bg-transparent p-3.5 text-sm text-gray-800 placeholder:text-gray-400 focus:outline-none" />
 			<BubbleMenu
 				editor={editor}
 				className="flex flex-wrap items-center gap-2 rounded border border-gray-200 bg-white p-2 shadow"
 				options={{ placement: 'bottom-start' }}>
-				{/* Inline formatting */}
 				<div className="flex items-center gap-1">
 					<IconBtn
 						title="Bold"
@@ -153,7 +148,6 @@ const MarkdownEditor = ({ editorContent, setEditorContent }: Props) => {
 					/>
 				</div>
 
-				{/* Headings */}
 				<div className="flex items-center gap-1">
 					<IconBtn
 						title="Heading 1"
@@ -175,7 +169,6 @@ const MarkdownEditor = ({ editorContent, setEditorContent }: Props) => {
 					/>
 				</div>
 
-				{/* Blocks & lists */}
 				<div className="flex items-center gap-1">
 					<IconBtn
 						title="Bullet list"
@@ -208,7 +201,6 @@ const MarkdownEditor = ({ editorContent, setEditorContent }: Props) => {
 					/>
 				</div>
 
-				{/* History */}
 				<div className="flex items-center gap-1">
 					<IconBtn
 						title="Undo"
