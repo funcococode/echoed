@@ -4,11 +4,12 @@ import { useCallback, useEffect, useState } from 'react'
 import PostCard from '@/components/ui/post/post-card'
 import { type AllEchoesType, getAllPosts } from '@/actions/post'
 import Pagination from '@/components/ui/pagination'
-import PageHeading from '@/components/ui/page-heading'
 import SelectEchoesContainerLayout from '../_components/select-echoes-container-layout'
 import SelectEchoLayout from '../_components/select-echo-layout'
 import useLayoutStore from '@/stores/layout-store'
 import { cn } from '@/utils/cn'
+import PageHeading from '@/components/ui/page-heading'
+import Frequencies from '@/components/ui/frequencies'
 
 export default function Feed() {
 	const [data, setData] = useState<AllEchoesType['data']>([])
@@ -43,7 +44,8 @@ export default function Feed() {
 		<section className="flex gap-4 relative">
 			<div className="relative flex-1 space-y-10 md:space-y-4">
 				<PageHeading>
-					<div className="flex h-32 items-center justify-end px-10 w-full">
+					<div className="flex h-32 items-center justify-between px-5 w-full">
+						<Frequencies />
 						<div className="flex items-center gap-4">
 							<SelectEchoesContainerLayout />
 							<SelectEchoLayout />

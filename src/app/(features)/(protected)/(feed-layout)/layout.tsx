@@ -1,6 +1,5 @@
 'use client'
 
-import Header from '@/components/ui/header'
 import { SessionProvider } from 'next-auth/react'
 import React, { type ReactElement } from 'react'
 
@@ -14,7 +13,6 @@ export default function FeedLayout({ children, pageHeading }: Props) {
     return (
         <SessionProvider>
             <div className='space-y-4 flex flex-col relative h-screen  '>
-                <Header />
                 <section id="page-heading" className='relative'>
                     {pageHeading || null}
                 </section>

@@ -73,9 +73,11 @@ export default function NewPost({ chamberId }: Props) {
 	const [step, setStep] = useState<Step>(1)
 	const [submitting, setSubmitting] = useState(false)
 	const [direction, setDirection] = useState(0); // -1 back, +1 next
+	const [showSuccessAnim, setShowSuccessAnim] = useState(false)
 
 
-	const { control, watch, reset, setValue } = useForm<AddEchoInput>({
+
+	const { control, watch, reset, setValue, getValues } = useForm<AddEchoInput>({
 		mode: 'onChange',
 		defaultValues: {
 			title: '',
@@ -122,14 +124,20 @@ export default function NewPost({ chamberId }: Props) {
 			const response = await addNewEcho(payload)
 			if (response?.success) {
 				toast.success(response.message ?? 'Your Echo is live!', { richColors: true })
-				reset({
-					title: '',
-					description: '',
-					main_text: '',
-					tags: [],
-				})
-				setTags([]);
-				setCover('');
+				setShowSuccessAnim(true)
+				setTimeout(() => {
+					reset({
+						title: '',
+						description: '',
+						main_text: '',
+						tags: [],
+					})
+					setTags([]);
+					setCover('');
+					setStep(1);
+					setShowSuccessAnim(false)
+				}, 2000)
+
 			} else {
 				throw new Error(response?.message || 'Failed to publish')
 			}
@@ -217,7 +225,8 @@ export default function NewPost({ chamberId }: Props) {
 								<motion.div custom={0} variants={fieldStagger} className="border-secondary-light border-b border-dashed pb-5">
 									<Input
 										control={control}
-										name='Title'
+										name='title'
+										label='Title'
 										maxLength={TITLE_MAX + 40}
 										placeholder="Concise & compelling (e.g. ‘Writing better hooks in React’)."
 										counterRenderer={(len, max) => <Counter value={len} max={max ?? 0} />}
@@ -227,7 +236,8 @@ export default function NewPost({ chamberId }: Props) {
 								<motion.div custom={1} variants={fieldStagger} className="border-secondary-light border-b border-dashed pb-5">
 									<Textarea
 										control={control}
-										name='Short Description'
+										name='description'
+										label='Short Description'
 										maxLength={DESC_MAX + 80}
 										placeholder="A quick summary to hook readers and set context."
 										counterRenderer={(len, max) => <Counter value={len} max={max ?? 0} />}
@@ -262,7 +272,7 @@ export default function NewPost({ chamberId }: Props) {
 										</label>
 										<div className="border-secondary-light overflow-hidden rounded-md border">
 											<MarkdownEditor
-												editorContent={details ?? ''}
+												editorContent={getValues('main_text') ?? details ?? ''}
 												setEditorContent={value => setValue('main_text', value)}
 											/>
 										</div>
@@ -340,10 +350,10 @@ export default function NewPost({ chamberId }: Props) {
 												</div>
 											)}
 											<h1 className="mb-1 text-2xl font-bold text-gray-900">
-												{title || 'Untitled Echo'}
+												{title ?? 'Untitled Echo'}
 											</h1>
 											<p className="text-gray-600">
-												{description ||
+												{description ??
 													'Short description will appear here.'}
 											</p>
 											{cover && (
@@ -364,6 +374,21 @@ export default function NewPost({ chamberId }: Props) {
 								</motion.section>
 							</motion.div>
 						)}
+
+						{showSuccessAnim && (
+							<motion.div
+								initial={{ opacity: 0, scale: 0.6 }}
+								animate={{ opacity: 1, scale: 1 }}
+								exit={{ opacity: 0, scale: 0.6 }}
+								transition={{ duration: 0.4 }}
+								className="fixed inset-0 flex items-center justify-center z-50"
+							>
+								<div className="bg-white shadow-2xl rounded-full p-6 border-4 border-green-500">
+									<TbCheck className="text-green-500 w-16 h-16" />
+								</div>
+							</motion.div>
+						)}
+
 					</AnimatePresence>
 
 					{/* nav */}

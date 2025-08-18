@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { motion } from "motion/react";
 import Icon from "../icon";
 import useEchoNavigation, { type NavigationLinkProps } from "@/hooks/use-echo-navigation";
@@ -12,6 +12,7 @@ import { FiSettings, FiLogOut } from "react-icons/fi";
 import Logo from "../logo";
 import { signOut } from "next-auth/react";
 import SearchBar from "../search/search-bar";
+import { TbPlus } from "react-icons/tb";
 
 interface Props {
     slim?: boolean;
@@ -21,7 +22,6 @@ export default function LeftSidebar({ slim = false }: Props) {
     const pathname = usePathname();
     const { navigationData: data } = useEchoNavigation();
     const { setCurrentPath, setIsChangingPath } = useNavigationStore();
-    const [searchValue, setSearchValue] = useState("");
 
     useEffect(() => {
         setIsChangingPath(false);
@@ -78,6 +78,7 @@ export default function LeftSidebar({ slim = false }: Props) {
             {/* Search Bar */}
             <SearchBar />
 
+
             {/* Navigation */}
             <div className="flex-1 overflow-y-auto space-y-6">
                 {Object.entries(data)?.map(([key, value]) => (
@@ -125,6 +126,10 @@ export default function LeftSidebar({ slim = false }: Props) {
                 ))}
             </div>
 
+            <Link href='/post/new' className="flex items-center text-sm font-semibold rounded-md bg-primary-light text-primary py-2 px-4 gap-4 mb-4">
+                <TbPlus className="text-base" />
+                New Echo
+            </Link>
             {/* Utility Section */}
             <div className="mt-auto space-y-1 pt-4 border-t border-gray-200">
                 <Link
