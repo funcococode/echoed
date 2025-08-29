@@ -6,7 +6,7 @@ import { useParams } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
 import { type AllEchoesType, getAllPosts } from '@/actions/post'
-import { TbBellPlus, TbCodeVariablePlus, TbUserMinus, TbUserPlus, TbWaveSquare } from 'react-icons/tb'
+import { TbBellPlus, TbCodeVariablePlus, TbPin, TbUserMinus, TbUserPlus, TbWaveSquare } from 'react-icons/tb'
 import Button from '@/components/form/button'
 import { cn } from '@/utils/cn'
 import useLayoutStore from '@/stores/layout-store'
@@ -15,6 +15,7 @@ import SelectEchoLayout from '../../_components/select-echo-layout'
 import { toast } from 'sonner'
 import { type EchoTypes } from '@/actions/types'
 import Link from 'next/link'
+import ManageChamber from '../_components/manage-chamber'
 
 export default function ChamberPage() {
 	const session = useSession()
@@ -109,38 +110,41 @@ export default function ChamberPage() {
 						</div>
 					</div>
 					<div className="flex items-center gap-5">
-						<div className='pr-5 border-r'>
-							<Button
-								text="Create an echo here"
-								icon={<TbCodeVariablePlus className="text-xl" />}
-								className="hover:py-2 transition-all cursor-pointer border-secondary hover:border-primary font-medium flex items-center gap-2 rounded-full border px-4 py-1.5 text-sm text-black hover:bg-primary-light hover:text-primary"
-							/>
-						</div>
-						{!data?.chamber?.ChamberMember?.find(item => item.chamberId === id && item.userId === session.data?.user?.id)?.id ? <Button
-							onClick={handleClickJoin}
-							text="Join"
-							icon={<TbUserPlus className="text-lg" />}
-							className="cursor-pointer flex items-center gap-2  bg-black px-4 py-1.5 text-sm text-white font-medium rounded-full"
-						/> : <div className='flex items-center gap-2'>
-							<Button
+						<Button
+							text="Create an echo here"
+							icon={<TbCodeVariablePlus className="text-xl" />}
+							className="hover:py-2 transition-all cursor-pointer border-secondary hover:border-primary font-medium flex items-center gap-2 rounded-full border px-4 py-1.5 text-sm text-black hover:bg-primary-light hover:text-primary"
+						/>
+						{session?.data?.user?.id !== data?.chamber?.user?.id && <div className='pl-5 border-l'>
+							{!data?.chamber?.ChamberMember?.find(item => item.chamberId === id && item.userId === session.data?.user?.id)?.id ? <Button
 								onClick={handleClickJoin}
-								text=""
-								icon={<TbBellPlus className="text-lg" />}
-								className="hover:py-2 transition-all cursor-pointer flex items-center gap-2 border border-secondary hover:border-warning px-4 py-1.5 text-sm font-medium rounded-md hover:bg-warning-light hover:text-warning"
-							/>
-							<Button
-								onClick={handleClickLeave}
-								text=""
-								icon={<TbUserMinus className="text-lg" />}
-								className="hover:py-2 transition-all cursor-pointer flex items-center gap-2 border border-secondary hover:border-danger px-4 py-1.5 text-sm font-medium rounded-md hover:bg-danger-light hover:text-danger"
-							/>
+								text="Join"
+								icon={<TbUserPlus className="text-lg" />}
+								className="cursor-pointer flex items-center gap-2  bg-black px-4 py-1.5 text-sm text-white font-medium rounded-full"
+							/> : <div className='flex items-center gap-2'>
+								<Button
+									onClick={handleClickJoin}
+									text=""
+									icon={<TbBellPlus className="text-lg" />}
+									className="hover:py-2 transition-all cursor-pointer flex items-center gap-2 border border-secondary hover:border-warning px-4 py-1.5 text-sm font-medium rounded-md hover:bg-warning-light hover:text-warning"
+								/>
+								<Button
+									onClick={handleClickLeave}
+									text=""
+									icon={<TbUserMinus className="text-lg" />}
+									className="hover:py-2 transition-all cursor-pointer flex items-center gap-2 border border-secondary hover:border-danger px-4 py-1.5 text-sm font-medium rounded-md hover:bg-danger-light hover:text-danger"
+								/>
+							</div>}
+						</div>}
+						{session?.data?.user?.id === data?.chamber?.user?.id && <div className='pl-5 border-l space-y-2'>
+							<ManageChamber chamberId={id} />
 						</div>}
 					</div>
 				</section>
 				<footer className='flex justify-end items-center gap-2 text-xs font-light text-gray-400 px-10 place-self-end'>
 					<h6 className='flex items-center gap-2'>
-						{/* <TbCake className='text-base' /> */}
-						Created by <Link href={`/user/${data?.chamber?.user?.id}`} className='text-primary hover:underline font-semibold'> @{data?.chamber?.user?.username} </Link> on <span className=''>{data?.chamber?.createdAt}</span>
+						{session?.data?.user?.id !== data?.chamber?.user?.id && <>Created by <Link href={`/user/${data?.chamber?.user?.id}`} className='text-primary hover:underline font-semibold'> @{data?.chamber?.user?.username} </Link> on <span className=''>{data?.chamber?.createdAt}</span></>}
+						{session?.data?.user?.id === data?.chamber?.user?.id && <>You created this chamber on <span className=''>{data?.chamber?.createdAt}</span></>}
 					</h6>
 				</footer>
 			</PageHeading>
@@ -149,8 +153,16 @@ export default function ChamberPage() {
 					<SelectEchoesContainerLayout />
 					<SelectEchoLayout />
 				</div>
-				<section className={cn(layout === 'grid' && 'grid grid-cols-2 gap-5', layout === 'rows' && 'space-y-5')}>
-					{data?.posts?.map(item => <PostCard key={item.id} post={item} display={echoLayout ?? 'full'} />)}
+				<section className={cn('border border-warning p-5 rounded-lg', layout === 'grid' && 'grid grid-cols-2 gap-5 ', layout === 'rows' && 'space-y-5')}>
+					<h1 className='font-bold text-sm text-warning flex items-center gap-2'>
+						<TbPin />
+						Pinned Echoes
+					</h1>
+					{data?.posts?.filter(item => item.isPinned).map(item => <PostCard key={item.id} post={item} display={'compact'} />)}
+				</section>
+				<section className={cn('border border-secondary p-5 rounded-lg', layout === 'grid' && 'grid grid-cols-2 gap-5', layout === 'rows' && 'space-y-5')}>
+					<h1 className='font-bold text-sm text-black'>All Echoes</h1>
+					{data?.posts?.filter(item => !item.isPinned).map(item => <PostCard key={item.id} post={item} display={echoLayout ?? 'full'} />)}
 				</section>
 			</div>
 		</div>

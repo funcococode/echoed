@@ -252,7 +252,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import moment from 'moment'
 import { motion } from 'motion/react'
-import { TbClock, TbCalendar, TbEye, TbPlus } from 'react-icons/tb'
+import { TbClock, TbCalendar, TbEye, TbPlus, TbPinFilled } from 'react-icons/tb'
 import type { AllEchoesType } from '@/actions/post'
 import type { PostLayout } from '@/types/layout'
 import BookmarkButton from '../bookmark-button'
@@ -396,9 +396,13 @@ const Compact = ({ post }: { post: AllEchoesType['data'][0] }) => {
 			)}
 
 			<div className="flex-1 space-y-2">
-				<div className="flex items-center justify-between gap-8">
+				<div className="flex items-center justify-between gap-4">
 					<div className='flex items-center justify-between w-full'>
-						<div className="text-xs text-gray-500 capitalize">{post.user?.firstname} {post.user?.lastname}</div>
+						<div className='flex items-center gap-2'>
+
+							{post.isPinned && <TbPinFilled className='text-warning' />}
+							<div className="text-xs text-gray-500 capitalize">{post.user?.firstname} {post.user?.lastname}</div>
+						</div>
 						<div className="mt-1 flex flex-wrap gap-1">
 							<Chip icon={<TbClock className="text-[12px]" />}>{nf(post.readTime)}m</Chip>
 							<Chip icon={<TbEye className="text-[12px]" />}>{nf(post.views)}</Chip>

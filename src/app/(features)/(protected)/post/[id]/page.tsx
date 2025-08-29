@@ -170,7 +170,7 @@ export default function Post() {
 		<div className="space-y-5 pl-5">
 			<div className="divide-secondary flex flex-wrap gap-5 divide-y md:divide-x md:divide-y-0">
 				<div className="flex-[5] space-y-10 pr-10">
-					<div className="space-y-5">
+					<div className="space-y-5 pt-10">
 						<div className="flex flex-wrap justify-between md:items-center md:text-sm">
 							<Link
 								href={`/user/${data?.userId}`}

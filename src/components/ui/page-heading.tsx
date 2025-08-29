@@ -26,7 +26,7 @@ export default function PageHeading({ children, className }: PageHeadingProps) {
 		isChangingPath ? (
 			<div className="min-h-32 max-h-max animate-pulse overflow-hidden rounded border border-gray-100">
 				<section className="flex h-32 items-center justify-between gap-1 px-4">
-					<div className="text-secondary flex w-1/4 items-center justify-start gap-4 text-5xl">
+					<div className="text-secondary flex w-1/4 items-center justify-start gap-4 text-3xl">
 						<TbLoader2 className="animate-spin" />
 						<span className="font-extralight">Fetching...</span>
 					</div>

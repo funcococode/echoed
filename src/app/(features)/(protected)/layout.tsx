@@ -1,9 +1,10 @@
 'use client'
 
 import EchoLoader from "@/components/ui/loaders/loader"
-import LeftSidebar from "@/components/ui/sidebar/left-sidebar"
 import useNavigationStore from "@/stores/navigation-store"
 import { type ReactElement } from "react"
+import Sidebar from "./_components/sidebar"
+import { SessionProvider } from "next-auth/react"
 
 interface Props {
     children: ReactElement
@@ -18,9 +19,11 @@ export default function FeedLayout({ children }: Props) {
             {isChangingPath && <EchoLoader overlay />}
 
             {/* Non-scrolling sidebar (it can scroll internally if taller than viewport) */}
-            <aside className="col-span-2 h-full rounded shadow-md shadow-gray-500/10">
-                <LeftSidebar />
-            </aside>
+            <SessionProvider>
+                <aside className="col-span-2 h-full rounded shadow-md shadow-gray-500/10">
+                    <Sidebar />
+                </aside>
+            </SessionProvider>
 
             {/* Only this column scrolls */}
             <div className="relative col-span-10 h-full overflow-y-auto scrollbar-hide">

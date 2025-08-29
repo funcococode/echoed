@@ -12,7 +12,7 @@ import {
 
 interface Option {
     label: string;
-    value: string;
+    value: string | number;
     icon?: React.ReactElement
     selected?: boolean;
 }

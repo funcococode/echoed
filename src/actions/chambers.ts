@@ -5,7 +5,8 @@ import { db } from '@/server/db'
 import moment from 'moment'
 
 export type ChamberType = ReturnType<typeof listChambers> extends Promise<infer T> ? T : never
-export const listChambers = async (query?: string) => {
+export const listChambers = async ({ query, mine }: { query?: string; mine?: boolean }) => {
+	const session = await auth()
 	const response = await db.chamber.findMany({
 		where: {
 			...(query
@@ -14,6 +15,15 @@ export const listChambers = async (query?: string) => {
 							{ name: { contains: query } },
 							{ description: { contains: query } },
 						],
+					}
+				: {}),
+			...(mine
+				? {
+						ChamberMember: {
+							some: {
+								userId: session?.user?.id,
+							},
+						},
 					}
 				: {}),
 		},

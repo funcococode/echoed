@@ -117,6 +117,12 @@ export async function getAllPosts({
 				},
 				take: 3,
 			},
+			PinnedChamberEchoes: {
+				select: {
+					id: true,
+					chamberId: true,
+				},
+			},
 		},
 		orderBy: {
 			createdAt: 'desc',
@@ -149,6 +155,7 @@ export async function getAllPosts({
 						async item => await pinata.gateways.public.convert(item.cid),
 					),
 				),
+				...(chamberId ? { isPinned: post.PinnedChamberEchoes.length > 0 } : {}),
 			}
 		}),
 	)
