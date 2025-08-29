@@ -2,7 +2,7 @@
 import { type ChamberDataType, getChamberData, joinChamber, leaveChamber } from '@/actions/chambers'
 import PageHeading from '@/components/ui/page-heading'
 import PostCard from '@/components/ui/post/post-card'
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
 import { type AllEchoesType, getAllPosts } from '@/actions/post'
@@ -23,6 +23,8 @@ export default function ChamberPage() {
 	const [data, setData] = useState<{ chamber: ChamberDataType; posts: AllEchoesType['data'] }>()
 	const { layout, echoLayout } = useLayoutStore();
 	const [refresh, setRefersh] = useState(false);
+	const router = useRouter();
+
 
 	const fetchData = useCallback(async () => {
 		if (!id) throw new Error('Invalid chamber id')
@@ -51,6 +53,7 @@ export default function ChamberPage() {
 				richColors: true
 			})
 			setRefersh(prev => !prev)
+			router.refresh();
 		} else {
 			toast.error(`Something went wrong.`, {
 				richColors: true
@@ -64,6 +67,7 @@ export default function ChamberPage() {
 				richColors: true
 			})
 			setRefersh(prev => !prev)
+			router.refresh();
 		} else {
 			toast.error(`Something went wrong.`, {
 				richColors: true

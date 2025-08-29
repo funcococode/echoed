@@ -1,8 +1,7 @@
 'use client'
 
-import { type ChamberType, listChambers } from "@/actions/chambers";
 import { usePathname } from "next/navigation";
-import { useEffect, useMemo, useState, type ReactElement } from "react";
+import { useMemo, useState, type ReactElement } from "react";
 import { GrLineChart } from "react-icons/gr";
 import { HiOutlineCollection } from "react-icons/hi";
 import { TbArchive, TbBookmark, TbEyeClosed, TbHome2, TbRobotFace, TbTag } from "react-icons/tb";
@@ -20,15 +19,6 @@ type Props = Record<string, NavigationLinkProps[]>
 export default function useEchoNavigation() {
     const pathname = usePathname();
     const [currentPath, setCurrentPath] = useState<NavigationLinkProps>();
-    const [chambers, setChambers] = useState<ChamberType>([]);
-
-    const fetchChambers = async () => {
-        const response = await listChambers({ mine: true });
-        setChambers(response);
-    }
-    useEffect(() => {
-        fetchChambers();
-    }, [])
 
     const navigationData = useMemo((): Props => ({
         default: [
@@ -92,16 +82,7 @@ export default function useEchoNavigation() {
                 current: '/tags/trending' === pathname
             },
         ],
-        ...(chambers.length > 0 ? {
-            chambers: chambers.map(chamber => ({
-                link: `/chambers/${chamber.id}`,
-                title: chamber.name,
-                sectionHeading: 'Chambers',
-                icon: <HiOutlineCollection />,
-                current: `/chambers/${chamber.id}` === pathname
-            }))
-        } : {})
-    }), [pathname, chambers]);
+    }), [pathname]);
 
     return { navigationData, setCurrentPath, currentPath }
 }

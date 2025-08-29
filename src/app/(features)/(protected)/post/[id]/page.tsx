@@ -33,7 +33,7 @@ import {
 	TbTrash,
 } from 'react-icons/tb'
 import { toast } from 'sonner'
-import SearchChamber from '../../(feed-layout)/chambers/_components/search-chamber'
+import SearchChamber from '../../chambers/_components/search-chamber'
 import Markdown from 'react-markdown'
 import rehypeRaw from 'rehype-raw'
 import remarkGfm from 'remark-gfm'
