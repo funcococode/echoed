@@ -3,9 +3,10 @@
 import { auth } from '@/auth'
 import { db } from '@/server/db'
 import moment from 'moment'
+import { revalidateTag } from 'next/cache'
 
 export type ChamberType = ReturnType<typeof listChambers> extends Promise<infer T> ? T : never
-export const listChambers = async (query?: string) => {
+export const listChambers = async ({ query, userId }: { query?: string; userId?: string }) => {
 	const response = await db.chamber.findMany({
 		where: {
 			...(query
@@ -14,6 +15,15 @@ export const listChambers = async (query?: string) => {
 							{ name: { contains: query } },
 							{ description: { contains: query } },
 						],
+					}
+				: {}),
+			...(userId
+				? {
+						ChamberMember: {
+							some: {
+								userId: userId,
+							},
+						},
 					}
 				: {}),
 		},
@@ -131,6 +141,7 @@ export const joinChamber = async (chamberId: string) => {
 			},
 		})
 
+		revalidateTag(`my-chambers:${session?.user?.id}`)
 		return response
 	} catch (e) {
 		console.log(e)
@@ -156,6 +167,7 @@ export const leaveChamber = async (chamberId: string) => {
 			},
 		})
 
+		revalidateTag(`my-chambers:${session?.user?.id}`)
 		return response
 	} catch (e) {
 		console.log(e)

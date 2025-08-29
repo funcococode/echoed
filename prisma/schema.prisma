@@ -27,11 +27,12 @@ model User {
   comments      Comment[]
   savedPosts    SavedPost[]
 
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @updatedAt
-  TagsFollowed   TagsFollowed[]
-  Chamber        Chamber[]
-  chamberMembers ChamberMember[]
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  TagsFollowed    TagsFollowed[]
+  Chamber         Chamber[]
+  chamberMembers  ChamberMember[]
+  ChamberEchoFlag ChamberEchoFlag[] @relation("FlagCreatedBy")
 }
 
 model Account {
@@ -95,24 +96,26 @@ model Authenticator {
 }
 
 model Post {
-  id          String            @id @default(uuid())
-  title       String
-  main_text   String?           @db.LongText
-  description String            @db.Text
-  userId      String
-  user        User              @relation(fields: [userId], references: [id], onDelete: Cascade)
-  votes       Vote[]
-  comments    Comment[]
-  saves       SavedPost[]
-  tags        TagsOnPost[]
-  attachments PostAttachments[]
-  is_hidden   Boolean           @default(false)
-  is_archived Boolean           @default(false)
-  views       Int               @default(0)
-  createdAt   DateTime          @default(now())
-  updatedAt   DateTime          @updatedAt
-  Chamber     Chamber[]
+  id                  String                @id @default(uuid())
+  title               String
+  main_text           String?               @db.LongText
+  description         String                @db.Text
+  userId              String
+  user                User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  votes               Vote[]
+  comments            Comment[]
+  saves               SavedPost[]
+  tags                TagsOnPost[]
+  attachments         PostAttachments[]
+  is_hidden           Boolean               @default(false)
+  is_archived         Boolean               @default(false)
+  views               Int                   @default(0)
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
+  Chamber             Chamber[]
   // chamberId   Strjing
+  PinnedChamberEchoes PinnedChamberEchoes[]
+  ChamberEchoFlag     ChamberEchoFlag[]
 }
 
 model PostAttachments {
@@ -199,16 +202,18 @@ model SavedPost {
 }
 
 model Chamber {
-  id            String          @id @default(uuid())
-  frequency     String?         @unique
-  name          String          @unique
-  description   String?         @db.Text
-  userId        String
-  user          User            @relation(fields: [userId], references: [id], onDelete: Cascade)
-  posts         Post[]
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
-  ChamberMember ChamberMember[]
+  id                  String                @id @default(uuid())
+  frequency           String?               @unique
+  name                String                @unique
+  description         String?               @db.Text
+  userId              String
+  user                User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  posts               Post[]
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
+  ChamberMember       ChamberMember[]
+  PinnedChamberEchoes PinnedChamberEchoes[]
+  ChamberEchoFlag     ChamberEchoFlag[]
 
   @@index([userId])
 }
@@ -226,4 +231,76 @@ model ChamberMember {
   @@unique([chamberId, userId])
   @@index([chamberId])
   @@index([userId])
+}
+
+// model for pinned echoes on chamber
+
+model PinnedChamberEchoes {
+  id        String   @id @default(uuid())
+  echoId    String
+  echo      Post     @relation(fields: [echoId], references: [id], onDelete: Cascade)
+  chamberId String
+  chamber   Chamber  @relation(fields: [chamberId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([echoId, chamberId])
+}
+
+// ── Enums ─────────────────────────────────────────────────────────────────────
+enum EchoFlagType {
+  NSFW
+  ABUSE
+  HARASSMENT
+  HATE
+  SPAM
+  COPYRIGHT
+  MISINFO
+  SELF_HARM
+  VIOLENCE
+  ILLEGAL
+  SCAM
+  OTHER
+}
+
+enum EchoFlagStatus {
+  OPEN // active & enforced
+  RESOLVED // handled; optionally keep for audit
+  REJECTED // raised but dismissed
+}
+
+enum EchoFlagSeverity {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+// ── Model: one row per (Chamber x Post x FlagType) ───────────────────────────
+model ChamberEchoFlag {
+  id        String           @id @default(cuid())
+  chamberId String
+  postId    String
+  type      EchoFlagType
+  status    EchoFlagStatus   @default(OPEN)
+  severity  EchoFlagSeverity @default(MEDIUM)
+
+  notes        String? // moderator note / context
+  createdById  String
+  resolvedById String?
+  resolvedAt   DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  // Relations (adjust names if your models differ)
+  chamber   Chamber @relation(fields: [chamberId], references: [id], onDelete: Cascade)
+  post      Post    @relation(fields: [postId], references: [id], onDelete: Cascade)
+  createdBy User    @relation("FlagCreatedBy", fields: [createdById], references: [id])
+
+  // One flag type per echo within a chamber
+  @@unique([chamberId, postId, type])
+  // Helpful indices for moderation dashboards & feeds
+  @@index([chamberId, postId])
+  @@index([status, type])
+  @@index([type])
 }

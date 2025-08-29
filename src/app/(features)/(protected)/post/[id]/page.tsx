@@ -29,18 +29,18 @@ import {
 	TbEyeglass,
 	TbEyeglassOff,
 	TbFile,
-	TbLoader2,
 	TbPencil,
 	TbTrash,
 } from 'react-icons/tb'
 import { toast } from 'sonner'
-import SearchChamber from '../../(feed-layout)/chambers/_components/search-chamber'
+import SearchChamber from '../../chambers/_components/search-chamber'
 import Markdown from 'react-markdown'
 import rehypeRaw from 'rehype-raw'
 import remarkGfm from 'remark-gfm'
 import { addEchoToChamber } from '@/actions/chambers'
 import SectionHeading from '@/components/ui/section-heading'
 import Card from '@/components/ui/card/card'
+import EchoLoader from '@/components/ui/loaders/loader'
 
 export default function Post() {
 	const { id } = useParams<{ id: string }>()
@@ -164,17 +164,13 @@ export default function Post() {
 
 	if (isLoading)
 		return (
-			<div className="grid w-full place-content-center">
-				<div className="flex items-center gap-2">
-					<TbLoader2 className="animate-spin text-xl" /> Fetching Data
-				</div>
-			</div>
+			<EchoLoader overlay />
 		)
 	return (
-		<div className="space-y-5">
+		<div className="space-y-5 pl-5">
 			<div className="divide-secondary flex flex-wrap gap-5 divide-y md:divide-x md:divide-y-0">
 				<div className="flex-[5] space-y-10 pr-10">
-					<div className="space-y-5">
+					<div className="space-y-5 pt-10">
 						<div className="flex flex-wrap justify-between md:items-center md:text-sm">
 							<Link
 								href={`/user/${data?.userId}`}

@@ -9,6 +9,8 @@ import Button from "@/components/form/button";
 import Input from "@/components/form/input";
 import EchoCanvas from "@/components/canvas/echo-canvas";
 import Logo from "@/components/ui/logo";
+import { TbChecks } from "react-icons/tb";
+import { useEffect, useState } from "react";
 
 export type LoginFields = Record<string, string>;
 
@@ -18,6 +20,9 @@ export default function Login() {
   });
   const router = useSearchParams();
   const error = router.get("error");
+  const registered = router.get('registered') === '1';
+  const [showRegistered, setShowRegistered] = useState(registered);
+
   const errorMessages: Record<string, string> = {
     CredentialsSignin: "Invalid credentials, please try again.",
     Default: "An unknown error occurred, please try again later.",
@@ -26,6 +31,12 @@ export default function Login() {
   const onSubmit = async (values: LoginFields) => {
     await signIn("credentials", { ...values, callbackUrl: "/feed" });
   };
+
+  useEffect(() => {
+    if (showRegistered) {
+      setTimeout(() => setShowRegistered(false), 10000)
+    }
+  }, [])
 
   return (
     <main className="min-h-[90vh] grid md:grid-cols-5 rounded-2xl overflow-hidden border shadow-sm bg-white/50 dark:bg-neutral-900/50">
@@ -45,6 +56,13 @@ export default function Login() {
           {error && (
             <div className="mb-4 text-sm font-medium text-red-500">
               {errorMessages[error] || errorMessages.Default}
+            </div>
+          )}
+
+          {showRegistered && (
+            <div className="mb-4 text-sm font-medium bg-success-light text-success rounded-md p-4 flex items-center gap-2">
+              <TbChecks />
+              <p>Your account has been created successfully</p>
             </div>
           )}
 

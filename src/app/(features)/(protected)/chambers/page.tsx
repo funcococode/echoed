@@ -16,7 +16,7 @@ export default function Chambers() {
   const { currentPath } = useNavigationStore()
 
   const fetchData = async () => {
-    const response = await listChambers();
+    const response = await listChambers({});
     setData(response)
   }
 

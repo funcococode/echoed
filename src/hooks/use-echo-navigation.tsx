@@ -81,7 +81,7 @@ export default function useEchoNavigation() {
                 icon: <GrLineChart />,
                 current: '/tags/trending' === pathname
             },
-        ]
+        ],
     }), [pathname]);
 
     return { navigationData, setCurrentPath, currentPath }

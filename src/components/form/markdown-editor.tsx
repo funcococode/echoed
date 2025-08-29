@@ -1,115 +1,218 @@
 'use client'
 import Heading from '@tiptap/extension-heading'
-import { type Editor, EditorContent, useEditor } from '@tiptap/react'
+import Underline from '@tiptap/extension-underline'
+import Link from '@tiptap/extension-link'
+import { EditorContent, useEditor } from '@tiptap/react'
 import { BubbleMenu } from '@tiptap/react/menus'
 import StarterKit from '@tiptap/starter-kit'
-import { type ReactNode, type Dispatch, type SetStateAction } from 'react'
-import { TbBold, TbH1, TbH2, TbH3, TbItalic, TbUnderline } from 'react-icons/tb'
+import { renderToMarkdown } from '@tiptap/static-renderer/pm/markdown'
+
+import { type ReactNode } from 'react'
+import {
+	TbBold,
+	TbH1,
+	TbH2,
+	TbH3,
+	TbItalic,
+	TbUnderline,
+	TbStrikethrough,
+	TbCode,
+	TbLink,
+	TbList,
+	TbListNumbers,
+	TbQuote,
+	TbMinus,
+	TbArrowBackUp,
+	TbArrowForwardUp,
+} from 'react-icons/tb'
 
 interface Props {
 	editorContent: string
-	setEditorContent: Dispatch<SetStateAction<string>>
+	setEditorContent: (value: string) => void
 }
 
-const MenuButton = ({
+const IconBtn = ({
 	icon,
-	editor,
 	onClick,
-	name,
+	active = false,
+	title,
+	disabled = false,
 }: {
 	icon: ReactNode
-	editor: Editor
 	onClick: () => void
-	name: string
-}) => {
-	return (
-		<button
-			onClick={onClick}
-			className={`rounded px-2 py-1 text-lg text-white ${editor.isActive(name) ? 'bg-primary' : 'bg-black/90'}`}>
-			{icon}
-		</button>
-	)
-}
+	active?: boolean
+	title?: string
+	disabled?: boolean
+}) => (
+	<button
+		type="button"
+		title={title}
+		onClick={onClick}
+		disabled={disabled}
+		className={`rounded px-2 py-1 text-lg text-white transition ${active ? 'bg-primary' : 'bg-black/90 hover:bg-black'} disabled:cursor-not-allowed disabled:opacity-40`}>
+		{icon}
+	</button>
+)
 
 const MarkdownEditor = ({ editorContent, setEditorContent }: Props) => {
 	const editor = useEditor({
 		extensions: [
 			StarterKit,
+			Underline,
+			Link.configure({
+				openOnClick: false,
+				autolink: true,
+				protocols: ['http', 'https', 'mailto', 'tel'],
+				HTMLAttributes: { rel: 'noopener noreferrer nofollow' },
+			}),
 			Heading.configure({
+				levels: [1, 2, 3, 4],
 				HTMLAttributes: {
-					class: 'text-2xl font-bold capitalize',
-					levels: [1, 2, 3, 4],
+					class: 'font-bold capitalize',
 				},
 			}),
 		],
 		immediatelyRender: false,
 		editorProps: {
 			attributes: {
-				class: 'appearance-none min-h-96 border border-secondary rounded w-full py-2 px-3 bg-gray-100 text-black text-sm leading-tight focus:outline-none',
+				class: 'appearance-none min-h-96 text-black text-sm leading-tight focus:outline-none',
 			},
 		},
-		content: editorContent,
 		onUpdate: ({ editor }) => {
-			setEditorContent?.(editor.getHTML())
+			const md = renderToMarkdown({
+				extensions: editor.extensionManager.extensions,
+				content: editor.getJSON(),
+			})
+			setEditorContent(md)
 		},
 	})
 
 	if (!editor) return null
 
+	const isHeading = (level: 1 | 2 | 3) => editor.isActive('heading', { level })
+
+	const toggleLink = () => {
+		const prev = editor.getAttributes('link')?.href as string | undefined
+		const url = window.prompt('Enter URL', prev || '')
+		if (url === null) return
+		if (url.trim() === '') {
+			editor.chain().focus().unsetLink().run()
+			return
+		}
+		editor.chain().focus().extendMarkRange('link').setLink({ href: url.trim() }).run()
+	}
+
 	return (
 		<div>
-			<EditorContent editor={editor} className="rounded" />
+			<EditorContent editor={editor} className="w-full resize-y rounded-md border-0 bg-transparent p-3.5 text-sm text-gray-800 placeholder:text-gray-400 focus:outline-none" />
 			<BubbleMenu
 				editor={editor}
-				className="flex items-center gap-4 rounded border border-gray-200 bg-white p-2 shadow"
-				options={{
-					placement: 'bottom-start',
-				}}>
+				className="flex flex-wrap items-center gap-2 rounded border border-gray-200 bg-white p-2 shadow"
+				options={{ placement: 'bottom-start' }}>
 				<div className="flex items-center gap-1">
-					<MenuButton
+					<IconBtn
+						title="Bold"
 						icon={<TbBold />}
-						onClick={() => editor?.chain().focus().toggleBold().run()}
-						name={'bold'}
-						editor={editor}
+						active={editor.isActive('bold')}
+						onClick={() => editor.chain().focus().toggleBold().run()}
 					/>
-					<MenuButton
+					<IconBtn
+						title="Italic"
 						icon={<TbItalic />}
-						onClick={() => editor?.chain().focus().toggleItalic().run()}
-						name={'italic'}
-						editor={editor}
+						active={editor.isActive('italic')}
+						onClick={() => editor.chain().focus().toggleItalic().run()}
 					/>
-					<MenuButton
+					<IconBtn
+						title="Underline"
 						icon={<TbUnderline />}
-						onClick={() => editor?.chain().focus().toggleUnderline().run()}
-						name={'underline'}
-						editor={editor}
+						active={editor.isActive('underline')}
+						onClick={() => editor.chain().focus().toggleUnderline().run()}
+					/>
+					<IconBtn
+						title="Strikethrough"
+						icon={<TbStrikethrough />}
+						active={editor.isActive('strike')}
+						onClick={() => editor.chain().focus().toggleStrike().run()}
+					/>
+					<IconBtn
+						title="Inline code"
+						icon={<TbCode />}
+						active={editor.isActive('code')}
+						onClick={() => editor.chain().focus().toggleCode().run()}
+					/>
+					<IconBtn
+						title="Link"
+						icon={<TbLink />}
+						active={editor.isActive('link')}
+						onClick={toggleLink}
 					/>
 				</div>
 
 				<div className="flex items-center gap-1">
-					<MenuButton
+					<IconBtn
+						title="Heading 1"
 						icon={<TbH1 />}
-						onClick={() =>
-							editor?.chain().focus().toggleHeading({ level: 1 }).run()
-						}
-						name={'heading'}
-						editor={editor}
+						active={isHeading(1)}
+						onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
 					/>
-					<MenuButton
+					<IconBtn
+						title="Heading 2"
 						icon={<TbH2 />}
-						onClick={() =>
-							editor?.chain().focus().toggleHeading({ level: 2 }).run()
-						}
-						name={'heading'}
-						editor={editor}
+						active={isHeading(2)}
+						onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
 					/>
-					<MenuButton
+					<IconBtn
+						title="Heading 3"
 						icon={<TbH3 />}
-						onClick={() =>
-							editor?.chain().focus().toggleHeading({ level: 3 }).run()
-						}
-						name={'heading'}
-						editor={editor}
+						active={isHeading(3)}
+						onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
+					/>
+				</div>
+
+				<div className="flex items-center gap-1">
+					<IconBtn
+						title="Bullet list"
+						icon={<TbList />}
+						active={editor.isActive('bulletList')}
+						onClick={() => editor.chain().focus().toggleBulletList().run()}
+					/>
+					<IconBtn
+						title="Ordered list"
+						icon={<TbListNumbers />}
+						active={editor.isActive('orderedList')}
+						onClick={() => editor.chain().focus().toggleOrderedList().run()}
+					/>
+					<IconBtn
+						title="Blockquote"
+						icon={<TbQuote />}
+						active={editor.isActive('blockquote')}
+						onClick={() => editor.chain().focus().toggleBlockquote().run()}
+					/>
+					<IconBtn
+						title="Code block"
+						icon={<TbCode />}
+						active={editor.isActive('codeBlock')}
+						onClick={() => editor.chain().focus().toggleCodeBlock().run()}
+					/>
+					<IconBtn
+						title="Horizontal rule"
+						icon={<TbMinus />}
+						onClick={() => editor.chain().focus().setHorizontalRule().run()}
+					/>
+				</div>
+
+				<div className="flex items-center gap-1">
+					<IconBtn
+						title="Undo"
+						icon={<TbArrowBackUp />}
+						onClick={() => editor.chain().focus().undo().run()}
+						disabled={!editor.can().undo()}
+					/>
+					<IconBtn
+						title="Redo"
+						icon={<TbArrowForwardUp />}
+						onClick={() => editor.chain().focus().redo().run()}
+						disabled={!editor.can().redo()}
 					/>
 				</div>
 			</BubbleMenu>
