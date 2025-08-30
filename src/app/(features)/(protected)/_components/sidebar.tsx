@@ -195,7 +195,7 @@ export default function Sidebar({ slim = false, user, chambers }: Props) {
             <div className="mt-auto space-y-1 pt-4 border-t border-gray-200">
                 <Link
                     href={`/user/${user?.id ?? ""}`}
-                    className="flex items-center gap-3 px-3 py-2 text-gray-500 hover:text-primary hover:bg-gray-100 rounded-md transition-colors"
+                    className="flex items-center gap-3 px-3 py-2 text-gray-500 hover:text-primary hover:bg-gray-100 rounded-md transition-colors capitalize"
                 >
                     <TbUser />
                     <span className="text-sm">{user?.name}</span>

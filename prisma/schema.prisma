@@ -33,6 +33,14 @@ model User {
   Chamber         Chamber[]
   chamberMembers  ChamberMember[]
   ChamberEchoFlag ChamberEchoFlag[] @relation("FlagCreatedBy")
+
+  /// Optional denormalized counters (kept in sync in actions)
+  followersCount Int @default(0)
+  followingCount Int @default(0)
+
+  /// Follow relations
+  followers Follow[] @relation("Followers") // other users who follow this user
+  following Follow[] @relation("Following") // users this user follows
 }
 
 model Account {
@@ -303,4 +311,19 @@ model ChamberEchoFlag {
   @@index([chamberId, postId])
   @@index([status, type])
   @@index([type])
+}
+
+model Follow {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  followerId  String
+  followingId String
+
+  follower  User @relation("Following", fields: [followerId], references: [id], onDelete: Cascade)
+  following User @relation("Followers", fields: [followingId], references: [id], onDelete: Cascade)
+
+  @@unique([followerId, followingId])
+  @@index([followerId])
+  @@index([followingId])
 }

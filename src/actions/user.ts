@@ -1,25 +1,26 @@
-"use server";
+'use server'
 
-import { db } from "@/server/db";
+import { db } from '@/server/db'
 
-export type UserType =
-  ReturnType<typeof getUser> extends Promise<infer T> ? T : never;
+export type UserType = ReturnType<typeof getUser> extends Promise<infer T> ? T : never
 export async function getUser({ id }: { id: string }) {
-  const data = await db.user.findFirst({
-    where: {
-      id: id,
-    },
-    include: {
-      _count: {
-        select: {
-          Posts: true,
-          TagsFollowed: true
-          // tag: true,
-        },
-      },
-      TagsFollowed: true,
-    },
-  });
+	const data = await db.user.findFirst({
+		where: {
+			id: id,
+		},
+		include: {
+			_count: {
+				select: {
+					Posts: true,
+					TagsFollowed: true,
+					followers: true,
+					following: true,
+					// tag: true,
+				},
+			},
+			TagsFollowed: true,
+		},
+	})
 
-  return data;
+	return data
 }
