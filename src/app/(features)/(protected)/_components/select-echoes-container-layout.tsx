@@ -6,11 +6,12 @@ import { TbGridDots, TbLayoutList } from "react-icons/tb";
 
 export default function SelectEchoesContainerLayout() {
     const { layout, setLayout } = useLayoutStore();
+
     return (
         <SelectInput
             options={[
-                { label: 'Rows', value: 'rows', icon: <TbLayoutList />, selected: layout === 'rows' },
-                { label: 'Grid', value: 'grid', icon: <TbGridDots />, selected: layout === 'grid' },
+                { label: 'Rows', value: 'ROWS', icon: <TbLayoutList />, selected: layout === 'ROWS' },
+                { label: 'Grid', value: 'GRID', icon: <TbGridDots />, selected: layout === 'GRID' },
             ]}
             onChange={setLayout}
             placeholder="Layout"

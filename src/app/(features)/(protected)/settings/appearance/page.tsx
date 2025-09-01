@@ -3,8 +3,8 @@
 import { useEffect, useState, useTransition } from 'react';
 import { getSettings, updateSettings } from '../actions';
 import PillCheckbox from '@/components/form/checkbox-pill';
-import { TbMenu3 } from 'react-icons/tb';
-import { SelectInput } from '@/components/form/select-input';
+import { TbCpu, TbGridDots, TbLayout, TbLayoutBoardSplit, TbLayoutGridAdd, TbLayoutList, TbMenu3, TbMoon, TbSun, TbTextCaption } from 'react-icons/tb';
+import PillRadioGroup from '@/components/form/radio-pill';
 
 type Settings = Awaited<ReturnType<typeof getSettings>>['data'];
 
@@ -34,29 +34,56 @@ export default function AppearanceSettingsPage() {
                 {pending && <div className="text-xs text-slate-500">Saving…</div>}
             </header>
 
-            <section className="grid grid-cols-1 gap-4 sm:max-w-md">
+            <section className="grid grid-cols-1 gap-8 sm:max-w-md">
                 <div>
                     <label className="mb-1 block text-sm font-medium text-slate-700">Theme</label>
-                    <SelectInput
+                    <PillRadioGroup
+                        name="theme"
+                        layoutId="theme"
+                        value={s?.theme}
+                        onChange={(val) => patch({ theme: val as any })}
                         options={[
-                            { value: 'SYSTEM', label: 'System' },
-                            { value: 'LIGHT', label: 'Light' },
-                            { value: 'DARK', label: 'Dark' },
+                            { value: 'system', label: 'System', icon: <TbCpu /> },
+                            { value: 'light', label: 'Light', icon: <TbSun /> },
+                            { value: 'dark', label: 'Dark', icon: <TbMoon /> },
                         ]}
-                        onChange={(value) => patch({ theme: value })}
-                        placeholder='Select a theme'
+                    // animate={animateReady}
                     />
                 </div>
 
                 <div>
-                    <label className="mb-1 block text-sm font-medium text-slate-700">Density</label>
-                    <SelectInput
+                    <label className="mb-1 block text-sm font-medium text-slate-700">Feed Density Layout</label>
+
+                    <PillRadioGroup
+                        name="feed-density-layout"
+                        layoutId="feed-density-layout"
+                        value={s?.feedDensity}
+                        onChange={(val) => patch({ feedDensity: val as any })}
                         options={[
-                            { value: 'cozy', label: 'Cozy' },
-                            { value: 'compact', label: 'Compact' },
+                            { label: 'Rows', value: 'ROWS', icon: <TbLayoutList /> },
+                            { label: 'Grid', value: 'GRID', icon: <TbGridDots /> },
+
                         ]}
-                        onChange={(value) => patch({ density: value })}
-                        placeholder='Select a density'
+                    // animate={animateReady}
+                    />
+                </div>
+
+                <div>
+                    <label className="mb-1 block text-sm font-medium text-slate-700">Echoes Card Layout</label>
+
+                    <PillRadioGroup
+                        name="echo-card-layout"
+                        layoutId="echoes-card-layout"
+                        value={s?.echoLayout}
+                        onChange={(val) => patch({ echoLayout: val as any })}
+                        options={[
+
+                            { label: 'Full Size', value: 'FULL', icon: <TbLayoutBoardSplit /> },
+                            { label: 'Compact', value: 'COMPACT', icon: <TbLayout /> },
+                            { label: 'Slim', value: 'SLIM', icon: <TbLayoutGridAdd /> },
+                            { label: 'Minimal', value: 'MINIMAL', icon: <TbTextCaption /> },
+                        ]}
+                    // animate={animateReady}
                     />
                 </div>
 

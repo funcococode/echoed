@@ -9,11 +9,13 @@ import useNavigationStore from "@/stores/navigation-store";
 import { cn } from "@/utils/cn";
 import { FiSettings, FiLogOut } from "react-icons/fi";
 import { signOut } from "next-auth/react";
-import { TbPlus, TbUser, TbHash } from "react-icons/tb";
+import { TbPlus, TbHash } from "react-icons/tb";
 import Logo from "@/components/ui/logo";
 import SearchBar from "@/components/ui/search/search-bar";
 import Icon from "@/components/ui/icon";
 import { type ChamberType } from "@/actions/chambers";
+import Avatar from "@/components/ui/avatar";
+import DarkModeSwitch from "@/components/ui/theme-toggle-button";
 
 interface Props {
     slim?: boolean;
@@ -127,7 +129,7 @@ export default function Sidebar({ slim = false, user, chambers }: Props) {
 
     // FULL: one nav for everything so the layoutId can interpolate across all links
     return (
-        <div className="flex flex-col h-screen px-4 py-6 bg-white">
+        <div className="flex flex-col h-screen px-4 py-6 bg-white dark:bg-neutral-900">
             {/* Top Logo + Heading */}
             <div className="flex items-center gap-2 mb-5">
                 <Link href="/" className="flex items-center gap-2">
@@ -149,7 +151,7 @@ export default function Sidebar({ slim = false, user, chambers }: Props) {
                     New Echo
                 </Link>
 
-                <nav className="flex flex-col">
+                <nav className="flex flex-col ">
                     {items.map((node) =>
                         node.type === "header" ? (
                             <h2
@@ -166,8 +168,8 @@ export default function Sidebar({ slim = false, user, chambers }: Props) {
                                 className={cn(
                                     "group relative flex items-center gap-3 px-3 py-2 transition-colors duration-200 rounded-md",
                                     node.item.current
-                                        ? "text-primary font-medium bg-primary/5"
-                                        : "text-gray-500 hover:text-primary hover:bg-gray-100"
+                                        ? "text-primary font-medium bg-primary/5 dark:bg-primary/30 dark:text-white"
+                                        : "text-gray-500 hover:text-primary hover:bg-gray-100 dark:text-neutral-300 dark:hover:bg-neutral-800",
                                 )}
                             >
                                 {node.item.current && (
@@ -180,7 +182,7 @@ export default function Sidebar({ slim = false, user, chambers }: Props) {
                                 <motion.div
                                     whileHover={{ scale: 1.1 }}
                                     whileTap={{ scale: 0.95 }}
-                                    className={cn("p-1 rounded-md", node.item.current && "text-primary")}
+                                    className={cn("p-1 rounded-md", node.item.current && "text-primary dark:text-white")}
                                 >
                                     {node.item.icon}
                                 </motion.div>
@@ -195,21 +197,24 @@ export default function Sidebar({ slim = false, user, chambers }: Props) {
             <div className="mt-auto space-y-1 pt-4 border-t border-gray-200">
                 <Link
                     href={`/user/${user?.id ?? ""}`}
-                    className="flex items-center gap-3 px-3 py-2 text-gray-500 hover:text-primary hover:bg-gray-100 rounded-md transition-colors capitalize"
+                    className="flex items-center gap-3 px-3 py-2 text-gray-500 hover:text-primary dark:text-neutral-400 hover:bg-gray-100 dark:hover:bg-neutral-800 rounded-md transition-colors capitalize"
                 >
-                    <TbUser />
+                    <Avatar url={user?.image} name={user?.username} size="sm" shape="circle" />
+
                     <span className="text-sm">{user?.name}</span>
                 </Link>
+                <DarkModeSwitch label="Dark mode" description="Use a darker color theme." size="sm" />
+
                 <Link
                     href="/settings"
-                    className="flex items-center gap-3 px-3 py-2 text-gray-500 hover:text-primary hover:bg-gray-100 rounded-md transition-colors"
+                    className="flex items-center gap-3 px-3 py-2 text-gray-500 hover:text-primary dark:text-neutral-400 hover:bg-gray-100 dark:hover:bg-neutral-800 rounded-md transition-colors"
                 >
                     <FiSettings />
                     <span className="text-sm">Settings</span>
                 </Link>
                 <button
-                    onClick={() => signOut()}
-                    className="flex items-center gap-3 px-3 py-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors w-full"
+                    onClick={() => signOut({ redirect: true, callbackUrl: '/' })}
+                    className="flex items-center gap-3 px-3 py-2 text-gray-500 hover:text-red-600 dark:text-neutral-400 dark:hover:text-red-100 hover:bg-red-50 dark:hover:bg-red-800 rounded-md transition-colors w-full"
                 >
                     <FiLogOut />
                     <span className="text-sm">Logout</span>

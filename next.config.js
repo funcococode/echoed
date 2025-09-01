@@ -20,6 +20,8 @@ const config = {
                 port: "",
                 pathname: "/**"
             },
+            { protocol: 'https', hostname: 'api.dicebear.com' },
+      { protocol: 'https', hostname: 'unavatar.io' },
         ]
     }
 };

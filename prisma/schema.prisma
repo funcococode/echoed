@@ -14,11 +14,13 @@ model User {
   id            String          @id @default(cuid())
   firstname     String
   lastname      String
+  displayName   String?
   username      String          @unique
   password      String
   email         String?         @unique
   emailVerified DateTime?
   image         String?
+  bio           String?         @db.Text
   accounts      Account[]
   sessions      Session[]
   Authenticator Authenticator[]
@@ -367,9 +369,21 @@ enum FeedStyle {
 }
 
 enum ThemePreference {
-  LIGHT
-  DARK
-  SYSTEM
+  light
+  dark
+  system
+}
+
+enum EchoLayoutDensity {
+  FULL
+  COMPACT
+  SLIM
+  MINIMAL
+}
+
+enum FeedDensity {
+  ROWS
+  GRID
 }
 
 model UserSettings {
@@ -396,8 +410,10 @@ model UserSettings {
   inlineLinkPreviews Boolean   @default(true)
 
   // Appearance & Accessibility
-  theme        ThemePreference @default(SYSTEM)
-  reduceMotion Boolean         @default(false)
+  theme        ThemePreference   @default(system)
+  reduceMotion Boolean           @default(false)
+  echoLayout   EchoLayoutDensity @default(FULL)
+  feedDensity  FeedDensity       @default(ROWS)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

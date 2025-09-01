@@ -11,6 +11,8 @@ function requireUserId(id?: string): asserts id is string {
 
 // -------- Profile --------
 const ProfileSchema = z.object({
+	firstname: z.string().trim().min(1).max(60),
+	lastname: z.string().trim().min(1).max(60),
 	displayName: z.string().trim().min(1).max(60),
 	username: z
 		.string()
@@ -18,7 +20,7 @@ const ProfileSchema = z.object({
 		.toLowerCase()
 		.regex(/^[a-z0-9_\.]{3,20}$/),
 	bio: z.string().trim().max(3000).optional().default(''),
-	avatarUrl: z.string().url().optional().nullable(),
+	avatarUrl: z.string().url().optional().nullable().default(''),
 })
 
 export async function updateProfile(input: z.infer<typeof ProfileSchema>) {
@@ -32,10 +34,11 @@ export async function updateProfile(input: z.infer<typeof ProfileSchema>) {
 		where: { id: session.user.id },
 		data: {
 			username: data.username,
-			// assuming you use separate displayName field; adapt if firstname/lastname
-			// displayName: data.displayName,
-			// bio: data.bio,
-			// avatar: data.avatarUrl,
+			displayName: data.displayName,
+			bio: data.bio,
+			image: data.avatarUrl,
+			firstname: data.firstname,
+			lastname: data.lastname,
 		},
 		select: { id: true, username: true },
 	})
@@ -102,9 +105,11 @@ const SettingsSchema = z.object({
 	inlineLinkPreviews: z.boolean().optional(),
 
 	// Appearance & Accessibility
-	theme: z.enum(['LIGHT', 'DARK', 'SYSTEM']).optional(),
+	theme: z.enum(['light', 'dark', 'system']).optional(),
 	density: z.enum(['COZY', 'COMPACT']).optional(),
 	reduceMotion: z.boolean().optional(),
+	feedDensity: z.enum(['ROWS', 'GRID']).optional(),
+	echoLayout: z.enum(['FULL', 'COMPACT', 'SLIM', 'MINIMAL']).optional(),
 })
 
 export async function getSettings() {
@@ -134,4 +139,30 @@ export async function updateSettings(input: z.infer<typeof SettingsSchema>) {
 	// Revalidate any pages that read settings (theme/feed/profile)
 	revalidatePath('/settings')
 	return { success: true as const, data: updated }
+}
+
+export async function getUserProfileData() {
+	const session = await auth()
+	requireUserId(session?.user?.id)
+
+	const user = await db.user.findUnique({
+		where: { id: session.user.id },
+		select: {
+			id: true,
+			firstname: true,
+			lastname: true,
+			displayName: true,
+			username: true,
+			bio: true,
+			image: true,
+		},
+	})
+
+	return {
+		success: true as const,
+		data: {
+			...user,
+			avatar: user?.image,
+		},
+	}
 }

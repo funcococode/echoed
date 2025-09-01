@@ -1,2 +1,2 @@
-export type Layout = 'rows' | 'grid'
-export type PostLayout = 'slim' | 'compact' | 'full' | 'minimal'
+export type Layout = 'ROWS' | 'GRID'
+export type PostLayout = 'SLIM' | 'COMPACT' | 'FULL' | 'MINIMAL'

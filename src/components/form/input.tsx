@@ -4,6 +4,7 @@ import { cn } from '@/lib/utils'
 import { type ReactElement, useMemo, useState } from 'react'
 import { Controller, type Control, type FieldPath, type FieldValues } from 'react-hook-form'
 import { TbAlertCircle, TbCheck, TbEye, TbEyeOff } from 'react-icons/tb'
+import { Input as FormInput } from '../ui/input'
 
 export interface InputProps<T extends FieldValues> {
   type?: string
@@ -26,7 +27,7 @@ export interface InputProps<T extends FieldValues> {
   matchToLabel?: string
   showPasswordStrength?: boolean
   showPasswordVisiblilityToggle?: boolean
-  /** Wrap with dashed section like your design */
+  /** Wrap with  section like your design */
   sectioned?: boolean
   /** Optional custom counter renderer (e.g. your <Counter />) */
   counterRenderer?: (len: number, max?: number) => React.ReactNode
@@ -78,7 +79,7 @@ export default function Input<T extends FieldValues>({
   const [capsOn, setCapsOn] = useState(false)
 
   return (
-    <div className={cn(sectioned && 'border-secondary-light border-b border-dashed pb-5')}>
+    <div className={cn(sectioned && 'border-secondary-light border-b border-dashed dark:border-neutral-800 pb-5')}>
       <Controller
         name={name as FieldPath<T>}
         control={control}
@@ -115,8 +116,9 @@ export default function Input<T extends FieldValues>({
               <div
                 className={cn(
                   'relative rounded-md border bg-white',
-                  error ? 'border-rose-300' : 'border-secondary-light',
-                  disabled && 'opacity-60 pointer-events-none'
+                  error && 'border-rose-300',
+                  disabled && 'opacity-60 pointer-events-none',
+                  'dark:border-neutral-800'
                 )}
               >
                 {/* Optional left icon */}
@@ -129,15 +131,15 @@ export default function Input<T extends FieldValues>({
                   </label>
                 )}
 
-                <input
+                <FormInput
                   ref={ref}
                   id={name}
                   name={name}
                   type={isPasswordKind ? (showPw ? 'text' : 'password') : type}
                   value={valueStr}
                   onChange={(e) => {
-                    if (maxLength && e.target.value.length > maxLength) return
-                    onChange(e)
+                    if (maxLength && e.target.value.length > maxLength) return;
+                    onChange(e);
                   }}
                   onBlur={onBlur}
                   onKeyUp={(e) => setCapsOn(e.getModifierState?.('CapsLock') ?? false)}
@@ -146,10 +148,20 @@ export default function Input<T extends FieldValues>({
                   inputMode={inputMode}
                   aria-invalid={!!error}
                   className={cn(
-                    'w-full rounded-md border-0 bg-transparent p-3.5 text-sm text-gray-800 placeholder:text-gray-400 focus:outline-none',
+                    // base
+                    'w-full rounded-md border-0 bg-transparent p-3.5 text-sm focus:outline-none',
+                    'text-gray-800 placeholder:text-gray-400 caret-slate-900 selection:bg-slate-200/70',
+                    // dark mode
+                    'dark:text-white dark:placeholder:text-white/50 dark:caret-white dark:selection:bg-white/20 dark:bg-neutral-950 ',
+                    // platform hints (prevents odd autofill colors)
+                    'autofill:bg-transparent [color-scheme:light] dark:[color-scheme:dark]',
+                    // states
+                    'disabled:opacity-50 read-only:opacity-60',
+                    // icon padding
                     withIcon && icon ? 'pl-10' : ''
                   )}
                 />
+
 
                 {/* Right-side adornments (password toggle / clear) */}
                 <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center gap-1 pr-3">

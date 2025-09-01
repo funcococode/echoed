@@ -7,9 +7,10 @@ import moment from 'moment';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import { motion } from 'motion/react';
-import { TbCalendar, TbNotes, TbUser, TbShare, TbUserHeart, TbUserStar } from 'react-icons/tb';
+import { TbCalendar, TbNotes, TbShare, TbUserHeart, TbUserStar } from 'react-icons/tb';
 import FollowButton from '../../_components/follow-button';
 import { useSession } from 'next-auth/react';
+import Avatar from '@/components/ui/avatar';
 
 export default function UserProfile() {
   const { id } = useParams<{ id: string }>();
@@ -20,6 +21,8 @@ export default function UserProfile() {
   const [posts, setPosts] = useState<PostType[]>([]);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState<string | null>(null);
+  const [imgLoaded, setImgLoaded] = useState(false);
+  const [imgError, setImgError] = useState(false);
 
   useEffect(() => {
     if (!id) {
@@ -33,6 +36,7 @@ export default function UserProfile() {
         setLoading(true);
         const [u, p] = await Promise.all([getUser({ id }), getAllPosts({ userId: id })]);
         if (!active) return;
+        console.log(u)
         setData(u ?? null);
         setPosts(
           (p?.data ?? []).map(post => ({
@@ -52,6 +56,15 @@ export default function UserProfile() {
       active = false;
     };
   }, [id, router]);
+
+  const avatarUrl = useMemo(() => {
+    const src = data?.image ?? '';
+    if (src) return src;
+    const seed = encodeURIComponent(
+      data?.username || `${data?.firstname ?? ''}${data?.lastname ?? ''}` || 'EchoedUser'
+    );
+    return `https://api.dicebear.com/7.x/adventurer/png?seed=${seed}&size=256&radius=10&backgroundColor=b6e3f4,c0aede,d1d4f1`;
+  }, [data?.image, data?.username, data?.firstname, data?.lastname]);
 
   const initials = useMemo(() => {
     const fi = (data?.firstname?.[0] ?? '').toUpperCase();
@@ -89,9 +102,8 @@ export default function UserProfile() {
         <div className="flex flex-col gap-5 px-6 pb-6 pt-4 sm:flex-row sm:items-end sm:justify-between">
           {/* Identity */}
           <div className="flex items-center gap-4">
-            <div className="grid h-16 w-16 place-items-center rounded-2xl border border-gray-200 bg-gradient-to-br from-slate-50 to-white text-lg font-semibold text-slate-700 shadow-sm">
-              {initials || <TbUser className="h-6 w-6 text-slate-400" />}
-            </div>
+            <Avatar url={data?.image} name={`${data?.firstname} ${data?.lastname}`} username={data?.username} size="xl" shape="rounded" withRing priority />
+
 
             <div className="min-w-0">
               <div className="flex flex-wrap items-center gap-2">

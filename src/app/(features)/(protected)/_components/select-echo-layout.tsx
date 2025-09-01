@@ -8,10 +8,10 @@ export default function SelectEchoLayout() {
     return (
         <SelectInput
             options={[
-                { label: 'Full Size', value: 'full', icon: <TbLayoutBoardSplit />, selected: echoLayout === 'full' },
-                { label: 'Compact', value: 'compact', icon: <TbLayout />, selected: echoLayout === 'compact' },
-                { label: 'Slim', value: 'slim', icon: <TbLayoutGridAdd />, selected: echoLayout === 'slim' },
-                { label: 'Minimal', value: 'minimal', icon: <TbTextCaption />, selected: echoLayout === 'minimal' },
+                { label: 'Full Size', value: 'FULL', icon: <TbLayoutBoardSplit />, selected: echoLayout === 'FULL' },
+                { label: 'Compact', value: 'COMPACT', icon: <TbLayout />, selected: echoLayout === 'COMPACT' },
+                { label: 'Slim', value: 'SLIM', icon: <TbLayoutGridAdd />, selected: echoLayout === 'SLIM' },
+                { label: 'Minimal', value: 'MINIMAL', icon: <TbTextCaption />, selected: echoLayout === 'MINIMAL' },
             ]}
             onChange={setEchoLayout}
             placeholder="Layout"

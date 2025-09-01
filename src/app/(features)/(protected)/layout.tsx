@@ -5,6 +5,8 @@ import Loader from "./_components/loader"
 import { auth } from "@/auth"
 import { listChambers } from "@/actions/chambers"
 import { unstable_cache } from "next/cache"
+import ProtectedLayoutClient from "./client"
+import { getSettings } from "./settings/actions"
 
 interface Props {
     children: ReactElement
@@ -19,9 +21,19 @@ const getChambersData = async (userId: string) => {
     return cached();
 };
 
+// const getLayoutData = async (userId: string) => {
+//     const cached = unstable_cache(
+//         async () => getSettings(),
+//         ["layout-settings", userId],
+//         { tags: [`layout-settings:${userId}`] }
+//     );
+//     return cached();
+// };
+
 export default async function FeedLayout({ children, pageHeading }: Props) {
     const session = await auth();
     const chambers = await getChambersData(session?.user?.id ?? '');
+    const { data: { feedDensity, echoLayout, theme } } = await getSettings();
 
     return (
         // Lock the whole layout to the viewport and prevent page scroll
@@ -40,13 +52,9 @@ export default async function FeedLayout({ children, pageHeading }: Props) {
                 </aside>
 
                 {/* Only this column scrolls */}
-                <div className="relative col-span-10 h-full overflow-y-auto scrollbar-hide">
-                    <section id="page-heading" className='relative'>
-                        {pageHeading ?? null}
-                    </section>
+                <ProtectedLayoutClient pageHeading={pageHeading} feedDensity={feedDensity} echoLayout={echoLayout} theme={theme}>
                     {children}
-                </div>
-
+                </ProtectedLayoutClient>
                 <div id="search-results" />
             </main>
         </SessionProvider>

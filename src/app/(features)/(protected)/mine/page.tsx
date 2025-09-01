@@ -47,9 +47,9 @@ export default function Mine() {
 					</div>
 				</section>
 			</PageHeading>
-			<div className={cn(layout === 'grid' && 'grid grid-cols-2 gap-5', layout === 'rows' && 'space-y-5')}>
+			<div className={cn('mt-5 ', layout === 'GRID' && 'grid grid-cols-2 gap-5', layout === 'ROWS' && 'space-y-5')}>
 				{data?.map(item => (
-					<PostCard key={item.id} post={item} display={echoLayout ?? 'full'} />
+					<PostCard key={item.id} post={item} display={echoLayout ?? 'FULL'} />
 				))}
 
 				{!data.length && <Link

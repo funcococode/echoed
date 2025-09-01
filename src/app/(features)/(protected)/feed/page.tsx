@@ -54,9 +54,9 @@ export default function Feed() {
 					</div>
 				</PageHeading>
 
-				<div className={cn(layout === 'grid' && 'grid grid-cols-2 gap-5', layout === 'rows' && 'space-y-5')}>
+				<div className={cn('mt-5', layout === 'GRID' && 'grid grid-cols-2 gap-5', layout === 'ROWS' && 'space-y-5')}>
 					{data?.map(item => (
-						<PostCard post={item} key={item.id} display={echoLayout ?? 'full'} />
+						<PostCard post={item} key={item.id} display={echoLayout ?? 'FULL'} />
 					))}
 					{!data?.length && (
 						<div className="col-span-2 text-center py-20">

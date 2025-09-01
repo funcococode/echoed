@@ -41,6 +41,7 @@ import { addEchoToChamber } from '@/actions/chambers'
 import SectionHeading from '@/components/ui/section-heading'
 import Card from '@/components/ui/card/card'
 import EchoLoader from '@/components/ui/loaders/loader'
+import Avatar from '@/components/ui/avatar'
 
 export default function Post() {
 	const { id } = useParams<{ id: string }>()
@@ -174,8 +175,9 @@ export default function Post() {
 						<div className="flex flex-wrap justify-between md:items-center md:text-sm">
 							<Link
 								href={`/user/${data?.userId}`}
-								className="text-primary capitalize">
-								{data?.user?.firstname} {data?.user?.lastname}
+								className="text-primary capitalize flex items-center gap-2">
+								<Avatar url={data?.user?.image} name={data?.user?.username} size="md" shape="circle" />
+								{data?.user?.displayName}
 							</Link>
 							<div className="flex items-center gap-2">
 								{data?.is_hidden && (
