@@ -40,6 +40,7 @@ export default function Feed() {
 		fetchData().catch(err => console.log(err))
 	}, [refetch, currentPage, limit, fetchData])
 
+
 	return (
 		<section className="flex gap-4 relative">
 			<div className="relative flex-1 space-y-10 md:space-y-4">
@@ -57,14 +58,19 @@ export default function Feed() {
 					{data?.map(item => (
 						<PostCard post={item} key={item.id} display={echoLayout ?? 'full'} />
 					))}
+					{!data?.length && (
+						<div className="col-span-2 text-center py-20">
+							<p className="text-sm text-neutral-500">No echoes found.</p>
+						</div>
+					)}
 				</div>
 			</div>
-			<Pagination
+			{!!data?.length && <Pagination
 				setCurrentPage={setCurrentPage}
 				currentPage={currentPage}
 				totalRecords={pageInfo?.total_count ?? 0}
 				totalPages={pageInfo?.total_pages ?? 0}
-			/>
+			/>}
 		</section >
 	)
 }

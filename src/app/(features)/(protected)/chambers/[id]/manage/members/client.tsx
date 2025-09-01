@@ -4,43 +4,31 @@ import * as React from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { type ColumnDef, type PaginationState, type RowSelectionState } from "@tanstack/react-table";
 import { motion } from "motion/react";
-import { TbDots, TbSearch, TbTrash, TbEye, TbPin, TbPinFilled } from "react-icons/tb";
+import { TbDots, TbSearch, TbTrash, TbEye } from "react-icons/tb";
 
 import { DataTable } from "@/components/elements/table"; // ← your reusable table
 import { Dropdown } from "@/components/elements/dropdown";
 import Button from "@/components/form/button";
-import { pinEchoToChamber, removeEchoFromChamber } from "./actions";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
+import { removeMemberFromChamber } from "./actions";
 
-type EchoItem = {
-    id: string,
-    title: string,
-    description: string,
-    createdAt: Date,
-    updatedAt: Date,
-    user: {
-        id: string,
-        image: string | null,
-        email: string | null,
-        username: string
-    },
-    views: number,
-    _count: {
-        saves: number,
-        votes: number,
-        tags: number
-    }
-    isPinned?: boolean
+type MemberItem = {
+    id: string;
+    username: string;
+    name: string;
+    email: string | null;
+    image: string | null;
+    createdAt: Date | null;
 };
 
-export default function ManageEchoesClient({
+export default function ManageMembersClient({
     chamber,
     initial,
 }: {
-    chamber: { id: string; name: string };
+    chamber: { id: string; name: string, description: string; };
     initial: {
-        items: EchoItem[];
+        items: MemberItem[];
         total: number;
         page: number;      // 1-based
         pageSize: number;
@@ -52,7 +40,7 @@ export default function ManageEchoesClient({
     const pathname = usePathname();
 
     // Data + selection
-    const [rows, setRows] = React.useState<EchoItem[]>(initial.items);
+    const [rows, setRows] = React.useState<MemberItem[]>(initial.items);
     const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
     React.useEffect(() => setRows(initial.items), [initial.items]);
 
@@ -78,7 +66,7 @@ export default function ManageEchoesClient({
                 case "delete": {
                     setRows(prev => prev.filter(p => p.id !== item.id));
                     try {
-                        await removeEchoFromChamber([item.id], chamber.id);
+                        await removeMemberFromChamber([item.id], chamber.id);
                     } catch {
                         router.refresh();
                     }
@@ -91,7 +79,7 @@ export default function ManageEchoesClient({
 
     // Bulk remove (selected on current page)
     const selectedIdx = React.useMemo(
-        () => Object.keys(rowSelection).filter(k => (rowSelection as any)[k]),
+        () => Object.keys(rowSelection).filter(k => (rowSelection)[k]),
         [rowSelection]
     );
     const selectedIds = React.useMemo(
@@ -100,18 +88,12 @@ export default function ManageEchoesClient({
     );
     const bulkRemove = async () => {
         if (!selectedIds.length) return;
-        // const toRemove = new Set(selectedIds);
-        // setRows(prev => prev.filter(r => !toRemove.has(r.id)));
         setRowSelection({});
         try {
-            await removeEchoFromChamber(selectedIds, chamber.id);
+            await removeMemberFromChamber(selectedIds, chamber.id);
         } catch {
             router.refresh();
         }
-    };
-
-    const handlePinEcho = (echoIds: string | string[], chamberId: string, pinAll: 'pin' | 'unpin' | 'toggle' | undefined) => {
-        pinEchoToChamber(echoIds, chamberId, pinAll).then(() => { }).catch(err => console.log(err))
     };
 
     // Server pagination wiring
@@ -127,68 +109,46 @@ export default function ManageEchoesClient({
     };
 
     // Columns (clean, airy, with an actions menu)
-    const columns = React.useMemo<ColumnDef<EchoItem>[]>(() => [
+    const columns = React.useMemo<ColumnDef<MemberItem>[]>(() => [
         {
-            accessorKey: "title",
-            header: "Title",
+            accessorKey: "name",
+            header: "Name",
             cell: ({ row }) => (
                 <div className="flex items-center gap-5">
                     <div className="min-w-0 max-w-[24rem]">
-                        <div className="truncate font-medium text-slate-800">{row.original.title}</div>
-                        {row.original.description && (
-                            <div className="mt-0.5 line-clamp-1 text-xs text-slate-500 truncate">
-                                {row.original.description}
-                            </div>
-                        )}
+                        <div className="truncate font-medium text-slate-800">{row.original.name}</div>
                     </div>
-                    {row.original.isPinned && (<div className="flex items-center gap-2 text-warning"><TbPinFilled /></div>)}
                 </div>
             ),
         },
         {
-            accessorKey: "user.username",
-            header: "Author",
+            accessorKey: "username",
+            header: "Username",
             cell: ({ row }) => (
                 <div className="min-w-0 max-w-[34rem]">
-                    <Link href={`/user/${row.original.user.id}`} className="text-primary">@{row.original.user.username}</Link>
+                    <Link href={`/user/${row.original.id}`} className="text-primary">@{row.original.username}</Link>
                 </div>
             ),
         },
-        // add saves, views, tags, and views count as well
         {
-            accessorKey: "views",
-            header: "Views",
-            cell: ({ row }) => <span className="text-sm text-slate-700">{row.original.views}</span>,
-        },
-        {
-            accessorKey: "_count.saves",
-            header: "Saves",
-            cell: ({ row }) => <span className="text-sm text-slate-700">{row.original._count.saves}</span>,
-        },
-        {
-            accessorKey: "_count.votes",
-            header: "Votes",
-            cell: ({ row }) => <span className="text-sm text-slate-700">{row.original._count.votes}</span>,
-        },
-        {
-            accessorKey: "_count.tags",
-            header: "Tags",
+            accessorKey: "email",
+            header: "Email",
             cell: ({ row }) => (
                 <div className="flex flex-wrap gap-1">
-                    {row.original._count.tags}
+                    {row.original.email}
                 </div>
             ),
         },
         {
-            accessorKey: "updatedAt",
-            header: "Updated",
+            accessorKey: "createdAt",
+            header: "Joined",
             cell: ({ row }) => {
-                const d = new Date((row.original.updatedAt ?? row.original.createdAt) as any);
+                const d = new Date((row.original.createdAt ?? row.original.createdAt) as unknown as string);
                 return <span className="text-sm text-slate-700">{d.toLocaleDateString()}</span>;
             },
             sortingFn: (a, b) => {
-                const da = new Date((a.original.updatedAt ?? a.original.createdAt) as any).getTime();
-                const db = new Date((b.original.updatedAt ?? b.original.createdAt) as any).getTime();
+                const da = new Date((a.original.createdAt ?? a.original.createdAt) as unknown as string).getTime();
+                const db = new Date((b.original.createdAt ?? b.original.createdAt) as unknown as string).getTime();
                 return da - db;
             },
         },
@@ -211,8 +171,7 @@ export default function ManageEchoesClient({
                     groups={[
                         {
                             items: [
-                                { label: row.original.isPinned ? 'Unpin from Chamber' : "Pin to Chamber", value: "pin", icon: <TbPin />, onClick: () => handlePinEcho(row.original.id, chamber.id, undefined) },
-                                { label: "View", value: "view", icon: <TbEye /> },
+                                { label: "View Profile", value: "view", icon: <TbEye />, href: `/user/${row.original.id}` },
                                 { label: "Remove", value: "remove", icon: <TbTrash />, separatorAbove: true, },
                             ],
                         },
@@ -239,12 +198,12 @@ export default function ManageEchoesClient({
                             defaultValue={initial.q}
                             onChange={(e) => {
                                 const v = e.target.value;
-                                window.clearTimeout((window as any).__qto);
-                                (window as any).__qto = window.setTimeout(() => setParam("q", v), 300);
+                                window.clearTimeout((window as unknown as { __qto: number | undefined }).__qto);
+                                (window as unknown as { __qto: number | undefined }).__qto = window.setTimeout(() => setParam("q", v), 300);
                             }}
-                            placeholder="Search echoes…"
+                            placeholder="Search members…"
                             className="w-full rounded-xl border border-slate-300 bg-white px-9 py-2.5 text-sm text-slate-800 outline-none focus:border-indigo-300 focus:ring-2 focus:ring-indigo-200"
-                            aria-label="Search echoes"
+                            aria-label="Search members"
                         />
                     </div>
                 </div>
@@ -257,8 +216,8 @@ export default function ManageEchoesClient({
                 transition={{ duration: 0.28, ease: "easeOut", delay: 0.05 }}
                 className="p-5"
             >
-                <DataTable<EchoItem, unknown>
-                    tableTitle="Manage Echoes"
+                <DataTable<MemberItem, unknown>
+                    tableTitle="Manage Members"
                     className="rounded-xl"
                     columns={columns}
                     data={rows}
@@ -275,13 +234,6 @@ export default function ManageEchoesClient({
                     initialPageSize={initial.pageSize}
                     toolbarRight={
                         !!Object.keys(rowSelection)?.length && <motion.div initial={{ opacity: 0, scale: 0 }} animate={{ opacity: 1, scale: 1 }} className="hidden sm:flex items-center gap-2">
-                            <Button
-                                text={`Pin (${selectedIds.length})`}
-                                variant="secondary"
-                                onClick={() => handlePinEcho(selectedIds, chamber.id, selectedIds?.length !== rows.length ? undefined : 'pin')}
-                                disabled={!selectedIds.length}
-                                classNames="rounded-lg bg-warning-light text-warning  border-none disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-secondary-light disabled:text-gray-600 disabled:border-secondary"
-                            />
                             <Button
                                 text={`Remove (${selectedIds.length})`}
                                 variant="secondary"
@@ -301,7 +253,7 @@ export default function ManageEchoesClient({
                     animate={{ opacity: 1, y: 0 }}
                     className="grid place-items-center rounded-2xl border border-dashed border-slate-300 bg-white p-10 text-center shadow-sm"
                 >
-                    <p className="text-sm text-slate-600">No echoes match your filters.</p>
+                    <p className="text-sm text-slate-600">No members match your filters.</p>
                     <div className="mt-4">
                         <Button
                             text="Create your first Echo"

@@ -9,6 +9,9 @@ import SelectEchoesContainerLayout from '../_components/select-echoes-container-
 import SelectEchoLayout from '../_components/select-echo-layout'
 import useLayoutStore from '@/stores/layout-store'
 import { cn } from '@/utils/cn'
+import { TbPlus } from 'react-icons/tb'
+import Icon from '@/components/ui/icon'
+import Link from 'next/link'
 
 export default function Mine() {
 	const session = useSession()
@@ -48,6 +51,14 @@ export default function Mine() {
 				{data?.map(item => (
 					<PostCard key={item.id} post={item} display={echoLayout ?? 'full'} />
 				))}
+
+				{!data.length && <Link
+					href="/post/new"
+					className="mt-5 flex-1 border w-full h-96 rounded-md border-gray-200 bg-gray-50 capitalize font-semibold grid place-content-center gap-5 hover:bg-gray-100">
+					<Icon icon={<TbPlus />} size="large" />
+					Create a new Echo
+				</Link>}
+
 			</div>
 		</div>
 	)

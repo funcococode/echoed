@@ -26,6 +26,7 @@ import Input from '@/components/form/input'
 import Textarea from '@/components/form/textarea'
 import { useForm } from 'react-hook-form'
 import { AnimatePresence, motion } from 'motion/react'
+import PageHeading from '@/components/ui/page-heading'
 
 interface Props {
 	chamberId?: string
@@ -164,6 +165,13 @@ export default function NewPost({ chamberId }: Props) {
 
 	return (
 		<div className="border-secondary-light rounded-md border bg-white shadow-sm">
+			<PageHeading>
+				<section className="flex h-32 items-center justify-between gap-1 px-4">
+					<div className="text-secondary flex w-full items-center justify-start gap-4 text-5xl">
+						Create your own echo
+					</div>
+				</section>
+			</PageHeading>
 			{/* top progress */}
 			<div className="h-1 w-full bg-gray-100">
 				<div className="bg-primary h-1 transition-all" style={{ width: `${progress}%` }} />

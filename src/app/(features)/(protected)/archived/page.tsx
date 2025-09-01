@@ -10,6 +10,7 @@ import { cn } from "@/utils/cn";
 import useLayoutStore from "@/stores/layout-store";
 import SelectEchoesContainerLayout from "../_components/select-echoes-container-layout";
 import SelectEchoLayout from "../_components/select-echo-layout";
+import { TbArchive } from "react-icons/tb";
 
 
 export default function ArchivedEchoes() {
@@ -48,6 +49,10 @@ export default function ArchivedEchoes() {
                 {data?.map(item => (
                     <PostCard key={item.id} post={item} display={echoLayout ?? 'full'} />
                 ))}
+                {!data?.length && <div className="text-center text-gray-500 py-20 text-sm flex items-center gap-2 justify-center flex-col col-span-2">
+                    <TbArchive className="text-5xl" />
+                    <p>Archived echoes will appear here.</p>
+                </div>}
             </div>
 
         </div>

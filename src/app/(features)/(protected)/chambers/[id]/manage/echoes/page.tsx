@@ -14,7 +14,7 @@ interface Props {
 export default async function ManageEchoes({ params, searchParams }: Props) {
     const id = params.id;
     const q = (searchParams?.q ?? "").trim();
-    const status = (searchParams?.status as Props["searchParams"]["status"]) ?? "all";
+    // const status = (searchParams?.status as Props["searchParams"]["status"]) ?? "all";
     const page = Math.max(1, Number(searchParams?.page ?? 1));
     const pageSize = 10;
 
@@ -26,29 +26,27 @@ export default async function ManageEchoes({ params, searchParams }: Props) {
     if (!chamber) notFound();
 
     const where = {
-        chamberId: id,
+        Chamber: {
+            some: {
+                id: chamber.id,
+            }
+        },
         ...(q
             ? {
                 OR: [
-                    { title: { contains: q, mode: "insensitive" } },
-                    { description: { contains: q, mode: "insensitive" } },
+                    { title: { contains: q } },
+                    { description: { contains: q } },
                 ],
             }
             : {}),
-        ...(status && status !== "all"
-            ? { status } // ⟵ if your Post model doesn’t have `status`, remove this line
-            : {}),
+        // ...(status && status !== "all"
+        //     ? { status } // ⟵ if your Post model doesn’t have `status`, remove this line
+        //     : {}),
     };
 
     const [items, total] = await Promise.all([
         db.post.findMany({
-            where: {
-                Chamber: {
-                    some: {
-                        id: chamber.id,
-                    }
-                }
-            },
+            where,
             orderBy: { createdAt: "desc" },
             take: pageSize,
             skip: (page - 1) * pageSize,

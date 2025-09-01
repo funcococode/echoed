@@ -39,8 +39,9 @@ model User {
   followingCount Int @default(0)
 
   /// Follow relations
-  followers Follow[] @relation("Followers") // other users who follow this user
-  following Follow[] @relation("Following") // users this user follows
+  followers Follow[]      @relation("Followers") // other users who follow this user
+  following Follow[]      @relation("Following") // users this user follows
+  settings  UserSettings?
 }
 
 model Account {
@@ -227,18 +228,35 @@ model Chamber {
 }
 
 model ChamberMember {
-  id        String   @id @default(uuid())
-  chamberId String
-  chamber   Chamber  @relation(fields: [chamberId], references: [id], onDelete: Cascade)
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  role      String // e.g., 'admin', 'member'
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                  String            @id @default(uuid())
+  chamberId           String
+  chamber             Chamber           @relation(fields: [chamberId], references: [id], onDelete: Cascade)
+  userId              String
+  user                User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role                ChamberMemberRole @relation(fields: [chamberMemberRoleId], references: [id])
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
+  chamberMemberRoleId String
 
   @@unique([chamberId, userId])
   @@index([chamberId])
   @@index([userId])
+}
+
+enum ChamberRoles {
+  CREATOR
+  LISTENER
+  MODERATOR
+}
+
+model ChamberMemberRole {
+  id            String          @id @default(uuid())
+  name          ChamberRoles
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  ChamberMember ChamberMember[]
+
+  @@unique([name])
 }
 
 // model for pinned echoes on chamber
@@ -326,4 +344,61 @@ model Follow {
   @@unique([followerId, followingId])
   @@index([followerId])
   @@index([followingId])
+}
+
+//  SETTINGS PAGE
+
+enum UserVisibility {
+  PUBLIC
+  FOLLOWERS
+  PRIVATE
+}
+
+enum CommentPermission {
+  EVERYONE
+  FOLLOWERS
+  NOBODY
+}
+
+enum FeedStyle {
+  FOLLOWING
+  LATEST
+  MIXED
+}
+
+enum ThemePreference {
+  LIGHT
+  DARK
+  SYSTEM
+}
+
+model UserSettings {
+  userId String @id
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Privacy & Safety
+  profileVisibility   UserVisibility    @default(PUBLIC)
+  allowComments       CommentPermission @default(EVERYONE)
+  blurNSFW            Boolean           @default(true)
+  discoverableByEmail Boolean           @default(false)
+
+  // Notifications
+  inAppNotifications Boolean @default(true)
+  emailNotifications Boolean @default(false)
+  notifyNewFollower  Boolean @default(true)
+  notifyMention      Boolean @default(true)
+  notifyComment      Boolean @default(true)
+  notifyLike         Boolean @default(false)
+
+  // Content & Feed
+  feedStyle          FeedStyle @default(MIXED)
+  autoplayMedia      Boolean   @default(false)
+  inlineLinkPreviews Boolean   @default(true)
+
+  // Appearance & Accessibility
+  theme        ThemePreference @default(SYSTEM)
+  reduceMotion Boolean         @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

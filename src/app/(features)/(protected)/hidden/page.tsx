@@ -9,6 +9,7 @@ import { cn } from "@/utils/cn";
 import useLayoutStore from "@/stores/layout-store";
 import SelectEchoesContainerLayout from "../_components/select-echoes-container-layout";
 import SelectEchoLayout from "../_components/select-echo-layout";
+import { TbEyeClosed } from "react-icons/tb";
 
 export default function HiddenEchoes() {
     const session = useSession();
@@ -43,6 +44,10 @@ export default function HiddenEchoes() {
             </PageHeading>
             <div className={cn(layout === 'grid' && 'grid grid-cols-2 gap-5', layout === 'rows' && 'space-y-5')}>
                 {data?.map(item => <PostCard key={item.id} post={item} display={echoLayout ?? 'full'} />)}
+                {!data?.length && <div className="text-center text-gray-500 py-20 text-sm flex items-center gap-2 justify-center flex-col">
+                    <TbEyeClosed className="text-5xl" />
+                    <p>Echoes that you hide will appear here.</p>
+                </div>}
             </div>
         </div>
     )
