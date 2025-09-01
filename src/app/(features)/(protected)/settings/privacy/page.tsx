@@ -60,7 +60,7 @@ export default function PrivacySettingsPage() {
         <div className="space-y-8">
             <header className="flex items-center justify-between">
                 <div>
-                    <h2 className="text-lg font-semibold text-slate-900">Privacy &amp; Safety</h2>
+                    <h2 className="text-lg font-semibold text-slate-900 dark:text-neutral-200">Privacy &amp; Safety</h2>
                     <p className="text-sm text-slate-500">Control who can see and interact with you.</p>
                 </div>
                 {pending && <div className="text-xs text-slate-500">Saving…</div>}
@@ -68,7 +68,7 @@ export default function PrivacySettingsPage() {
 
             {/* Visibility */}
             <section className="space-y-3">
-                <div className="text-sm font-medium text-slate-800">Profile visibility</div>
+                <div className="text-sm font-medium text-slate-800 dark:text-neutral-400">Profile visibility</div>
                 <PillRadioGroup
                     name="visibility"
                     layoutId="visibility-pill-bg"
@@ -85,7 +85,7 @@ export default function PrivacySettingsPage() {
 
             {/* Comments */}
             <section className="space-y-3">
-                <div className="text-sm font-medium text-slate-800">Who can comment on my posts</div>
+                <div className="text-sm font-medium text-slate-800 dark:text-neutral-400">Who can comment on my posts</div>
                 <PillRadioGroup
                     name="comments"
                     layoutId="comments-pill-bg"

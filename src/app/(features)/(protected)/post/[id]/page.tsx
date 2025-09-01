@@ -169,35 +169,36 @@ export default function Post() {
 		)
 	return (
 		<div className="space-y-5 pl-5">
-			<div className="divide-secondary flex flex-wrap gap-5 divide-y md:divide-x md:divide-y-0">
+			<div className="divide-secondary dark:divide-neutral-800 flex flex-wrap gap-5 divide-y md:divide-x md:divide-y-0">
 				<div className="flex-[5] space-y-10 pr-10">
 					<div className="space-y-5 pt-10">
 						<div className="flex flex-wrap justify-between md:items-center md:text-sm">
 							<Link
 								href={`/user/${data?.userId}`}
-								className="text-primary capitalize flex items-center gap-2">
+								className="text-primary dark:text-neutral-100 capitalize flex items-center gap-2"
+							>
 								<Avatar url={data?.user?.image} name={data?.user?.username} size="md" shape="circle" />
-								{data?.user?.displayName}
+								{data?.user?.displayName ?? `${data?.user?.firstname} ${data?.user?.lastname}`}
 							</Link>
 							<div className="flex items-center gap-2">
 								{data?.is_hidden && (
-									<div className="flex list-none items-center rounded border border-gray-200 bg-gray-500/10 text-xs font-medium text-gray-400">
-										<span className="border-r border-gray-200 p-1">
+									<div className="flex list-none items-center rounded border border-gray-200 dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-100 bg-gray-500/10 text-xs font-medium text-gray-400">
+										<span className="border-r border-gray-200 p-1 dark:border-neutral-800">
 											<TbEyeClosed />
 										</span>
 										<span className="px-1.5">Hidden</span>
 									</div>
 								)}
 								{data?.is_archived && (
-									<div className="flex list-none items-center rounded border border-orange-200 bg-orange-500/10 text-xs font-medium text-orange-400">
-										<span className="border-r border-orange-200 p-1">
+									<div className="flex list-none items-center rounded border border-orange-200 bg-orange-500/10 text-xs font-medium text-orange-400 dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-100">
+										<span className="border-r border-orange-200 p-1 dark:border-neutral-800">
 											<TbArchive />
 										</span>
 										<span className="px-1.5">Archived</span>
 									</div>
 								)}
-								<div className="text-primary flex list-none items-center rounded border border-indigo-200 bg-indigo-500/10 text-xs font-medium">
-									<span className="border-r border-indigo-200 p-1">
+								<div className="text-primary flex list-none items-center rounded border border-indigo-200 bg-indigo-500/10 text-xs font-medium dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-100">
+									<span className="border-r border-indigo-200 p-1 dark:border-neutral-800">
 										<TbArrowUp />
 									</span>
 									<span className="px-1.5">
@@ -208,8 +209,8 @@ export default function Post() {
 										}
 									</span>
 								</div>
-								<div className="flex list-none items-center rounded border border-red-200 bg-red-500/10 text-xs font-medium text-red-700">
-									<span className="border-r border-red-200 p-1">
+								<div className="flex list-none items-center rounded border border-red-200 bg-red-500/10 text-xs font-medium text-red-700 dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-100">
+									<span className="border-r border-red-200 p-1 dark:border-neutral-800">
 										<TbArrowDown />
 									</span>
 									<span className="px-1.5">
@@ -220,8 +221,8 @@ export default function Post() {
 										}
 									</span>
 								</div>
-								<div className="flex list-none items-center rounded border border-yellow-300 bg-yellow-500/10 text-xs font-medium text-yellow-700">
-									<span className="border-r border-yellow-300 p-1">
+								<div className="flex list-none items-center rounded border border-yellow-300 bg-yellow-500/10 text-xs font-medium text-yellow-700 dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-100">
+									<span className="border-r border-yellow-300 p-1 dark:border-neutral-800">
 										<TbEye />
 									</span>
 									<span className="px-1.5">{data?.views}</span>
@@ -251,14 +252,14 @@ export default function Post() {
 							</div>
 						</div>
 					</div>
-					<h1 className="text-3xl leading-normal font-bold text-gray-800 md:text-4xl">
+					<h1 className="text-3xl leading-normal font-bold text-gray-800 md:text-4xl dark:text-neutral-100">
 						{data?.title}
 					</h1>
 					<div className="space-y-10">
-						<p className="border-primary border-l-4 pl-5 text-base font-light text-gray-600">
+						<p className="border-primary border-l-4 pl-5 text-base font-light text-gray-600 dark:text-neutral-400">
 							{data?.description}
 						</p>
-						<div className="prose">
+						<div className="prose dark:*:text-neutral-300">
 							<Markdown
 								rehypePlugins={[rehypeRaw]}
 								remarkPlugins={[remarkGfm]}>

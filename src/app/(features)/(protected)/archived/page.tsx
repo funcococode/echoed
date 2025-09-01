@@ -45,9 +45,9 @@ export default function ArchivedEchoes() {
                 </section>
             </PageHeading>
 
-            <div className={cn(layout === 'grid' && 'grid grid-cols-2 gap-5', layout === 'rows' && 'space-y-5')}>
+            <div className={cn(layout === 'GRID' && 'grid grid-cols-2 gap-5', layout === 'ROWS' && 'space-y-5')}>
                 {data?.map(item => (
-                    <PostCard key={item.id} post={item} display={echoLayout ?? 'full'} />
+                    <PostCard key={item.id} post={item} display={echoLayout ?? 'FULL'} />
                 ))}
                 {!data?.length && <div className="text-center text-gray-500 py-20 text-sm flex items-center gap-2 justify-center flex-col col-span-2">
                     <TbArchive className="text-5xl" />

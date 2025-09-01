@@ -80,7 +80,7 @@ export default function ChamberLayout({ children }: Props) {
             <PageHeading className='h-96 grid relative'>
                 <section className="flex items-center justify-between px-10 row-span-11">
                     <div className="flex items-center gap-5 max-w-2/3 ">
-                        <div className="border-secondary bg-secondary-light text-secondary grid aspect-square w-20 p-3 place-content-center rounded-full border text-3xl font-bold">
+                        <div className="border-secondary bg-secondary-light text-secondary dark:bg-neutral-900 dark:border-neutral-800 dark:text-neutral-400 grid aspect-square w-20 p-3 place-content-center rounded-full border text-3xl font-bold">
                             {data?.chamber?.name?.split(' ')?.map(item => item[0])?.[0]}
                         </div>
                         <div className="space-y-10">
@@ -91,17 +91,17 @@ export default function ChamberLayout({ children }: Props) {
                                     {data?.chamber?.frequency?.split('-')?.[0]}
                                 </span>
                             </h1>
-                            <p className="text-sm font-light w-2/3">
+                            <p className="text-sm font-light w-2/3 dark:text-neutral-400">
                                 {data?.chamber?.description}
                             </p>
                             <div className='flex items-center gap-2 w-fit'>
-                                <div className='flex border border-secondary rounded-md px-4 py-0.5 w-fit items-center text-xs font-semibold gap-2'>
+                                <div className='flex border border-secondary dark:bg-neutral-900 dark:border-neutral-800 rounded-md px-4 py-0.5 w-fit items-center text-xs font-semibold gap-2'>
                                     <h2>
                                         {data?.chamber?._count?.ChamberMember}
                                     </h2>
                                     <h3 className=''>Member</h3>
                                 </div>
-                                <div className='flex border border-secondary  rounded-md px-4 py-0.5 w-fit items-center text-xs font-semibold gap-2'>
+                                <div className='flex border border-secondary dark:bg-neutral-900 dark:border-neutral-800 rounded-md px-4 py-0.5 w-fit items-center text-xs font-semibold gap-2'>
                                     <h2>
                                         {data?.chamber?._count?.posts}
                                     </h2>
@@ -114,7 +114,7 @@ export default function ChamberLayout({ children }: Props) {
                         <Button
                             text="Create an echo here"
                             icon={<TbCodeVariablePlus className="text-xl" />}
-                            className="hover:py-2 transition-all cursor-pointer border-secondary hover:border-primary font-medium flex items-center gap-2 rounded-full border px-4 py-1.5 text-sm text-black hover:bg-primary-light hover:text-primary"
+                            className="hover:py-2 transition-all cursor-pointer border-secondary dark:border-neutral-800 dark:text-neutral-100 hover:border-primary dark:hover:bg-neutral-100 dark:hover:text-neutral-900 font-medium flex items-center gap-2 rounded-full border px-4 py-1.5 text-sm text-black hover:bg-primary-light hover:text-primary"
                         />
                         {session?.data?.user?.id !== data?.chamber?.user?.id && <div className='pl-5 border-l'>
                             {!data?.chamber?.ChamberMember?.find(item => item.chamberId === id && item.userId === session.data?.user?.id)?.id ? <Button

@@ -160,7 +160,7 @@ function PillTabs({
             role="tablist"
             aria-label={ariaLabel}
             className={[
-                "inline-flex items-center gap-1 rounded-full border border-secondary bg-secondary p-1 font-semibold",
+                "inline-flex items-center gap-1 rounded-full border border-secondary bg-white dark:bg-neutral-900 dark:border-neutral-800 p-1 font-semibold",
                 compact ? "text-xs" : "text-sm",
             ].join(" ")}
         >
@@ -175,8 +175,8 @@ function PillTabs({
                         className={[
                             "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1.5 transition-[background,border,color] cursor-pointer",
                             active
-                                ? "bg-white"
-                                : "hover:bg-secondary-light",
+                                ? "bg-primary-light text-primary"
+                                : "",
                         ].join(" ")}
                         title={opt.label}
                     >
@@ -216,7 +216,7 @@ function TagChip({ item, idx }: { item: TagItem; idx: number }) {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 6, scale: 0.98 }}
             transition={{ duration: 0.16, delay: idx * 0.01 }}
-            className="group inline-flex items-center gap-2 rounded-full border border-secondary bg-secondary-light/40 px-3.5 py-1.5 text-sm focus-visible:outline-none "
+            className="group inline-flex items-center gap-2 rounded-full border border-secondary bg-secondary-light/40 dark:bg-neutral-900 dark:border-neutral-800 px-3.5 py-1.5 text-sm focus-visible:outline-none "
         // onClick={() => router.push(`/tags/${slugify(item.name)}`)}
         >
             <span
@@ -248,14 +248,13 @@ function TileGrid({ items }: { items: TagItem[] }) {
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 6, scale: 0.99 }}
                         transition={{ duration: 0.18, delay: idx * 0.008 }}
-                        className="relative list-none border rounded-md border-secondary-light cursor-pointer"
+                        className="relative list-none border rounded-md border-secondary-light dark:border-neutral-800 overflow-hidden cursor-pointer"
                     >
                         <span
-                            className="w-20 h-full inline-block absolute top-1/2 -translate-y-1/2 z-10"
+                            className="w-1 h-full inline-block absolute top-1/2 -translate-y-1/2 z-10"
                             style={{
                                 background: `
-                                    radial-gradient(24px 16px at 0% 50%, hsl(${hue} 70% 60% / .18), transparent 70%),
-                                    linear-gradient(to right, #fff, hsl(${hue} 70% 60% / .14))
+                                    hsl(${hue} 70% 60% / .3)
                                 `
                             }}
 

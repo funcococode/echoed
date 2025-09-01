@@ -28,7 +28,7 @@ export default function AppearanceSettingsPage() {
         <div className="space-y-6">
             <header className='flex items-center justify-between'>
                 <div>
-                    <h2 className="text-lg font-semibold text-slate-900">Appearance &amp; Accessibility</h2>
+                    <h2 className="text-lg font-semibold text-slate-900 dark:text-neutral-200">Appearance &amp; Accessibility</h2>
                     <p className="text-sm text-slate-500">Personalize how Echoed looks and feels.</p>
                 </div>
                 {pending && <div className="text-xs text-slate-500">Saving…</div>}
@@ -36,7 +36,7 @@ export default function AppearanceSettingsPage() {
 
             <section className="grid grid-cols-1 gap-8 sm:max-w-md">
                 <div>
-                    <label className="mb-1 block text-sm font-medium text-slate-700">Theme</label>
+                    <label className="mb-1 block text-sm font-medium text-slate-700 dark:text-neutral-400">Theme</label>
                     <PillRadioGroup
                         name="theme"
                         layoutId="theme"
@@ -52,7 +52,7 @@ export default function AppearanceSettingsPage() {
                 </div>
 
                 <div>
-                    <label className="mb-1 block text-sm font-medium text-slate-700">Feed Density Layout</label>
+                    <label className="mb-1 block text-sm font-medium text-slate-700 dark:text-neutral-400">Feed Density Layout</label>
 
                     <PillRadioGroup
                         name="feed-density-layout"
@@ -69,7 +69,7 @@ export default function AppearanceSettingsPage() {
                 </div>
 
                 <div>
-                    <label className="mb-1 block text-sm font-medium text-slate-700">Echoes Card Layout</label>
+                    <label className="mb-1 block text-sm font-medium text-slate-700 dark:text-neutral-400">Echoes Card Layout</label>
 
                     <PillRadioGroup
                         name="echo-card-layout"
@@ -89,7 +89,7 @@ export default function AppearanceSettingsPage() {
 
             </section>
             <section>
-                <label className="mb-1 block text-sm font-medium text-slate-700">Miscellaneous</label>
+                <label className="mb-1 block text-sm font-medium text-slate-700 dark:text-neutral-400">Miscellaneous</label>
                 <PillCheckbox
                     id="reduce-motion"
                     checked={!!s?.reduceMotion}

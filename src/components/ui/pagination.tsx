@@ -23,7 +23,7 @@ export default function Pagination({
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3 }}
-                className="flex items-center gap-3 bg-white/80 backdrop-blur-md p-3 rounded-full shadow-lg border border-gray-100"
+                className="flex items-center gap-3 bg-white/80 dark:bg-neutral-950 dark:border-neutral-800 backdrop-blur-md p-3 rounded-full shadow-lg border border-gray-100"
             >
                 {/* Prev Button */}
                 <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
@@ -58,14 +58,14 @@ export default function Pagination({
                                     {isActive && (
                                         <motion.div
                                             layoutId="activePage"
-                                            className="absolute inset-0 rounded-lg bg-primary/10"
+                                            className="absolute inset-0 rounded-lg bg-primary/10 dark:bg-primary/50"
                                             transition={{ type: "spring", stiffness: 320, damping: 25 }}
                                         />
                                     )}
 
                                     <Button
                                         className={` cursor-pointer relative text-sm p-2 px-4 rounded-full font-medium transition-colors duration-200 ${isActive
-                                            ? 'text-primary'
+                                            ? 'text-primary dark:text-white'
                                             : 'text-gray-500 hover:text-primary'
                                             }`}
                                         onClick={() => setCurrentPage(idx)}

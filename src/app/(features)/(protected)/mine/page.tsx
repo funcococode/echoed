@@ -54,7 +54,7 @@ export default function Mine() {
 
 				{!data.length && <Link
 					href="/post/new"
-					className="mt-5 flex-1 border w-full h-96 rounded-md border-gray-200 bg-gray-50 capitalize font-semibold grid place-content-center gap-5 hover:bg-gray-100">
+					className="mt-5 flex-1 border w-full h-96 rounded-md border-gray-200 bg-gray-50 dark:bg-neutral-950 dark:border-neutral-800 border-dashed capitalize font-semibold grid place-content-center gap-5 hover:bg-gray-100">
 					<Icon icon={<TbPlus />} size="large" />
 					Create a new Echo
 				</Link>}

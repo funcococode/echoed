@@ -169,7 +169,7 @@ export default function Sidebar({ slim = false, user, chambers }: Props) {
                                     "group relative flex items-center gap-3 px-3 py-2 transition-colors duration-200 rounded-md",
                                     node.item.current
                                         ? "text-primary font-medium bg-primary/5 dark:bg-primary/30 dark:text-white"
-                                        : "text-gray-500 hover:text-primary hover:bg-gray-100 dark:text-neutral-300 dark:hover:bg-neutral-800",
+                                        : "text-gray-500 hover:text-primary hover:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-800",
                                 )}
                             >
                                 {node.item.current && (
@@ -194,7 +194,7 @@ export default function Sidebar({ slim = false, user, chambers }: Props) {
             </div>
 
             {/* Utility Section */}
-            <div className="mt-auto space-y-1 pt-4 border-t border-gray-200">
+            <div className="mt-auto space-y-1 pt-4 border-t border-gray-200 dark:border-neutral-800">
                 <Link
                     href={`/user/${user?.id ?? ""}`}
                     className="flex items-center gap-3 px-3 py-2 text-gray-500 hover:text-primary dark:text-neutral-400 hover:bg-gray-100 dark:hover:bg-neutral-800 rounded-md transition-colors capitalize"
@@ -203,7 +203,7 @@ export default function Sidebar({ slim = false, user, chambers }: Props) {
 
                     <span className="text-sm">{user?.name}</span>
                 </Link>
-                <DarkModeSwitch label="Dark mode" description="Use a darker color theme." size="sm" />
+                <DarkModeSwitch label="Dark mode" size="sm" />
 
                 <Link
                     href="/settings"

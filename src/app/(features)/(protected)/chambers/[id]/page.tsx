@@ -47,16 +47,16 @@ export default function ChamberPage() {
 					<SelectEchoesContainerLayout />
 					<SelectEchoLayout />
 				</div>
-				<section className={cn('border border-warning p-5 rounded-lg', layout === 'grid' && 'grid grid-cols-2 gap-5 ', layout === 'rows' && 'space-y-5')}>
-					<h1 className='font-bold text-sm text-warning flex items-center gap-2'>
-						<TbPin />
+				<section className={cn('border border-warning dark:border-warning/50 p-5 rounded-lg', layout === 'GRID' && 'grid grid-cols-2 gap-5 ', layout === 'ROWS' && 'space-y-5')}>
+					<h1 className='font-bold text-sm text-warning  flex items-center gap-2'>
+						<TbPin className='text-xl' />
 						Pinned Echoes
 					</h1>
-					{data?.posts?.filter(item => item.isPinned).map(item => <PostCard key={item.id} post={item} display={'compact'} />)}
+					{data?.posts?.filter(item => item.isPinned).map(item => <PostCard key={item.id} post={item} display={'COMPACT'} />)}
 				</section>
-				<section className={cn('border border-secondary p-5 rounded-lg', layout === 'grid' && 'grid grid-cols-2 gap-5', layout === 'rows' && 'space-y-5')}>
-					<h1 className='font-bold text-sm text-black'>All Echoes</h1>
-					{data?.posts?.filter(item => !item.isPinned).map(item => <PostCard key={item.id} post={item} display={echoLayout ?? 'full'} />)}
+				<section className={cn('border border-secondary dark:border-neutral-800 p-5 rounded-lg', layout === 'GRID' && 'grid grid-cols-2 gap-5', layout === 'ROWS' && 'space-y-5')}>
+					<h1 className='font-bold text-sm text-black dark:text-neutral-400'>All Echoes</h1>
+					{data?.posts?.filter(item => !item.isPinned).map(item => <PostCard key={item.id} post={item} display={echoLayout ?? 'FULL'} />)}
 				</section>
 			</div>
 		</div>

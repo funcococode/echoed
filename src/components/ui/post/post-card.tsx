@@ -12,7 +12,7 @@ import Avatar from '../avatar'
 
 export interface PostCardProps {
 	post: AllEchoesType['data'][0]
-	display?: PostLayout // 'full' | 'COMPACT' | 'MINIMAL' | 'SLIM'
+	display?: PostLayout // 'FULL' | 'COMPACT' | 'MINIMAL' | 'SLIM'
 }
 
 /* helpers */
@@ -22,7 +22,7 @@ const initials = (fn?: string | null, ln?: string | null) =>
 	`${(fn?.[0] ?? '').toUpperCase()}${(ln?.[0] ?? '').toUpperCase()}` || 'E'
 
 const Chip = ({ icon, children }: { icon?: React.ReactNode; children: React.ReactNode }) => (
-	<span className="inline-flex items-center gap-1.5 rounded-full border border-gray-200 bg-white px-2 py-0.5 text-[11px] font-medium text-gray-600">
+	<span className="inline-flex items-center gap-1.5 rounded-full border border-gray-200 bg-white dark:bg-neutral-800 dark:border-neutral-900 dark:text-neutral-400 px-2 py-0.5 text-[11px] font-medium text-gray-600">
 		{icon}
 		{children}
 	</span>
@@ -89,7 +89,7 @@ const SLIM = ({ post }: { post: AllEchoesType['data'][0] }) => (
 	<motion.article
 		initial={{ opacity: 0, y: 4 }}
 		animate={{ opacity: 1, y: 0 }}
-		className="flex items-center gap-3 rounded border border-secondary-light bg-white p-3 "
+		className="flex items-center gap-3 rounded border border-secondary-light bg-white dark:bg-neutral-900 dark:border-neutral-800 p-3 "
 	>
 		{post.headerImage && (
 			<div className="relative h-14 w-14 overflow-hidden rounded-md bg-gray-100">
@@ -97,7 +97,7 @@ const SLIM = ({ post }: { post: AllEchoesType['data'][0] }) => (
 			</div>
 		)}
 		<div className="min-w-0 flex-1">
-			<Link href={`/post/${post.id}`} className="line-clamp-1 text-sm font-semibold text-gray-900 hover:text-primary">
+			<Link href={`/post/${post.id}`} className="line-clamp-1 text-sm font-semibold text-gray-900 hover:text-primary dark:text-neutral-100">
 				{post.title}
 			</Link>
 			<div className="mt-0.5 flex items-center gap-2 text-[11px] text-gray-500">
@@ -114,14 +114,14 @@ const MINIMAL = ({ post }: { post: AllEchoesType['data'][0] }) => (
 	<motion.article
 		initial={{ opacity: 0, y: 4 }}
 		animate={{ opacity: 1, y: 0 }}
-		className="space-y-2 rounded border border-secondary-light bg-white p-3 "
+		className="space-y-2 rounded border border-secondary-light bg-white p-3 dark:bg-neutral-900 dark:border-neutral-800 "
 	>
 		{post.headerImage && (
 			<div className="relative w-full aspect-[8/1] overflow-hidden rounded-md bg-gray-100">
 				<Image alt="Header" src={post.headerImage} fill className="object-cover" />
 			</div>
 		)}
-		<Link href={`/post/${post.id}`} className="line-clamp-2 text-sm font-semibold text-gray-900 hover:text-primary">
+		<Link href={`/post/${post.id}`} className="line-clamp-2 text-sm font-semibold text-gray-900 hover:text-primary dark:text-neutral-100">
 			{post.title}
 		</Link>
 		<div className="flex flex-wrap gap-1">
@@ -139,7 +139,7 @@ const COMPACT = ({ post }: { post: AllEchoesType['data'][0] }) => {
 		<motion.article
 			initial={{ opacity: 0, y: 4 }}
 			animate={{ opacity: 1, y: 0 }}
-			className="flex gap-5 rounded border border-secondary-light bg-white p-4 "
+			className="flex gap-5 rounded border border-secondary-light bg-white dark:bg-neutral-900 dark:border-neutral-800 p-4 "
 		>
 
 			{post.headerImage && (
@@ -168,12 +168,12 @@ const COMPACT = ({ post }: { post: AllEchoesType['data'][0] }) => {
 					</div>
 					<BookmarkButton postId={post.id} bookmarked={post.bookmarked} />
 				</div>
-				<Link href={`/post/${post.id}`} className="line-clamp-2 text-sm font-semibold text-gray-900 hover:text-primary">
+				<Link href={`/post/${post.id}`} className="line-clamp-2 text-sm font-semibold text-gray-900 hover:text-primary dark:text-neutral-100 ">
 					{post.title}
 				</Link>
 
 				{post.description && (
-					<p className="line-clamp-2 text-xs text-gray-600">{post.description}</p>
+					<p className="line-clamp-2 text-xs text-gray-600 dark:text-neutral-400">{post.description}</p>
 				)}
 				<div className=' mt-5 space-y-5'>
 					{urls.length > 0 && <ExtraImages urls={urls} total={total} />}
@@ -192,7 +192,7 @@ const Full = ({ post }: { post: AllEchoesType['data'][0] }) => {
 		<motion.article
 			initial={{ opacity: 0, y: 4 }}
 			animate={{ opacity: 1, y: 0 }}
-			className="grid gap-6 rounded border border-secondary-light bg-white p-10 md:grid-cols-[1fr,260px]"
+			className="grid gap-6 rounded border border-secondary-light bg-white dark:bg-neutral-900 dark:border-neutral-800 p-10 md:grid-cols-[1fr,260px]"
 		>
 			<div className="space-y-10">
 				<div className="flex items-start justify-between">
@@ -213,11 +213,11 @@ const Full = ({ post }: { post: AllEchoesType['data'][0] }) => {
 				</div>
 				{post.headerImage && <ImageBox src={post.headerImage} alt="Header" />}
 				<div className='flex flex-col gap-2'>
-					<Link href={`/post/${post.id}`} className="text-lg font-semibold text-gray-900 hover:text-primary">
+					<Link href={`/post/${post.id}`} className="text-lg font-semibold text-gray-900 hover:text-primary dark:text-neutral-100">
 						{post.title}
 					</Link>
 					{post.description && (
-						<p className="line-clamp-3 text-sm text-gray-600">{post.description}</p>
+						<p className="line-clamp-3 text-sm text-gray-600 dark:text-neutral-400">{post.description}</p>
 					)}
 				</div>
 				{urls.length > 0 && <ExtraImages urls={urls} total={total} />}
@@ -228,7 +228,7 @@ const Full = ({ post }: { post: AllEchoesType['data'][0] }) => {
 }
 
 /* main export */
-export default function PostCard({ post, display = 'full' }: PostCardProps) {
+export default function PostCard({ post, display = 'FULL' }: PostCardProps) {
 	if (display === 'SLIM') return <SLIM post={post} />
 	if (display === 'MINIMAL') return <MINIMAL post={post} />
 	if (display === 'COMPACT') return <COMPACT post={post} />

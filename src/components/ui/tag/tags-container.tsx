@@ -23,7 +23,7 @@ export default function TagContainer({ showHeading = false, postId, userId }: Ta
     </div>
 
     return (
-        <Card className="space-y-4">
+        <Card className="space-y-4 ">
             {showHeading && <div className="flex items-center justify-between">
 
                 <SectionHeading icon={<TbHash />} text={`Tags (${data?.length})`} />

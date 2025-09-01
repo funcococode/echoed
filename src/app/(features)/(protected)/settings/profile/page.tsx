@@ -66,76 +66,76 @@ export default function ProfileSettingsPage() {
     return (
         <form onSubmit={onSubmit} className="space-y-6">
             <header>
-                <h2 className="text-lg font-semibold text-slate-900">Profile</h2>
-                <p className="text-sm text-slate-500">Update your public profile information.</p>
+                <h2 className="text-lg font-semibold text-slate-900 dark:text-neutral-100">Profile</h2>
+                <p className="text-sm text-slate-500 dark:text-neutral-400">Update your public profile information.</p>
             </header>
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
-                    <label className="mb-1 block text-sm font-medium text-slate-700">Firstname</label>
+                    <label className="mb-1 block text-sm font-medium text-slate-700 dark:text-neutral-400">Firstname</label>
                     <input
                         value={form.firstname}
                         onChange={(e) => setForm({ ...form, firstname: e.target.value })}
-                        className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-slate-400"
+                        className="w-full rounded-lg border border-gray-300 dark:border-neutral-800 px-3 py-2 text-sm outline-none focus:border-slate-400"
                         placeholder="Your Firstname"
                         required
                     />
                 </div>
                 <div>
-                    <label className="mb-1 block text-sm font-medium text-slate-700">Lastname</label>
+                    <label className="mb-1 block text-sm font-medium text-slate-700 dark:text-neutral-400">Lastname</label>
                     <input
                         value={form.lastname}
                         onChange={(e) => setForm({ ...form, lastname: e.target.value })}
-                        className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-slate-400"
+                        className="w-full rounded-lg border border-gray-300 dark:border-neutral-800 px-3 py-2 text-sm outline-none focus:border-slate-400"
                         placeholder="Your Lastname"
                         required
                     />
                 </div>
 
                 <div>
-                    <label className="mb-1 block text-sm font-medium text-slate-700">Display name</label>
+                    <label className="mb-1 block text-sm font-medium text-slate-700 dark:text-neutral-400">Display name</label>
                     <input
                         value={form.displayName}
                         onChange={(e) => setForm({ ...form, displayName: e.target.value })}
-                        className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-slate-400"
+                        className="w-full rounded-lg border border-gray-300 dark:border-neutral-800 px-3 py-2 text-sm outline-none focus:border-slate-400"
                         placeholder="Your name"
                         required
                     />
                 </div>
 
                 <div>
-                    <label className="mb-1 block text-sm font-medium text-slate-700">@username</label>
+                    <label className="mb-1 block text-sm font-medium text-slate-700 dark:text-neutral-400">@username</label>
                     <input
                         value={form.username}
                         onChange={(e) => setForm({ ...form, username: e.target.value })}
-                        className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-slate-400"
+                        className="w-full rounded-lg border border-gray-300 dark:border-neutral-800 px-3 py-2 text-sm outline-none focus:border-slate-400"
                         placeholder="handle"
                         required
                     />
                 </div>
 
                 <div className="sm:col-span-2">
-                    <label className="mb-1 block text-sm font-medium text-slate-700">Bio (markdown)</label>
+                    <label className="mb-1 block text-sm font-medium text-slate-700 dark:text-neutral-400">Bio (markdown)</label>
                     <textarea
                         value={form.bio}
                         onChange={(e) => setForm({ ...form, bio: e.target.value })}
                         rows={5}
-                        className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-slate-400"
+                        className="w-full rounded-lg border border-gray-300 dark:border-neutral-800 px-3 py-2 text-sm outline-none focus:border-slate-400"
                         placeholder="Tell people about yourself…"
                     />
                 </div>
 
                 {/* <div className="sm:col-span-2">
-                    <label className="mb-1 block text-sm font-medium text-slate-700">Avatar URL</label>
+                    <label className="mb-1 block text-sm font-medium text-slate-700 dark:text-neutral-400">Avatar URL</label>
                     <input
                         value={form.avatarUrl ?? ''}
                         onChange={(e) => setForm({ ...form, avatarUrl: e.target.value })}
-                        className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-slate-400"
+                        className="w-full rounded-lg border border-gray-300 dark:border-neutral-800 px-3 py-2 text-sm outline-none focus:border-slate-400"
                         placeholder="https://…"
                     />
                 </div> */}
                 <div className="sm:col-span-2">
-                    <label className="mb-1 block text-sm font-medium text-slate-700">Avatar</label>
+                    <label className="mb-1 block text-sm font-medium text-slate-700 dark:text-neutral-400">Avatar</label>
 
                     <div className="flex items-start gap-4">
                         {/* Preview */}
@@ -166,7 +166,7 @@ export default function ProfileSettingsPage() {
                                     setImgLoaded(false);
                                     setForm({ ...form, avatarUrl: e.target.value });
                                 }}
-                                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-slate-400"
+                                className="w-full rounded-lg border border-gray-300 dark:border-neutral-800 px-3 py-2 text-sm outline-none focus:border-slate-400"
                                 placeholder="https://…"
                             />
 
@@ -178,7 +178,7 @@ export default function ProfileSettingsPage() {
                                         setImgLoaded(false);
                                         setForm({ ...form, avatarUrl: generatedAvatar });
                                     }}
-                                    className="rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50"
+                                    className="rounded-lg border border-gray-300 dark:bg-neutral-950 dark:border-neutral-800 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 dark:text-neutral-400 hover:bg-slate-50"
                                 >
                                     Use generated avatar
                                 </button>
@@ -190,7 +190,7 @@ export default function ProfileSettingsPage() {
                                         setImgLoaded(false);
                                         setForm({ ...form, avatarUrl: '' });
                                     }}
-                                    className="rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-xs text-slate-600 hover:bg-slate-50"
+                                    className="rounded-lg border border-gray-300 dark:bg-neutral-950 dark:border-neutral-800 bg-white px-3 py-1.5 text-xs text-slate-600 dark:text-neutral-400 hover:bg-slate-50"
                                 >
                                     Clear
                                 </button>
@@ -210,7 +210,7 @@ export default function ProfileSettingsPage() {
                     type="submit"
                     disabled={pending}
                     className={cn(
-                        'rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white',
+                        'rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white dark:bg-primary',
                         pending && 'opacity-70'
                     )}
                 >

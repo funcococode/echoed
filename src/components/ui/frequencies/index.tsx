@@ -30,7 +30,7 @@ export default function EchoTabs() {
                         <motion.button
                             key={tab}
                             onClick={() => setActive(tab)}
-                            className={`relative px-1 py-2 text-sm font-medium transition-colors duration-200 ${isActive ? "text-primary" : "text-gray-400 "
+                            className={`relative px-1 py-2 text-sm font-medium transition-colors duration-200 ${isActive ? "dark:text-white text-primary" : "text-gray-400 "
                                 }`}
                             variants={{
                                 hidden: { opacity: 0, y: 10 },

@@ -41,7 +41,8 @@ export default function PillRadioGroup<T extends string>({
                             'border border-gray-200 text-slate-700',
                             'transition-colors ',
                             'hover:border-slate-400',
-                            opt.disabled && 'pointer-events-none opacity-50'
+                            opt.disabled && 'pointer-events-none opacity-50',
+                            'dark:bg-neutral-950 dark:border-neutral-800 dark:text-neutral-100'
                         )}
                     >
                         <input

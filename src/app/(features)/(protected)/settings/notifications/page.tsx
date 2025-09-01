@@ -28,7 +28,7 @@ export default function NotificationsSettingsPage() {
             <header className='flex items-center justify-between'>
                 <div>
 
-                    <h2 className="text-lg font-semibold text-slate-900">Notifications</h2>
+                    <h2 className="text-lg font-semibold text-slate-900 dark:text-neutral-200">Notifications</h2>
                     <p className="text-sm text-slate-500">Choose what alerts you receive.</p>
                 </div>
                 {pending && <div className="text-xs text-slate-500">Saving…</div>}
@@ -55,7 +55,7 @@ export default function NotificationsSettingsPage() {
                 </PillCheckbox>
             </section>
 
-            <h3 className="mt-2 text-sm font-medium text-slate-800">Events</h3>
+            <h3 className="mt-2 text-sm font-medium text-slate-800 dark:text-neutral-400">Events</h3>
             <section className="space-y-2 space-x-2">
                 {[
                     ['notifyNewFollower', 'New follower', <TbUserPlus key="notifyNewFollower" />],

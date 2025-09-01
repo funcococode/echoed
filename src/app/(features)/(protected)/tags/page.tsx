@@ -19,10 +19,17 @@ export default async function Tags() {
 
   return (
     <div className="space-y-6">
-      <PageHeading text="Tags" count={totalTags} icon={<TbTag />} />
+      <PageHeading>
+        <section className='h-32 flex items-center justify-between px-4 gap-1 '>
+          <div className='w-1/4 text-5xl flex justify-start gap-4 items-center text-secondary dark:text-neutral-700'>
+            <TbTag />
+            <span className="font-extralight">All Tags</span>
+          </div>
+        </section>
+      </PageHeading>
 
       {/* Top summary bar */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-5">
         <StatCard
           title="Total Tags"
           value={totalTags.toLocaleString()}
@@ -51,8 +58,8 @@ function StatCard({
   icon: React.ReactNode;
 }) {
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-b from-white/[0.02] to-white/[0.01] p-4">
-      <div className="absolute inset-px rounded-2xl ring-1 ring-white/[0.06] pointer-events-none" />
+    <div className="relative overflow-hidden rounded border border-neutral-100 dark:border-neutral-800 p-4">
+      <div className="absolute inset-px ring-1 ring-white/[0.06] pointer-events-none" />
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2 text-sm text-gray-400">
           <span className="opacity-80">{icon}</span>

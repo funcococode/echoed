@@ -27,12 +27,12 @@ export default function AccountSettingsPage() {
     return (
         <div className="space-y-8">
             <section className="space-y-3">
-                <h2 className="text-lg font-semibold text-slate-900">Account &amp; Security</h2>
+                <h2 className="text-lg font-semibold text-slate-900 dark:text-neutral-200">Account &amp; Security</h2>
                 <p className="text-sm text-slate-500">Manage password and sessions.</p>
 
                 <form onSubmit={onChangePassword} className="grid grid-cols-1 gap-4 sm:max-w-md">
                     <div>
-                        <label className="mb-1 block text-sm font-medium text-slate-700">Current password</label>
+                        <label className="mb-1 block text-sm font-medium text-slate-700 dark:text-neutral-400">Current password</label>
                         <input
                             type="password"
                             value={currentPassword}
@@ -42,7 +42,7 @@ export default function AccountSettingsPage() {
                         />
                     </div>
                     <div>
-                        <label className="mb-1 block text-sm font-medium text-slate-700">New password</label>
+                        <label className="mb-1 block text-sm font-medium text-slate-700 dark:text-neutral-400">New password</label>
                         <input
                             type="password"
                             value={newPassword}
@@ -56,7 +56,7 @@ export default function AccountSettingsPage() {
                         <button
                             type="submit"
                             disabled={pending}
-                            className={cn('rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white', pending && 'opacity-70')}
+                            className={cn('rounded-lg bg-slate-900 dark:bg-primary px-4 py-2 text-sm font-medium text-white', pending && 'opacity-70')}
                         >
                             {pending ? 'Saving…' : 'Update password'}
                         </button>
@@ -66,7 +66,7 @@ export default function AccountSettingsPage() {
             </section>
 
             <section className="space-y-3">
-                <h3 className="text-base font-medium text-slate-900">Active sessions</h3>
+                <h3 className="text-base font-medium text-slate-900 dark:text-neutral-200">Active sessions</h3>
                 <p className="text-sm text-slate-500">You can sign out of other devices.</p>
                 <button
                     onClick={() =>
@@ -75,14 +75,14 @@ export default function AccountSettingsPage() {
                             setStatus(res?.success ? 'Signed out other sessions' : 'Failed');
                         })
                     }
-                    className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-slate-800 hover:bg-slate-50"
+                    className="rounded-lg border border-gray-300 bg-white dark:bg-neutral-950 dark:border-neutral-800 dark:text-neutral-300 px-4 py-2 text-sm font-medium text-slate-800 dark:text-neutral-400 hover:bg-slate-50"
                 >
                     Sign out of other sessions
                 </button>
             </section>
 
             <section className="space-y-3">
-                <h3 className="text-base font-medium text-slate-900">Danger zone</h3>
+                <h3 className="text-base font-medium text-slate-900 dark:text-neutral-200">Danger zone</h3>
                 <p className="text-sm text-slate-500">Permanently delete your account.</p>
                 <button
                     onClick={() =>

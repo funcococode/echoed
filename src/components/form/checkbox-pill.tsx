@@ -31,7 +31,8 @@ export default function PillCheckbox({
                 'border border-gray-200 bg-white text-slate-700',
                 'transition-all',
                 'hover:border-slate-400',
-                disabled && 'pointer-events-none opacity-50'
+                disabled && 'pointer-events-none opacity-50',
+                'dark:bg-neutral-950 dark:text-neutral-100 dark:border-neutral-800'
             )}
         >
             <input
@@ -49,7 +50,7 @@ export default function PillCheckbox({
                     <AnimatePresence initial={false}>
                         <motion.span
                             key="bg"
-                            className="absolute inset-0 z-10 rounded-full bg-primary/20"
+                            className="absolute inset-0 z-10 rounded-full bg-primary/20 dark:bg-primary/40"
                             initial={{ opacity: 0, scale: 0.98 }}
                             animate={{ opacity: 1, scale: 1 }}
                             exit={{ opacity: 0, scale: 0.98 }}
@@ -60,9 +61,9 @@ export default function PillCheckbox({
                     <span className="absolute inset-0 z-10 rounded-full border border-primary bg-primary" />
                 ))}
 
-            {icon && <span className={cn("text-slate-700", checked && 'text-primary')}>{icon}</span>}
+            {icon && <span className={cn("text-slate-700", checked && 'text-primary dark:text-neutral-100')}>{icon}</span>}
 
-            <span className={cn('transition-colors z-20', checked && 'text-primary font-medium')}>
+            <span className={cn('transition-colors z-20', checked && 'text-primary font-medium dark:text-neutral-100')}>
                 {children}
             </span>
 

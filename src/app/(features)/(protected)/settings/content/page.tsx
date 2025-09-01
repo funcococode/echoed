@@ -29,7 +29,7 @@ export default function ContentSettingsPage() {
             <header className='flex items-center justify-between'>
                 <div>
 
-                    <h2 className="text-lg font-semibold text-slate-900">Content &amp; Feed</h2>
+                    <h2 className="text-lg font-semibold text-slate-900 dark:text-neutral-200">Content &amp; Feed</h2>
                     <p className="text-sm text-slate-500">Tune your home feed and media behavior.</p>
                 </div>
                 {pending && <div className="text-xs text-slate-500">Saving…</div>}
@@ -37,7 +37,7 @@ export default function ContentSettingsPage() {
 
             <section className="grid grid-cols-1 gap-5 sm:max-w-md">
                 <div>
-                    <label className="mb-1 block text-sm font-medium text-slate-700">Home feed style</label>
+                    <label className="mb-1 block text-sm font-medium text-slate-700 dark:text-neutral-400">Home feed style</label>
                     <SelectInput
                         options={[
                             { value: 'following', label: 'Following' },
@@ -50,7 +50,7 @@ export default function ContentSettingsPage() {
                 </div>
 
                 <section className="space-y-2 space-x-2">
-                    <label className="mb-1 block text-sm font-medium text-slate-700">Media & Feed Settings</label>
+                    <label className="mb-1 block text-sm font-medium text-slate-700 dark:text-neutral-400">Media & Feed Settings</label>
                     <PillCheckbox
                         id="autoplay-media"
                         checked={!!s?.autoplayMedia}

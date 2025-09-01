@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { TbMoon, TbSun } from 'react-icons/tb';
+import { TbMoon, TbSun, TbSunMoon } from 'react-icons/tb';
 import { cn } from '@/utils/cn';
 
 type Size = 'sm' | 'md' | 'lg';
@@ -57,14 +57,17 @@ export default function DarkModeSwitch({
         <label
             htmlFor={id}
             className={cn(
-                'flex items-center justify-between gap-3 rounded-xl border border-gray-200 bg-white p-3 shadow-sm',
+                'flex items-center justify-between gap-3 rounded-xl border border-gray-200 bg-white p-3 ',
                 'dark:border-white/15 dark:bg-white/5',
                 className
             )}
         >
             {/* Left: label */}
             <div className="min-w-0">
-                <div className="text-sm font-medium text-slate-900 dark:text-white">{label}</div>
+                <div className="text-sm font-medium text-slate-500 dark:text-white flex items-center gap-3">
+                    <TbSunMoon />
+                    {label}
+                </div>
                 {description && (
                     <div className="text-xs text-slate-500 dark:text-white/70">{description}</div>
                 )}

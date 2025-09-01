@@ -39,8 +39,8 @@ export default function CommentsContainer({ postId }: { postId: string, depth?: 
                 {!data?.length && <p className='text-xs font-medium text-gray-400'>No Comments</p>}
                 <div className="space-y-4">
                     <form action={handlePostComment} className="space-y-2">
-                        <textarea name="comment" id="comment" className="w-full resize-none bg-white border border-secondary rounded min-h-32 outline-none p-2 text-gray-800 text-sm" placeholder="Contribute your thoughts here"></textarea>
-                        <button className="font-semibold rounded px-4 py-1.5 bg-secondary text-gray-500 hover:bg-gray-800 hover:text-white">Submit</button>
+                        <textarea name="comment" id="comment" className="w-full resize-none bg-white border border-secondary dark:bg-neutral-900 dark:border-neutral-800 rounded min-h-32 outline-none p-2 text-gray-800 dark:text-neutral-400 text-sm" placeholder="Contribute your thoughts here"></textarea>
+                        <button className="font-semibold rounded px-4 py-1.5 bg-secondary text-gray-500 hover:bg-gray-800 hover:text-white dark:bg-neutral-900 dark:border-neutral-800 ">Submit</button>
                     </form>
                 </div>
                 {!!data?.length && <div className="space-y-2">

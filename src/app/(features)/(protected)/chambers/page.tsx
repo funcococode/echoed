@@ -34,7 +34,7 @@ export default function Chambers() {
       <div className="space-y-4 flex-[3]">
         <PageHeading>
           <section className='h-32 flex items-center justify-between px-4 gap-1 '>
-            <div className='w-1/4 text-5xl flex justify-start gap-4 items-center text-secondary'>
+            <div className='w-1/4 text-5xl flex justify-start gap-4 items-center text-secondary dark:text-neutral-800'>
               {currentPath.icon}
               <span className="font-extralight">{data.length}</span>
             </div>
@@ -49,9 +49,9 @@ export default function Chambers() {
           </section>
         </PageHeading>
         <div className="grid md:grid-cols-4 gap-4 mt-5">
-          {data?.map(item => <Link href={`/chambers/${item.id}`} className='group relative overflow-hidden hover:ring hover:ring-primary/20 hover:bg-primary/5 transition  rounded shadow shadow-gray-400/10 border border-secondary' key={item.id}>
+          {data?.map(item => <Link href={`/chambers/${item.id}`} className='group relative overflow-hidden hover:ring hover:ring-primary/20 hover:bg-primary/5 transition  rounded-md shadow shadow-gray-400/10 border border-secondary dark:border-neutral-800' key={item.id}>
             <div className='text-gray-300 text-xs font-semibold flex items-start gap-3 justify-between absolute inset-0 z-0 p-3'>
-              <p className="text-primary invisible group-hover:visible transition-all translate-x-full group-hover:translate-x-0 opacity-0 group-hover:opacity-100 flex items-center gap-1">
+              <p className="text-primary dark:text-neutral-300 invisible group-hover:visible transition-all translate-x-full group-hover:translate-x-0 opacity-0 group-hover:opacity-100 flex items-center gap-1">
                 <TbArrowRight />
                 View
               </p>
@@ -60,9 +60,9 @@ export default function Chambers() {
                 {item.frequency.split('-')[0]}
               </p>}
             </div>
-            <div className="relative z-10 h-full group-hover:shadow-lg group-hover:scale-95 group-hover:translate-y-10 space-y-4 list-none p-5 flex flex-col justify-start overflow-hidden transition-all bg-white rounded-md">
+            <div className="relative z-10 h-full group-hover:shadow-lg group-hover:scale-95 group-hover:translate-y-10 space-y-4 list-none p-5 flex flex-col justify-start overflow-hidden transition-all bg-white dark:bg-neutral-900 rounded-md">
               <div className="flex items-center justify-between">
-                <div className="font-semibold text-sm text-gray-700 flex justify-between group-hover:text-primary">
+                <div className="font-semibold text-sm text-gray-700 flex justify-between group-hover:text-primary dark:text-neutral-100">
                   <p>{item.name}</p>
                 </div>
               </div>
@@ -74,7 +74,7 @@ export default function Chambers() {
             </div>
           </Link>)}
         </div>
-        {!data.length && <button onClick={() => setShowModal(true)} className="flex-1 border w-full h-96 rounded-md border-gray-200 bg-gray-50 capitalize font-semibold grid place-content-center gap-5 hover:bg-gray-100">
+        {!data.length && <button onClick={() => setShowModal(true)} className="flex-1 border w-full h-96 rounded-md border-gray-200 bg-gray-50 dark:bg-neutral-950 dark:border-neutral-800 border-dashed capitalize font-semibold grid place-content-center gap-5 hover:bg-gray-100">
           <Icon icon={<TbPlus />} size="large" />
           Create new Chamber
         </button>}

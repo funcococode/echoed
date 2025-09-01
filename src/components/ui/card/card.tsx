@@ -10,7 +10,7 @@ interface CardProps {
 
 export default function Card({ children, className }: CardProps) {
     return (
-        <div className={cn(`space-y-4 list-none p-5 rounded border border-gray-100 bg-gray-50 flex flex-col justify-between`, className)}>
+        <div className={cn(`space-y-4 list-none p-5 rounded border border-gray-100 bg-gray-50 dark:bg-neutral-950 dark:border-neutral-800 flex flex-col justify-between`, className)}>
             {children}
         </div>
     )

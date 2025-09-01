@@ -5,19 +5,19 @@ interface Props {
 	hoverEffect?: boolean
 	size: 'large' | 'medium' | 'normal' | 'small' | 'x-small'
 	color?:
-		| 'primary'
-		| 'secondary'
-		| 'danger'
-		| 'success'
-		| 'warning'
-		| 'info'
-		| 'default'
-		| 'primary-light-bg'
-		| 'secondary-light-bg'
-		| 'danger-light-bg'
-		| 'success-light-bg'
-		| 'warning-light-bg'
-		| 'info-light-bg'
+	| 'primary'
+	| 'secondary'
+	| 'danger'
+	| 'success'
+	| 'warning'
+	| 'info'
+	| 'default'
+	| 'primary-light-bg'
+	| 'secondary-light-bg'
+	| 'danger-light-bg'
+	| 'success-light-bg'
+	| 'warning-light-bg'
+	| 'info-light-bg'
 }
 
 const SIZE_CLASS_MAPPING = {
@@ -29,10 +29,10 @@ const SIZE_CLASS_MAPPING = {
 }
 
 const COLOR_CLASS_MAPPING = {
-	default: 'bg-gray-400/10 text-gray-400',
+	default: 'bg-gray-400/10 text-gray-400 dark:bg-neutral-800',
 	primary: 'bg-primary text-white hover:bg-primary/90',
 	'primary-light-bg': 'bg-primary/10 text-primary hover:bg-primary/20',
-	secondary: 'bg-gray-100 text-gray-800 hover:bg-gray-100/90',
+	secondary: 'bg-gray-100 text-gray-800 hover:bg-gray-100/90 dark:bg-neutral-900',
 	'secondary-light-bg': 'bg-gray-100/10 text-gray-100 hover:bg-gray-100/20',
 	danger: 'bg-red-600 text-white hover:bg-red-600/90',
 	'danger-light-bg': 'bg-red-600/10 text-red-600 hover:bg-red-600/20',
@@ -49,7 +49,7 @@ export default function Icon({ icon, hoverEffect = false, size = 'normal', color
 
 	return (
 		<div
-			className={`grid place-content-center ${SIZE_CLASS_MAPPING[size]} rounded-full border border-gray-100 ${!!hoverEffect && 'hover:bg-primary hover:text-white'} ${color && COLOR_CLASS_MAPPING[color]}`}>
+			className={`grid place-content-center ${SIZE_CLASS_MAPPING[size]} rounded-full border border-gray-100 dark:border-neutral-800 ${!!hoverEffect && 'hover:bg-primary hover:text-white'} ${color && COLOR_CLASS_MAPPING[color]}`}>
 			{icon}
 		</div>
 	)
