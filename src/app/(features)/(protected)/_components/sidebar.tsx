@@ -14,8 +14,8 @@ import Logo from "@/components/ui/logo";
 import SearchBar from "@/components/ui/search/search-bar";
 import Icon from "@/components/ui/icon";
 import { type ChamberType } from "@/actions/chambers";
-import Avatar from "@/components/ui/avatar";
 import DarkModeSwitch from "@/components/ui/theme-toggle-button";
+import MyAvatar from "@/components/ui/avatar/my-avatar";
 
 interface Props {
     slim?: boolean;
@@ -199,7 +199,8 @@ export default function Sidebar({ slim = false, user, chambers }: Props) {
                     href={`/user/${user?.id ?? ""}`}
                     className="flex items-center gap-3 px-3 py-2 text-gray-500 hover:text-primary dark:text-neutral-400 hover:bg-gray-100 dark:hover:bg-neutral-800 rounded-md transition-colors capitalize"
                 >
-                    <Avatar url={user?.image} name={user?.username} size="sm" shape="circle" />
+                    {/* <Avatar url={user?.image} username={user?.username} size="sm" shape="circle" /> */}
+                    <MyAvatar />
 
                     <span className="text-sm">{user?.name}</span>
                 </Link>

@@ -22,9 +22,6 @@ import { HiOutlineCollection } from 'react-icons/hi'
 import {
 	TbArchive,
 	TbArchiveOff,
-	TbArrowDown,
-	TbArrowUp,
-	TbEye,
 	TbEyeClosed,
 	TbEyeglass,
 	TbEyeglassOff,
@@ -41,7 +38,8 @@ import { addEchoToChamber } from '@/actions/chambers'
 import SectionHeading from '@/components/ui/section-heading'
 import Card from '@/components/ui/card/card'
 import EchoLoader from '@/components/ui/loaders/loader'
-import Avatar from '@/components/ui/avatar'
+import Avatar from '@/components/ui/avatar/avatar'
+import EchoRippleStats from '../../_components/echo-stats'
 
 export default function Post() {
 	const { id } = useParams<{ id: string }>()
@@ -197,7 +195,7 @@ export default function Post() {
 										<span className="px-1.5">Archived</span>
 									</div>
 								)}
-								<div className="text-primary flex list-none items-center rounded border border-indigo-200 bg-indigo-500/10 text-xs font-medium dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-100">
+								{/* <div className="text-primary flex list-none items-center rounded border border-indigo-200 bg-indigo-500/10 text-xs font-medium dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-100">
 									<span className="border-r border-indigo-200 p-1 dark:border-neutral-800">
 										<TbArrowUp />
 									</span>
@@ -226,7 +224,8 @@ export default function Post() {
 										<TbEye />
 									</span>
 									<span className="px-1.5">{data?.views}</span>
-								</div>
+								</div> */}
+
 							</div>
 							<div className="mt-5 flex w-full items-center justify-between gap-5 text-sm font-light md:mt-0 md:w-fit md:justify-normal md:text-xs">
 								<p>
@@ -250,6 +249,19 @@ export default function Post() {
 									/>
 								)}
 							</div>
+							{/* <EchoStatChips
+								stats={{
+									views: 14230,
+									upvotes: 512,
+									downvotes: 23,
+									shares: 78,
+									bookmarks: 264,
+								}}
+								size="sm" // or "md"
+								// normalizeToMax={20000} // optional: compare to a global/sitewide max
+								className="mt-3"
+							/> */}
+
 						</div>
 					</div>
 					<h1 className="text-3xl leading-normal font-bold text-gray-800 md:text-4xl dark:text-neutral-100">
@@ -268,7 +280,27 @@ export default function Post() {
 						</div>
 					</div>
 				</div>
-				<div className="flex-[2] space-y-2 md:pr-5">
+				<div className="flex-[1.8] space-y-2 md:pr-5 py-10">
+					<EchoRippleStats
+						stats={{
+							views: data?.views,
+							upvotes:
+								data?.votes?.filter(
+									item => item.positive,
+								)?.length
+							,
+							downvotes: data?.votes?.filter(
+								item => !item.positive,
+							)?.length,
+							shares: data?.shares || 0,
+							bookmarks: data?.bookmarks || 0,
+						}}
+						size={150}
+						thickness={2}
+						gap={8}
+						// normalizeToMax={100000}
+						className='ring ring-neutral-100 rounded-sm'
+					/>
 					{!!data?.cids.length && (
 						<Card>
 							<SectionHeading icon={<TbFile />} text={`Attachments (${data?._count?.attachments})`} />

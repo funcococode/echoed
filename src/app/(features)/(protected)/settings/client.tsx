@@ -33,15 +33,15 @@ export default function SettingsClient({ children }: { children: ReactNode }) {
                                 href={href}
                                 className={cn(
                                     'relative rounded-full px-4 py-2 text-sm transition-colors',
-                                    'border border-transparent text-slate-700 dark:text-neutral-400 hover:text-slate-950 dark:text-neutral-400',
-                                    active && 'text-white dark:text-neutral-100'
+                                    'border border-transparent text-slate-700 dark:text-neutral-400 hover:text-slate-950 ',
+                                    active && 'text-white dark:text-neutral-100 hover:text-white'
                                 )}
                             >
                                 {/* Sliding pill background */}
                                 {active && (
                                     <motion.span
                                         layoutId="settings-pill"
-                                        className="absolute inset-0 -z-10 rounded-full bg-slate-900 dark:bg-primary dark:bg-primary/50"
+                                        className="absolute inset-0 -z-10 rounded-full bg-slate-900 dark:bg-primary/50"
                                         transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                                     />
                                 )}

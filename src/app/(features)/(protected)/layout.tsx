@@ -45,7 +45,9 @@ export default async function FeedLayout({ children, pageHeading }: Props) {
                     <Sidebar
                         user={{
                             id: session?.user?.id || '',
-                            name: `${session?.user?.firstname} ${session?.user?.lastname}`
+                            name: `${session?.user?.firstname} ${session?.user?.lastname}`,
+                            username: session?.user?.username || '',
+                            displayName: session?.user?.displayName || '',
                         }}
                         chambers={chambers}
                     />

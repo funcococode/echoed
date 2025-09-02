@@ -8,7 +8,7 @@ import { TbClock, TbCalendar, TbEye, TbPlus, TbPinFilled } from 'react-icons/tb'
 import type { AllEchoesType } from '@/actions/post'
 import type { PostLayout } from '@/types/layout'
 import BookmarkButton from '../bookmark-button'
-import Avatar from '../avatar'
+import Avatar from '../avatar/avatar'
 
 export interface PostCardProps {
 	post: AllEchoesType['data'][0]

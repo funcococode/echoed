@@ -10,7 +10,7 @@ import { motion } from 'motion/react';
 import { TbCalendar, TbNotes, TbShare, TbUserHeart, TbUserStar } from 'react-icons/tb';
 import FollowButton from '../../_components/follow-button';
 import { useSession } from 'next-auth/react';
-import Avatar from '@/components/ui/avatar';
+import Avatar from '@/components/ui/avatar/avatar';
 
 export default function UserProfile() {
   const { id } = useParams<{ id: string }>();
