@@ -13,7 +13,9 @@ export default function SearchChamber({ onSelect, onClose }: Props) {
 
 	const search = async (query: string) => {
 		if (query.length) {
-			const response = await listChambers(query)
+			const response = await listChambers({
+				query
+			})
 			setData(response)
 		} else {
 			setData([])
@@ -43,7 +45,7 @@ export default function SearchChamber({ onSelect, onClose }: Props) {
 				</div>
 				<div className="mt-2 min-h-44 space-y-5 rounded text-xs">
 					<h1 className="text-primary  font-semibold">Results</h1>
-					<div className="grid grid-cols-2 gap-4">
+					<div className="grid grid-cols-2 gap-4 max-h-64 overflow-y-scroll scrollbar-hide">
 						{data?.map(item => (
 							<button
 								onClick={() => handleAddChamber(item.id)}

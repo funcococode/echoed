@@ -195,36 +195,6 @@ export default function Post() {
 										<span className="px-1.5">Archived</span>
 									</div>
 								)}
-								{/* <div className="text-primary flex list-none items-center rounded border border-indigo-200 bg-indigo-500/10 text-xs font-medium dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-100">
-									<span className="border-r border-indigo-200 p-1 dark:border-neutral-800">
-										<TbArrowUp />
-									</span>
-									<span className="px-1.5">
-										{
-											data?.votes?.filter(
-												item => item.positive,
-											)?.length
-										}
-									</span>
-								</div>
-								<div className="flex list-none items-center rounded border border-red-200 bg-red-500/10 text-xs font-medium text-red-700 dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-100">
-									<span className="border-r border-red-200 p-1 dark:border-neutral-800">
-										<TbArrowDown />
-									</span>
-									<span className="px-1.5">
-										{
-											data?.votes?.filter(
-												item => !item.positive,
-											)?.length
-										}
-									</span>
-								</div>
-								<div className="flex list-none items-center rounded border border-yellow-300 bg-yellow-500/10 text-xs font-medium text-yellow-700 dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-100">
-									<span className="border-r border-yellow-300 p-1 dark:border-neutral-800">
-										<TbEye />
-									</span>
-									<span className="px-1.5">{data?.views}</span>
-								</div> */}
 
 							</div>
 							<div className="mt-5 flex w-full items-center justify-between gap-5 text-sm font-light md:mt-0 md:w-fit md:justify-normal md:text-xs">

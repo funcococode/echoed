@@ -2,6 +2,7 @@
 
 import { auth } from '@/auth'
 import { db } from '@/server/db'
+import { pc, PINECONE_INDEX_NAME } from '@/server/pinecone'
 import moment from 'moment'
 import { revalidateTag } from 'next/cache'
 
@@ -49,7 +50,24 @@ export const createChamber = async (name: string, description: string) => {
 				userId: session?.user?.id ?? '',
 				frequency: crypto.randomUUID(),
 			},
+
+			select: {
+				id: true,
+				frequency: true,
+			},
 		})
+
+		if (response.id) {
+			const records = {
+				id: response.id,
+				text: name,
+				description: description ?? '',
+				frequency: response.frequency ?? 0,
+			}
+			const index = pc.Index(PINECONE_INDEX_NAME).namespace('echo-chambers')
+
+			await index.upsertRecords([records])
+		}
 
 		return response
 	}
@@ -172,4 +190,34 @@ export const leaveChamber = async (chamberId: string) => {
 	} catch (e) {
 		console.log(e)
 	}
+}
+
+export type RelatedChambersType = ReturnType<typeof getRelatedChambers> extends Promise<infer T> ? T : never
+
+export async function getRelatedChambers(chamberName: string) {
+	const index = pc.Index(PINECONE_INDEX_NAME).namespace('echo-chambers')
+
+	const records = await index.searchRecords({
+		query: {
+			topK: 5,
+			inputs: {
+				text: chamberName,
+			},
+			filter: {
+				text: {
+					$ne: chamberName,
+				},
+			},
+		},
+		fields: ['text', 'description', 'frequency', 'ID'],
+	})
+	const results =
+		records.result?.hits
+			// ?.filter(item => item.fields?.text !== chamberName)
+			?.map(item => ({
+				id: item._id,
+				name: item.fields?.text,
+				description: item?.fields?.description,
+			})) || []
+	return results
 }

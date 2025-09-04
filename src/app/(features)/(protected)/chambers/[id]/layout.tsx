@@ -4,13 +4,14 @@ import PageHeading from '@/components/ui/page-heading'
 import { useParams, useRouter } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
-import { type AllEchoesType, getAllPosts } from '@/actions/post'
+import { type AllEchoesType } from '@/actions/post'
 import { TbBellPlus, TbCodeVariablePlus, TbUserMinus, TbUserPlus, TbWaveSquare } from 'react-icons/tb'
 import Button from '@/components/form/button'
 import { toast } from 'sonner'
-import { type EchoTypes } from '@/actions/types'
 import Link from 'next/link'
 import ManageChamber from '../_components/manage-chamber'
+import { getRelatedChambers, type RelatedChambersType } from '@/actions/chambers'
+import EchoLoader from '@/components/ui/loaders/loader'
 
 interface Props {
     children: React.ReactNode
@@ -20,28 +21,34 @@ export default function ChamberLayout({ children }: Props) {
     const { id } = useParams<{ id: string }>()
     const [data, setData] = useState<{ chamber: ChamberDataType; posts: AllEchoesType['data'] }>()
     const [refresh, setRefersh] = useState(false);
+    const [relatedChambers, setRelatedChambers] = useState<RelatedChambersType>()
+    const [loadingRelated, setLoadingRelated] = useState(true);
     const router = useRouter();
 
 
     const fetchData = useCallback(async () => {
         if (!id) throw new Error('Invalid chamber id')
-
-        const payload = {
-            chamberId: id,
-            type: 'all' as EchoTypes
-        }
-        const [chamber, posts] = await Promise.all([getChamberData(id), getAllPosts(payload)])
+        const chamber = await getChamberData(id)
         setData({
             chamber,
-            posts: posts.data,
+            posts: [],
         })
-    }, [id, refresh])
+    }, [id])
+
+    const fetchRelatedChambers = useCallback(async () => {
+        if (data?.chamber?.name) {
+
+            const related = await getRelatedChambers(data?.chamber?.name).finally(() => setLoadingRelated(false));
+            setRelatedChambers(related)
+        }
+    }, [data?.chamber?.name])
 
     useEffect(() => {
         if (session.status === 'authenticated') {
             fetchData().catch(err => console.log(err))
+            fetchRelatedChambers().catch(err => console.log(err))
         }
-    }, [session, fetchData, refresh])
+    }, [session, fetchData, refresh, fetchRelatedChambers])
 
     const handleClickJoin = async () => {
         const response = await joinChamber(id);
@@ -149,9 +156,26 @@ export default function ChamberLayout({ children }: Props) {
                     </h6>
                 </footer>
             </PageHeading>
-            <div className='space-y-5 mt-5'>
-                {children}
-            </div>
+            <main className='grid grid-cols-4 gap-4 mb-10'>
+                <div className='space-y-5 mt-5 col-span-3 border border-neutral-100 p-3 rounded-md border-dashed bg-neutral-50'>
+                    {children}
+                </div>
+                <aside className='col-span-1 mt-5'>
+                    <div className='space-y-4 rounded-md border border-neutral-100 p-3 border-dashed bg-neutral-50 '>
+                        <h1 className='text-xs font-semibold text-primary'>Related Chambers</h1>
+                        {loadingRelated && <div className='grid place-content-center h-44'><EchoLoader inline size={40} /></div>}
+                        <div className='space-y-2'>
+                            {relatedChambers?.map(chamber => (
+                                <Link key={chamber.id} href={`/chambers/${chamber.id}`} className='block space-y-2 border-b border-dashed pb-2 group hover:pl-2 transition-all '>
+                                    <h2 className='font-semibold text-xs text-neutral-600 group-hover:text-primary'>{chamber.name}</h2>
+                                    <p className='text-xs text-neutral-400 group-hover:text-neutral-700 truncate'>{chamber.description}</p>
+                                </Link>
+                            ))}
+                            {relatedChambers?.length === 0 && <p className='text-sm text-neutral-500'>No related chambers found.</p>}
+                        </div>
+                    </div>
+                </aside>
+            </main>
         </div>
     )
 }

@@ -66,7 +66,6 @@ export default function Avatar({
         () => encodeURIComponent(username ?? name ?? 'EchoedUser'),
         [username, name]
     );
-
     const dicebearUrl = useMemo(() => {
         // Adjust remotePatterns in next.config.js for api.dicebear.com
         // Optional: tweak background palette

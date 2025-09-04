@@ -11,11 +11,14 @@ import useLayoutStore from '@/stores/layout-store'
 import SelectEchoesContainerLayout from '../../_components/select-echoes-container-layout'
 import SelectEchoLayout from '../../_components/select-echo-layout'
 import { type EchoTypes } from '@/actions/types'
+import EchoLoader from '@/components/ui/loaders/loader'
 
 export default function ChamberPage() {
 	const session = useSession()
 	const { id } = useParams<{ id: string }>()
 	const [data, setData] = useState<{ chamber: ChamberDataType; posts: AllEchoesType['data'] }>()
+	const [loading, setLoading] = useState(true);
+
 	const { layout, echoLayout } = useLayoutStore();
 
 	const fetchData = useCallback(async () => {
@@ -34,11 +37,13 @@ export default function ChamberPage() {
 
 	useEffect(() => {
 		if (session.status === 'authenticated') {
-			fetchData().catch(err => console.log(err))
+			fetchData().catch(err => console.log(err)).finally(() => setLoading(false))
 		}
 	}, [session, fetchData])
 
+	if (loading) return <div className='grid h-60 place-content-center'><EchoLoader inline size={50} /></div>
 	if (!data) return <></>
+
 
 	return (
 		<div>
